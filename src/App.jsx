@@ -51,7 +51,7 @@ const initialState = {
   },
   p2 : {
     hand: Array.from({length: 1}).map(()=> {return {cardType: "monster", energyAttached:[]}}),
-    bench: Array.from({length: 5}),
+    bench: Array.from({length: 5}).map(()=> {return {cardType: "monster", energyAttached:[]}}),
     main: {attacks: ["Tackle"], energyAttached: [], status: ["BURN"]}, 
     deck: Array.from({length: 52}).map(()=> {return {cardType: "monster", energyAttached:[]}}),
     trash: []
@@ -62,7 +62,17 @@ const initialState = {
     // retreated: false,
     // attacked: false,
     // useAbility : {"pokemonId" : false}
-  }}
+  },
+  },
+
+  pendingEffects: {
+    prompt: "Choose an opponent benched Pokémon",
+    valid : {
+      id: ["all"],
+      loc: ["bench"],
+      player: ["p2"]
+    }
+  }
 }
 
 const opposite = {
@@ -240,9 +250,33 @@ function attackMain(state, action, target, amount){
   }}};
 }
 
+
+function attackAny(state, action, target, amount){
+  const {id, loc, player} = state.context;
+  const main = (loc == "main") ? {
+    ...state[target].main,
+    dc: (state[target].main?.dc ?? 0) + amount,
+  } : state[target].main;
+
+  const bench = (loc == "bench") ? 
+    state[target].bench.toSpliced(id,1,{
+      ...state[target].bench[id],
+      dc: (state[target].bench[id]?.dc ?? 0) + amount,
+    }) : state[target].bench;
+
+  return {...{...state,
+      [target] : { 
+      ...state[target],
+      main : main,
+      bench : bench
+  }}};
+}
+
 function DEAL_DAMAGE({state, action, amount, targetPos, target}){
   if (targetPos == "main"){
     return attackMain(state, action, target, amount);
+  } else if (targetPos == "choose"){
+    return attackAny(state, action, target, amount);
   }
   return attackBench(state, action, amount, sId)
 }
@@ -300,9 +334,6 @@ const REDUCER_ROUTER = {
 REDUCER_ROUTER.getFunc = function(key) {
   if (!(key in this)){
     return (state, action) => {
-      console.log(state)
-      console.log("Cannot find reducer for: " + key);
-      console.log(state)
       return state;
     }
   }
@@ -318,6 +349,13 @@ function Card({details}){
   const styling = getStyling(details);
   const player = details?.player ?? "p1";
   const type = details?.type ?? "monster";
+  const {loc} = details; 
+
+  function handleClick(){
+    //contains type -> loc(bench) id(0-4), player(p1/p2)
+
+    dispatch({type: 'click', ...details});
+  }
   
   const handleDrop = (e) => {
     e.preventDefault();
@@ -341,6 +379,7 @@ function Card({details}){
     <div draggable={true}
     onDragOver={handleDragOver} 
     onDrop={handleDrop}
+    onClick={handleClick}
     onDragStart={(e) => handleDragStart(e, { type: type, ...details })} className="relative bg-white cursor-grab rounded-lg shadow-md p-4 h-50 w-35 hover:scale-125 hover:shrink-0 hover:z-3 transition" style={{...styling}}>
       {(energyAttached.length > 0) && 
         <span className="absolute -bottom-2 -right-2 flex items-center gap-1 text-xs text-gray-600 rounded-full p-1">
@@ -387,10 +426,17 @@ function CardSpot({details}){
     dispatch({type: "drop", source: data.type, dest: "", ...dets})
   };
 
+  function handleClick(){
+    //contains type -> loc(bench) id(0-4), player(p1/p2)
+    console.log("CLICKING")
+    console.log(details)
+    dispatch({type: 'click', ...details});
+  }
+
   const styling = getStyling(details)
-  const name = details?.name ?? "";
   return (
     <div
+      onClick={handleClick}
       onDragOver={handleDragOver} 
       onDrop={handleDrop}
       className="bg-gray-200 rounded-lg shadow-md p-4 h-50 w-35 " style={{...styling}}>
@@ -438,8 +484,15 @@ function SearchableCards({details}){
 function Trash({details}){
   const {state, dispatch} = useContext(GameContext);
   const {player} = details;
+
+  function getTrash(){
+    return state[player].trash.map((t) => 
+      <Card details={{...t, name: "trash"}}/>
+    )
+  }
+
   return (
-    (state[player].trash.length==0) ? <CardSpot details={{...details, name: "trash"}}/> : <Card details={{...details, name: "trash"}}/>
+    (state[player].trash.length==0) ? <CardSpot details={{...details, name: "trash"}}/> : getTrash()
   )
 }
 
@@ -462,7 +515,7 @@ function HanDeck({details}){
   return (
     <div className="flex gap-3 justify-between w-full min-w-0">
       <div className="flex min-w-0 max-w-full [&>*+*]:-ml-10">
-        {Array.from(state[player].hand).map((_, i) => <Card key={i} details={{...details, name: "hand", id: i, ..._}}/>)}
+        {Array.from(state[player].hand).map((_, id) => <Card key={id} details={{...details, loc: "hand", id: id, ..._}}/>)}
       </div>
       <Deck details={details}/>
     </div>
@@ -479,7 +532,7 @@ function BenchTrash({details}){
         {Array.from(state[player].bench).map((_, i) => {
           return _ ?
           <Card details={{..._, ...details, loc: "bench", id: i}} /> :
-          <CardSpot key={i} details={{name: "bench", ...details, id: i}} />
+          <CardSpot key={i} details={{...details, loc: "bench", id: i}} />
         })}
       </div>
       <Trash details={details}/>
@@ -497,6 +550,28 @@ function Main({details}){
   )
 }
 
+function Prompt(){
+  const {state, dispatch} = useContext(GameContext);
+  return (
+    state?.pendingEffects && 
+      <div className="hover:opacity-40 transition-all absolute bottom-20 right-20 bg-blue-200 p-2 rounded-md px-10 font-bold">{state.pendingEffects?.prompt ?? "MISSING"}</div>
+  )
+}
+
+function clickValidation({state,loc,id,player}){
+  const spot = (loc == "main") ? state[player][id] : state[player][loc][id];
+
+  const locCheck = (state.pendingEffects.valid.loc == loc);
+  const idCheck = state.pendingEffects.valid.id.includes("all") || state.pendingEffects.valid.id.includes(id);
+  const playerCheck = (state.pendingEffects.valid.player.includes(player));  
+  const nullCheck = ((state.pendingEffects.valid?.empty) || (spot));
+
+  return (nullCheck) && 
+         (locCheck) && 
+         (idCheck) && 
+         (playerCheck)
+}
+
 function App() {
 
   function reducer(state, action) {
@@ -504,6 +579,27 @@ function App() {
 
     if (action.type == 'turn'){
       return iterateGameState(state, action.val);
+    }
+
+    if (state.pendingEffects){
+      if (action.type == "click"){
+        if (clickValidation({...action, state})){
+          console.log("VALIDATION PASSED!")
+          return {...state, pendingEffects: null, 
+            context: {
+              loc: action.loc,
+              id: action.id,
+              player: action.player
+            }
+          }
+
+        } else {
+          console.log("Click failed validation")
+        }
+      }
+
+      console.log("ERROR - please select an option");
+      return state;
     }
 
     // if (action.type == "drawCard"){
@@ -532,12 +628,21 @@ function App() {
       //   return state;
       case 'attack':
         const {cost, name, effects} = action.attack;
-        if (costMatch({cost: cost ?? {}, energyAttached: action?.energyAttached ?? []})){
-          effects.forEach((a) => {
-            state = EFFECTS[a.type]({state: state, target : action.target, ...a})
-          })
-          return state;
-        } 
+        state.effectsQueue.push(...effects);
+        while (state.effectsQueue.length > 0){
+          if (state.pendingEffects!==null){
+            return state;
+          }
+          const effect = state.effectsQueue.shift();
+          state = EFFECTS[effect.type]({state: state, target : action.target, ...effect})
+        }
+        return state;
+        // if (costMatch({cost: cost ?? {}, energyAttached: action?.energyAttached ?? []})){
+        //   effects.forEach((a) => {
+        //     state = EFFECTS[a.type]({state: state, target : action.target, ...a})
+        //   })
+        //   return state;
+        // } 
         console.log("Does not meet requirement for attack!")
         return state;     
       default:
@@ -555,20 +660,23 @@ function App() {
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
+  console.log(state)
+
   return (
     <div className="relative flex gap-5 flex-col justify-center items-center w-full h-screen p-10">
       <GameContext.Provider value={{state, dispatch}}> 
-{/* 
-        <SearchableCards details={{cards: state.p1.deck}}/> */}
+      {/* <SearchableCards details={{cards: state.p1.deck}}/> */}
+
 
         <TurnDebugger/>
 
         <HanDeck details={{player: "p2", flipped: true}}/>
         <BenchTrash details={{player: "p2", flipped: true}}/>
-        <Main details={{player: "p2", flipped: true}}/>
+        <Main details={{player: "p2", loc: "main", flipped: true}}/>
         
-
-        <Main details={{player: "p1"}}/>
+        <Prompt/>
+        
+        <Main details={{player: "p1", loc: "main"}}/>
         <BenchTrash details={{player: "p1"}}/>
         <HanDeck details={{player: "p1"}}/>
 

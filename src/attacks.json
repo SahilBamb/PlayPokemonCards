@@ -18,7 +18,8 @@
         "lightning": 1
       },
       "effects": [
-        { "type": "DEAL_DAMAGE", "amount": 20, "targetPos": "main" }
+        { "type": "PENDING_ACTION", "action": "CHOOSE_TARGET", "targetPos": "choose" },
+        { "type": "DEAL_DAMAGE", "amount": 20, "targetPos": "choose" }
       ]
     }
 }
