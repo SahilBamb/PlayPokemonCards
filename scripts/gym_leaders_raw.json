@@ -1,0 +1,2083 @@
+{
+  "source": "https://pokemon.fandom.com/wiki/Gym_Leader",
+  "scrapedAt": "2026-07-19T06:12:53.298Z",
+  "tables": [
+    {
+      "region": "Kanto",
+      "variant": null,
+      "headers": [
+        "number",
+        "image",
+        "name",
+        "location",
+        "gym",
+        "type",
+        "badge",
+        "games"
+      ],
+      "count": 10
+    },
+    {
+      "region": "Johto",
+      "variant": null,
+      "headers": [
+        "number",
+        "image",
+        "name",
+        "location",
+        "gym",
+        "type",
+        "badge"
+      ],
+      "count": 8
+    },
+    {
+      "region": "Hoenn",
+      "variant": null,
+      "headers": [
+        "number",
+        "image",
+        "name",
+        "location",
+        "gym",
+        "type",
+        "badge"
+      ],
+      "count": 9
+    },
+    {
+      "region": "Sinnoh",
+      "variant": null,
+      "headers": [
+        "number",
+        "image",
+        "name",
+        "location",
+        "gym",
+        "type",
+        "badge"
+      ],
+      "count": 8
+    },
+    {
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "headers": [
+        "number",
+        "image",
+        "name",
+        "location",
+        "gym",
+        "type",
+        "badge"
+      ],
+      "count": 14
+    },
+    {
+      "region": "Unova",
+      "variant": "Pokémon Black Version 2 and Pokémon White Version 2",
+      "headers": [
+        "number",
+        "image",
+        "name",
+        "location",
+        "gym",
+        "type",
+        "badge"
+      ],
+      "count": 8
+    },
+    {
+      "region": "Kalos",
+      "variant": null,
+      "headers": [
+        "number",
+        "image",
+        "name",
+        "location",
+        "gym",
+        "type",
+        "badge"
+      ],
+      "count": 8
+    },
+    {
+      "region": "Galar",
+      "variant": null,
+      "headers": [
+        "number",
+        "image",
+        "name",
+        "location",
+        "gym",
+        "type",
+        "badge"
+      ],
+      "count": 12
+    },
+    {
+      "region": "Paldea",
+      "variant": null,
+      "headers": [
+        "number",
+        "image",
+        "name",
+        "location",
+        "gym",
+        "type",
+        "badge"
+      ],
+      "count": 8
+    },
+    {
+      "region": "Orange Islands",
+      "variant": null,
+      "headers": [
+        "number",
+        "image",
+        "name",
+        "location",
+        "gym",
+        "badge"
+      ],
+      "count": 4
+    }
+  ],
+  "leaders": [
+    {
+      "id": "kanto-brock",
+      "region": "Kanto",
+      "variant": null,
+      "number": 1,
+      "name": "Brock",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Brock",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/1/13/Brock_Let%27s_Go%2C_Pikachu%21_and_Let%27s_Go%2C_Eevee%21.png/revision/latest",
+      "location": "Pewter City",
+      "locationUrl": null,
+      "gym": "Pewter City Gym",
+      "gymUrl": null,
+      "type": "Rock",
+      "badge": {
+        "name": "Boulder Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/d/dd/Boulder_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Boulder_Badge"
+      },
+      "games": [
+        "Pokémon Red Version and Pokémon Blue Version",
+        "Pokémon Yellow Version: Special Pikachu Edition",
+        "Pokémon Gold Version and Pokémon Silver Version",
+        "Pokémon Crystal Version",
+        "Pokémon FireRed Version and Pokémon LeafGreen Version",
+        "Pokémon HeartGold Version and Pokémon SoulSilver Version",
+        "Pokémon: Let's Go, Pikachu! and Pokémon: Let's Go, Eevee!"
+      ],
+      "notes": null
+    },
+    {
+      "id": "kanto-misty",
+      "region": "Kanto",
+      "variant": null,
+      "number": 2,
+      "name": "Misty",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Misty",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/2/25/Misty_Let%27s_Go%2C_Pikachu%21_and_Let%27s_Go%2C_Eevee%21.png/revision/latest",
+      "location": "Cerulean City",
+      "locationUrl": null,
+      "gym": "Cerulean City Gym",
+      "gymUrl": null,
+      "type": "Water",
+      "badge": {
+        "name": "Cascade Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/9/9c/Cascade_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Cascade_Badge"
+      },
+      "games": [
+        "Pokémon Red Version and Pokémon Blue Version",
+        "Pokémon Yellow Version: Special Pikachu Edition",
+        "Pokémon Gold Version and Pokémon Silver Version",
+        "Pokémon Crystal Version",
+        "Pokémon FireRed Version and Pokémon LeafGreen Version",
+        "Pokémon HeartGold Version and Pokémon SoulSilver Version",
+        "Pokémon: Let's Go, Pikachu! and Pokémon: Let's Go, Eevee!"
+      ],
+      "notes": null
+    },
+    {
+      "id": "kanto-lt-surge",
+      "region": "Kanto",
+      "variant": null,
+      "number": 3,
+      "name": "Lt. Surge",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Lt._Surge",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/1/16/Lt._Surge_Let%27s_Go%2C_Pikachu%21_and_Let%27s_Go%2C_Eevee%21.png/revision/latest",
+      "location": "Vermilion City",
+      "locationUrl": null,
+      "gym": "Vermilion City Gym",
+      "gymUrl": null,
+      "type": "Electric",
+      "badge": {
+        "name": "Thunder Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/a/a6/Thunder_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Thunder_Badge"
+      },
+      "games": [
+        "Pokémon Red Version and Pokémon Blue Version",
+        "Pokémon Yellow Version: Special Pikachu Edition",
+        "Pokémon Gold Version and Pokémon Silver Version",
+        "Pokémon Crystal Version",
+        "Pokémon FireRed Version and Pokémon LeafGreen Version",
+        "Pokémon HeartGold Version and Pokémon SoulSilver Version",
+        "Pokémon: Let's Go, Pikachu! and Pokémon: Let's Go, Eevee!"
+      ],
+      "notes": null
+    },
+    {
+      "id": "kanto-erika",
+      "region": "Kanto",
+      "variant": null,
+      "number": 4,
+      "name": "Erika",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Erika",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/b/b7/Erika_Let%27s_Go%2C_Pikachu%21_and_Let%27s_Go%2C_Eevee%21.png/revision/latest",
+      "location": "Celadon City",
+      "locationUrl": null,
+      "gym": "Celadon City Gym",
+      "gymUrl": null,
+      "type": "Grass",
+      "badge": {
+        "name": "Rainbow Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/b/b5/Rainbow_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Rainbow_Badge"
+      },
+      "games": [
+        "Pokémon Red Version and Pokémon Blue Version",
+        "Pokémon Yellow Version: Special Pikachu Edition",
+        "Pokémon Gold Version and Pokémon Silver Version",
+        "Pokémon Crystal Version",
+        "Pokémon FireRed Version and Pokémon LeafGreen Version",
+        "Pokémon HeartGold Version and Pokémon SoulSilver Version",
+        "Pokémon: Let's Go, Pikachu! and Pokémon: Let's Go, Eevee!"
+      ],
+      "notes": null
+    },
+    {
+      "id": "kanto-koga",
+      "region": "Kanto",
+      "variant": null,
+      "number": 5,
+      "name": "Koga",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Koga",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/e/eb/Koga_Let%27s_Go%2C_Pikachu%21_and_Let%27s_Go%2C_Eevee%21.png/revision/latest",
+      "location": "Fuchsia City",
+      "locationUrl": null,
+      "gym": "Fuchsia City Gym",
+      "gymUrl": null,
+      "type": "Poison",
+      "badge": {
+        "name": "Soul Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/7/7d/Soul_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Soul_Badge"
+      },
+      "games": [
+        "Pokémon Red Version and Pokémon Blue Version",
+        "Pokémon Yellow Version: Special Pikachu Edition",
+        "Pokémon FireRed Version and Pokémon LeafGreen Version",
+        "Pokémon: Let's Go, Pikachu! and Pokémon: Let's Go, Eevee!"
+      ],
+      "notes": null
+    },
+    {
+      "id": "kanto-janine",
+      "region": "Kanto",
+      "variant": null,
+      "number": 5,
+      "name": "Janine",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Janine",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/d/d7/Janine_HeartGold_and_SoulSilver.png/revision/latest",
+      "location": "Fuchsia City",
+      "locationUrl": null,
+      "gym": "Fuchsia City Gym",
+      "gymUrl": null,
+      "type": "Poison",
+      "badge": {
+        "name": "Soul Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/7/7d/Soul_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Soul_Badge"
+      },
+      "games": [
+        "Pokémon Gold Version and Pokémon Silver Version",
+        "Pokémon Crystal Version",
+        "Pokémon HeartGold Version and Pokémon SoulSilver Version"
+      ],
+      "notes": null
+    },
+    {
+      "id": "kanto-sabrina",
+      "region": "Kanto",
+      "variant": null,
+      "number": 6,
+      "name": "Sabrina",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Sabrina",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/2/28/Sabrina_Let%27s_Go%2C_Pikachu%21_and_Let%27s_Go%2C_Eevee%21.png/revision/latest",
+      "location": "Saffron City",
+      "locationUrl": null,
+      "gym": "Saffron City Gym",
+      "gymUrl": null,
+      "type": "Psychic",
+      "badge": {
+        "name": "Marsh Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/6/6b/Marsh_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Marsh_Badge"
+      },
+      "games": [
+        "Pokémon Red Version and Pokémon Blue Version",
+        "Pokémon Yellow Version: Special Pikachu Edition",
+        "Pokémon Gold Version and Pokémon Silver Version",
+        "Pokémon Crystal Version",
+        "Pokémon FireRed Version and Pokémon LeafGreen Version",
+        "Pokémon HeartGold Version and Pokémon SoulSilver Version",
+        "Pokémon: Let's Go, Pikachu! and Pokémon: Let's Go, Eevee!"
+      ],
+      "notes": null
+    },
+    {
+      "id": "kanto-blaine",
+      "region": "Kanto",
+      "variant": null,
+      "number": 7,
+      "name": "Blaine",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Blaine",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/1/18/Blaine_Let%27s_Go%2C_Pikachu%21_and_Let%27s_Go%2C_Eevee%21.png/revision/latest",
+      "location": "Cinnabar Island",
+      "locationUrl": null,
+      "gym": "Cinnabar Island Gym",
+      "gymUrl": null,
+      "type": "Fire",
+      "badge": {
+        "name": "Volcano Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/1/12/Volcano_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Volcano_Badge"
+      },
+      "games": [
+        "Pokémon Red Version and Pokémon Blue Version",
+        "Pokémon Yellow Version: Special Pikachu Edition",
+        "Pokémon Gold Version and Pokémon Silver Version",
+        "Pokémon Crystal Version",
+        "Pokémon FireRed Version and Pokémon LeafGreen Version",
+        "Pokémon HeartGold Version and Pokémon SoulSilver Version",
+        "Pokémon: Let's Go, Pikachu! and Pokémon: Let's Go, Eevee!"
+      ],
+      "notes": null
+    },
+    {
+      "id": "kanto-giovanni",
+      "region": "Kanto",
+      "variant": null,
+      "number": 8,
+      "name": "Giovanni",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Giovanni",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/a/a8/Giovanni_Let%27s_Go%2C_Pikachu%21_and_Let%27s_Go%2C_Eevee%21.png/revision/latest",
+      "location": "Viridian City",
+      "locationUrl": null,
+      "gym": "Viridian City Gym",
+      "gymUrl": null,
+      "type": "Ground",
+      "badge": {
+        "name": "Earth Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/7/78/Earth_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Earth_Badge"
+      },
+      "games": [
+        "Pokémon Red Version and Pokémon Blue Version",
+        "Pokémon Yellow Version: Special Pikachu Edition",
+        "Pokémon FireRed Version and Pokémon LeafGreen Version",
+        "Pokémon: Let's Go, Pikachu! and Pokémon: Let's Go, Eevee!"
+      ],
+      "notes": null
+    },
+    {
+      "id": "kanto-blue",
+      "region": "Kanto",
+      "variant": null,
+      "number": 8,
+      "name": "Blue",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Blue",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/e/eb/Blue_HeartGold_and_SoulSilver.png/revision/latest",
+      "location": "Viridian City",
+      "locationUrl": null,
+      "gym": "Viridian City Gym",
+      "gymUrl": null,
+      "type": "Ground",
+      "badge": {
+        "name": "Earth Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/7/78/Earth_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Earth_Badge"
+      },
+      "games": [
+        "Pokémon Gold Version and Pokémon Silver Version",
+        "Pokémon Crystal Version",
+        "Pokémon HeartGold Version and Pokémon SoulSilver Version"
+      ],
+      "notes": null
+    },
+    {
+      "id": "johto-falkner",
+      "region": "Johto",
+      "variant": null,
+      "number": 1,
+      "name": "Falkner",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Falkner",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/0/01/Falkner_HeartGold_and_SoulSilver.png/revision/latest",
+      "location": "Violet City",
+      "locationUrl": null,
+      "gym": "Violet City Gym",
+      "gymUrl": null,
+      "type": "Flying",
+      "badge": {
+        "name": "Zephyr Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/4/4a/Zephyr_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Zephyr_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "johto-bugsy",
+      "region": "Johto",
+      "variant": null,
+      "number": 2,
+      "name": "Bugsy",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Bugsy",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/e/e5/Bugsy_HeartGold_and_SoulSilver.png/revision/latest",
+      "location": "Azalea Town",
+      "locationUrl": null,
+      "gym": "Azalea Town Gym",
+      "gymUrl": null,
+      "type": "Bug",
+      "badge": {
+        "name": "Hive Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/0/08/Hive_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Hive_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "johto-whitney",
+      "region": "Johto",
+      "variant": null,
+      "number": 3,
+      "name": "Whitney",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Whitney",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/7/70/Whitney_HeartGold_and_SoulSilver.png/revision/latest",
+      "location": "Goldenrod City",
+      "locationUrl": null,
+      "gym": "Goldenrod City Gym",
+      "gymUrl": null,
+      "type": "Normal",
+      "badge": {
+        "name": "Plain Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/a/a7/Plain_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Plain_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "johto-morty",
+      "region": "Johto",
+      "variant": null,
+      "number": 4,
+      "name": "Morty",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Morty",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/8/8a/Morty_HeartGold_and_SoulSilver.png/revision/latest",
+      "location": "Ecruteak City",
+      "locationUrl": null,
+      "gym": "Ecruteak City Gym",
+      "gymUrl": null,
+      "type": "Ghost",
+      "badge": {
+        "name": "Fog Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/4/48/Fog_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Fog_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "johto-chuck",
+      "region": "Johto",
+      "variant": null,
+      "number": 5,
+      "name": "Chuck",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Chuck",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/b/bd/Chuck_HeartGold_and_SoulSilver.png/revision/latest",
+      "location": "Cianwood City",
+      "locationUrl": null,
+      "gym": "Cianwood City Gym",
+      "gymUrl": null,
+      "type": "Fighting",
+      "badge": {
+        "name": "Storm Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/b/b9/Storm_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Storm_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "johto-jasmine",
+      "region": "Johto",
+      "variant": null,
+      "number": 6,
+      "name": "Jasmine",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Jasmine",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/e/e5/Jasmine_HeartGold_and_SoulSilver.png/revision/latest",
+      "location": "Olivine City",
+      "locationUrl": null,
+      "gym": "Olivine City Gym",
+      "gymUrl": null,
+      "type": "Steel",
+      "badge": {
+        "name": "Mineral Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/7/7b/Mineral_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Mineral_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "johto-pryce",
+      "region": "Johto",
+      "variant": null,
+      "number": 7,
+      "name": "Pryce",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Pryce",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/4/46/Pryce_HeartGold_and_SoulSilver.png/revision/latest",
+      "location": "Mahogany Town",
+      "locationUrl": null,
+      "gym": "Mahogany Town Gym",
+      "gymUrl": null,
+      "type": "Ice",
+      "badge": {
+        "name": "Glacier Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/e/e6/Glacier_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Glacier_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "johto-clair",
+      "region": "Johto",
+      "variant": null,
+      "number": 8,
+      "name": "Clair",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Clair",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/4/4e/Clair_HeartGold_and_SoulSilver.png/revision/latest",
+      "location": "Blackthorn City",
+      "locationUrl": null,
+      "gym": "Blackthorn City Gym",
+      "gymUrl": null,
+      "type": "Dragon",
+      "badge": {
+        "name": "Rising Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/5/58/Rising_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Rising_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "hoenn-roxanne",
+      "region": "Hoenn",
+      "variant": null,
+      "number": 1,
+      "name": "Roxanne",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Roxanne",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/e/ef/Roxanne_Omega_Ruby_and_Alpha_Sapphire.png/revision/latest",
+      "location": "Rustboro City",
+      "locationUrl": null,
+      "gym": "Rustboro City Gym",
+      "gymUrl": null,
+      "type": "Rock",
+      "badge": {
+        "name": "Stone Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/6/63/Stone_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Stone_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "hoenn-brawly",
+      "region": "Hoenn",
+      "variant": null,
+      "number": 2,
+      "name": "Brawly",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Brawly",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/d/d1/Brawly_Omega_Ruby_and_Alpha_Sapphire.png/revision/latest",
+      "location": "Dewford Town",
+      "locationUrl": null,
+      "gym": "Dewford Town Gym",
+      "gymUrl": null,
+      "type": "Fighting",
+      "badge": {
+        "name": "Knuckle Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/9/97/Knuckle_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Knuckle_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "hoenn-wattson",
+      "region": "Hoenn",
+      "variant": null,
+      "number": 3,
+      "name": "Wattson",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Wattson",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/a/a0/Wattson_Omega_Ruby_and_Alpha_Sapphire.png/revision/latest",
+      "location": "Mauville City",
+      "locationUrl": null,
+      "gym": "Mauville City Gym",
+      "gymUrl": null,
+      "type": "Electric",
+      "badge": {
+        "name": "Dynamo Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/3/34/Dynamo_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Dynamo_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "hoenn-flannery",
+      "region": "Hoenn",
+      "variant": null,
+      "number": 4,
+      "name": "Flannery",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Flannery",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/2/28/Flannery_Omega_Ruby_and_Alpha_Sapphire.png/revision/latest",
+      "location": "Lavaridge Town",
+      "locationUrl": null,
+      "gym": "Lavaridge Town Gym",
+      "gymUrl": null,
+      "type": "Fire",
+      "badge": {
+        "name": "Heat Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/c/c4/Heat_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Heat_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "hoenn-norman",
+      "region": "Hoenn",
+      "variant": null,
+      "number": 5,
+      "name": "Norman",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Norman",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/c/c9/Norman_Omega_Ruby_and_Alpha_Sapphire.png/revision/latest",
+      "location": "Petalburg City",
+      "locationUrl": null,
+      "gym": "Petalburg City Gym",
+      "gymUrl": null,
+      "type": "Normal",
+      "badge": {
+        "name": "Balance Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/6/63/Balance_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Balance_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "hoenn-winona",
+      "region": "Hoenn",
+      "variant": null,
+      "number": 6,
+      "name": "Winona",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Winona",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/f/fb/Winona_Omega_Ruby_and_Alpha_Sapphire.png/revision/latest",
+      "location": "Fortree City",
+      "locationUrl": null,
+      "gym": "Fortree City Gym",
+      "gymUrl": null,
+      "type": "Flying",
+      "badge": {
+        "name": "Feather Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/6/62/Feather_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Feather_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "hoenn-tate-and-liza",
+      "region": "Hoenn",
+      "variant": null,
+      "number": 7,
+      "name": "Tate and Liza",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Tate_and_Liza",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/7/7c/Tate_and_Liza_Omega_Ruby_and_Alpha_Sapphire.png/revision/latest",
+      "location": "Mossdeep City",
+      "locationUrl": null,
+      "gym": "Mossdeep City Gym",
+      "gymUrl": null,
+      "type": "Psychic",
+      "badge": {
+        "name": "Mind Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/c/cc/Mind_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Mind_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "hoenn-wallace",
+      "region": "Hoenn",
+      "variant": null,
+      "number": 8,
+      "name": "Wallace",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Wallace",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/6/64/Wallace_Omega_Ruby_and_Alpha_Sapphire.png/revision/latest",
+      "location": "Sootopolis City",
+      "locationUrl": null,
+      "gym": "Sootopolis City Gym",
+      "gymUrl": null,
+      "type": "Water",
+      "badge": {
+        "name": "Rain Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/9/9b/Rain_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Rain_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "hoenn-juan",
+      "region": "Hoenn",
+      "variant": null,
+      "number": 8,
+      "name": "Juan",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Juan",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/e/e0/Juan.png/revision/latest",
+      "location": "Sootopolis City",
+      "locationUrl": null,
+      "gym": "Sootopolis City Gym",
+      "gymUrl": null,
+      "type": "Water",
+      "badge": {
+        "name": "Rain Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/9/9b/Rain_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Rain_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "sinnoh-roark",
+      "region": "Sinnoh",
+      "variant": null,
+      "number": 1,
+      "name": "Roark",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Roark",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/f/f4/Roark_Brilliant_Diamond_and_Shining_Pearl.png/revision/latest",
+      "location": "Oreburgh City",
+      "locationUrl": null,
+      "gym": "Oreburgh City Gym",
+      "gymUrl": null,
+      "type": "Rock",
+      "badge": {
+        "name": "Coal Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/0/0b/Coal_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Coal_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "sinnoh-gardenia",
+      "region": "Sinnoh",
+      "variant": null,
+      "number": 2,
+      "name": "Gardenia",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Gardenia",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/0/03/Gardenia_Brilliant_Diamond_and_Shining_Pearl.png/revision/latest",
+      "location": "Eterna City",
+      "locationUrl": null,
+      "gym": "Eterna City Gym",
+      "gymUrl": null,
+      "type": "Grass",
+      "badge": {
+        "name": "Forest Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/8/8c/Forest_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Forest_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "sinnoh-maylene",
+      "region": "Sinnoh",
+      "variant": null,
+      "number": 3,
+      "name": "Maylene",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Maylene",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/f/fa/Maylene_Brilliant_Diamond_and_Shining_Pearl.png/revision/latest",
+      "location": "Veilstone City",
+      "locationUrl": null,
+      "gym": "Veilstone City Gym",
+      "gymUrl": null,
+      "type": "Fighting",
+      "badge": {
+        "name": "Cobble Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/2/27/Cobble_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Cobble_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "sinnoh-crasher-wake",
+      "region": "Sinnoh",
+      "variant": null,
+      "number": 4,
+      "name": "Crasher Wake",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Crasher_Wake",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/2/2a/Crasher_Wake_Brilliant_Diamond_and_Shining_Pearl.png/revision/latest",
+      "location": "Pastoria City",
+      "locationUrl": null,
+      "gym": "Pastoria City Gym",
+      "gymUrl": null,
+      "type": "Water",
+      "badge": {
+        "name": "Fen Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/1/13/Fen_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Fen_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "sinnoh-fantina",
+      "region": "Sinnoh",
+      "variant": null,
+      "number": 5,
+      "name": "Fantina",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Fantina",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/c/c0/Fantina_Brilliant_Diamond_and_Shining_Pearl.png/revision/latest",
+      "location": "Hearthome City",
+      "locationUrl": null,
+      "gym": "Hearthome City Gym",
+      "gymUrl": null,
+      "type": "Ghost",
+      "badge": {
+        "name": "Relic Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/2/28/Relic_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Relic_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "sinnoh-byron",
+      "region": "Sinnoh",
+      "variant": null,
+      "number": 6,
+      "name": "Byron",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Byron",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/1/14/Byron_Brilliant_Diamond_and_Shining_Pearl.png/revision/latest",
+      "location": "Canalave City",
+      "locationUrl": null,
+      "gym": "Canalave City Gym",
+      "gymUrl": null,
+      "type": "Steel",
+      "badge": {
+        "name": "Mine Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/f/fe/Mine_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Mine_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "sinnoh-candice",
+      "region": "Sinnoh",
+      "variant": null,
+      "number": 7,
+      "name": "Candice",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Candice",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/e/ef/Candice_Brilliant_Diamond_and_Shining_Pearl.png/revision/latest",
+      "location": "Snowpoint City",
+      "locationUrl": null,
+      "gym": "Snowpoint City Gym",
+      "gymUrl": null,
+      "type": "Ice",
+      "badge": {
+        "name": "Icicle Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/0/09/Icicle_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Icicle_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "sinnoh-volkner",
+      "region": "Sinnoh",
+      "variant": null,
+      "number": 8,
+      "name": "Volkner",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Volkner",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/2/2c/Volkner_Brilliant_Diamond_and_Shining_Pearl.png/revision/latest",
+      "location": "Sunyshore City",
+      "locationUrl": null,
+      "gym": "Sunyshore City Gym",
+      "gymUrl": null,
+      "type": "Electric",
+      "badge": {
+        "name": "Beacon Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/0/0c/Beacon_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Beacon_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "unova-pokemon-black-version-and-pokemon-white-version-cilan",
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "number": 1,
+      "name": "Cilan",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Cilan",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/7/79/Cilan.png/revision/latest",
+      "location": "Striaton City",
+      "locationUrl": null,
+      "gym": "Striaton City Gym",
+      "gymUrl": null,
+      "type": "Grass",
+      "badge": {
+        "name": "Trio Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/7/74/Trio_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Trio_Badge"
+      },
+      "games": [],
+      "notes": "If the player chose Oshawott"
+    },
+    {
+      "id": "unova-pokemon-black-version-and-pokemon-white-version-oshawott",
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "number": 1,
+      "name": "Oshawott",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Oshawott",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/7/79/Cilan.png/revision/latest",
+      "location": "Striaton City",
+      "locationUrl": null,
+      "gym": "Striaton City Gym",
+      "gymUrl": null,
+      "type": "Grass",
+      "badge": {
+        "name": "Trio Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/7/74/Trio_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Trio_Badge"
+      },
+      "games": [],
+      "notes": "If the player chose Oshawott"
+    },
+    {
+      "id": "unova-pokemon-black-version-and-pokemon-white-version-chili",
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "number": 1,
+      "name": "Chili",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Chili",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/d/de/Chili.png/revision/latest",
+      "location": "Striaton City",
+      "locationUrl": null,
+      "gym": "Striaton City Gym",
+      "gymUrl": null,
+      "type": "Fire",
+      "badge": {
+        "name": "Trio Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/7/74/Trio_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Trio_Badge"
+      },
+      "games": [],
+      "notes": "If the player chose Snivy"
+    },
+    {
+      "id": "unova-pokemon-black-version-and-pokemon-white-version-snivy",
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "number": 1,
+      "name": "Snivy",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Snivy",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/d/de/Chili.png/revision/latest",
+      "location": "Striaton City",
+      "locationUrl": null,
+      "gym": "Striaton City Gym",
+      "gymUrl": null,
+      "type": "Fire",
+      "badge": {
+        "name": "Trio Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/7/74/Trio_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Trio_Badge"
+      },
+      "games": [],
+      "notes": "If the player chose Snivy"
+    },
+    {
+      "id": "unova-pokemon-black-version-and-pokemon-white-version-cress",
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "number": 1,
+      "name": "Cress",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Cress",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/4/42/Cress.png/revision/latest",
+      "location": "Striaton City",
+      "locationUrl": null,
+      "gym": "Striaton City Gym",
+      "gymUrl": null,
+      "type": "Water",
+      "badge": {
+        "name": "Trio Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/7/74/Trio_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Trio_Badge"
+      },
+      "games": [],
+      "notes": "If the player chose Tepig"
+    },
+    {
+      "id": "unova-pokemon-black-version-and-pokemon-white-version-tepig",
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "number": 1,
+      "name": "Tepig",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Tepig",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/4/42/Cress.png/revision/latest",
+      "location": "Striaton City",
+      "locationUrl": null,
+      "gym": "Striaton City Gym",
+      "gymUrl": null,
+      "type": "Water",
+      "badge": {
+        "name": "Trio Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/7/74/Trio_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Trio_Badge"
+      },
+      "games": [],
+      "notes": "If the player chose Tepig"
+    },
+    {
+      "id": "unova-pokemon-black-version-and-pokemon-white-version-lenora",
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "number": 2,
+      "name": "Lenora",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Lenora",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/8/85/Lenora.png/revision/latest",
+      "location": "Nacrene City",
+      "locationUrl": null,
+      "gym": "Nacrene City Gym",
+      "gymUrl": null,
+      "type": "Normal",
+      "badge": {
+        "name": "Basic Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/8/85/Basic_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Basic_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "unova-pokemon-black-version-and-pokemon-white-version-burgh",
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "number": 3,
+      "name": "Burgh",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Burgh",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/6/6d/Burgh.png/revision/latest",
+      "location": "Castelia City",
+      "locationUrl": null,
+      "gym": "Castelia City Gym",
+      "gymUrl": null,
+      "type": "Bug",
+      "badge": {
+        "name": "Insect Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/8/8a/Insect_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Insect_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "unova-pokemon-black-version-and-pokemon-white-version-elesa",
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "number": 4,
+      "name": "Elesa",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Elesa",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/4/44/Elesa_Black_and_White.png/revision/latest",
+      "location": "Nimbasa City",
+      "locationUrl": null,
+      "gym": "Nimbasa City Gym",
+      "gymUrl": null,
+      "type": "Electric",
+      "badge": {
+        "name": "Bolt Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/5/5b/Bolt_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Bolt_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "unova-pokemon-black-version-and-pokemon-white-version-clay",
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "number": 5,
+      "name": "Clay",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Clay",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/a/a2/Clay.png/revision/latest",
+      "location": "Driftveil City",
+      "locationUrl": null,
+      "gym": "Driftveil City Gym",
+      "gymUrl": null,
+      "type": "Ground",
+      "badge": {
+        "name": "Quake Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/2/29/Quake_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Quake_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "unova-pokemon-black-version-and-pokemon-white-version-skyla",
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "number": 6,
+      "name": "Skyla",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Skyla",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/9/9f/Skyla.png/revision/latest",
+      "location": "Mistralton City",
+      "locationUrl": null,
+      "gym": "Mistralton City Gym",
+      "gymUrl": null,
+      "type": "Flying",
+      "badge": {
+        "name": "Jet Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/9/9c/Jet_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Jet_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "unova-pokemon-black-version-and-pokemon-white-version-brycen",
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "number": 7,
+      "name": "Brycen",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Brycen",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/1/12/Brycen.png/revision/latest",
+      "location": "Icirrus City",
+      "locationUrl": null,
+      "gym": "Icirrus City Gym",
+      "gymUrl": null,
+      "type": "Ice",
+      "badge": {
+        "name": "Freeze Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/a/ac/Freeze_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Freeze_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "unova-pokemon-black-version-and-pokemon-white-version-drayden",
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "number": 8,
+      "name": "Drayden",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Drayden",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/e/ee/Drayden.png/revision/latest",
+      "location": "Opelucid City",
+      "locationUrl": null,
+      "gym": "Opelucid City Gym",
+      "gymUrl": null,
+      "type": "Dragon",
+      "badge": {
+        "name": "Legend Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/c/c0/Legend_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Legend_Badge"
+      },
+      "games": [],
+      "notes": "Pokémon Black Version only"
+    },
+    {
+      "id": "unova-pokemon-black-version-and-pokemon-white-version-iris",
+      "region": "Unova",
+      "variant": "Pokémon Black Version and Pokémon White Version",
+      "number": 8,
+      "name": "Iris",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Iris",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/0/07/Iris_Black_and_White.png/revision/latest",
+      "location": "Opelucid City",
+      "locationUrl": null,
+      "gym": "Opelucid City Gym",
+      "gymUrl": null,
+      "type": "Dragon",
+      "badge": {
+        "name": "Legend Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/c/c0/Legend_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Legend_Badge"
+      },
+      "games": [],
+      "notes": "Pokémon White Version only"
+    },
+    {
+      "id": "unova-pokemon-black-version-2-and-pokemon-white-version-2-cheren",
+      "region": "Unova",
+      "variant": "Pokémon Black Version 2 and Pokémon White Version 2",
+      "number": 1,
+      "name": "Cheren",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Cheren",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/8/84/Cheren_Black_2_and_White_2.png/revision/latest",
+      "location": "Aspertia City",
+      "locationUrl": null,
+      "gym": "Aspertia City Gym",
+      "gymUrl": null,
+      "type": "Normal",
+      "badge": {
+        "name": "Basic Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/8/85/Basic_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Basic_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "unova-pokemon-black-version-2-and-pokemon-white-version-2-roxie",
+      "region": "Unova",
+      "variant": "Pokémon Black Version 2 and Pokémon White Version 2",
+      "number": 2,
+      "name": "Roxie",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Roxie",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/3/39/Roxie.png/revision/latest",
+      "location": "Virbank City",
+      "locationUrl": null,
+      "gym": "Virbank City Gym",
+      "gymUrl": null,
+      "type": "Poison",
+      "badge": {
+        "name": "Toxic Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/3/3e/Toxic_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Toxic_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "unova-pokemon-black-version-2-and-pokemon-white-version-2-burgh",
+      "region": "Unova",
+      "variant": "Pokémon Black Version 2 and Pokémon White Version 2",
+      "number": 3,
+      "name": "Burgh",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Burgh",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/6/6d/Burgh.png/revision/latest",
+      "location": "Castelia City",
+      "locationUrl": null,
+      "gym": "Castelia City Gym",
+      "gymUrl": null,
+      "type": "Bug",
+      "badge": {
+        "name": "Insect Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/8/8a/Insect_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Insect_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "unova-pokemon-black-version-2-and-pokemon-white-version-2-elesa",
+      "region": "Unova",
+      "variant": "Pokémon Black Version 2 and Pokémon White Version 2",
+      "number": 4,
+      "name": "Elesa",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Elesa",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/4/40/Elesa_Black_2_and_White_2.png/revision/latest",
+      "location": "Nimbasa City",
+      "locationUrl": null,
+      "gym": "Nimbasa City Gym",
+      "gymUrl": null,
+      "type": "Electric",
+      "badge": {
+        "name": "Bolt Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/5/5b/Bolt_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Bolt_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "unova-pokemon-black-version-2-and-pokemon-white-version-2-clay",
+      "region": "Unova",
+      "variant": "Pokémon Black Version 2 and Pokémon White Version 2",
+      "number": 5,
+      "name": "Clay",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Clay",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/a/a2/Clay.png/revision/latest",
+      "location": "Driftveil City",
+      "locationUrl": null,
+      "gym": "Driftveil City Gym",
+      "gymUrl": null,
+      "type": "Ground",
+      "badge": {
+        "name": "Quake Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/2/29/Quake_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Quake_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "unova-pokemon-black-version-2-and-pokemon-white-version-2-skyla",
+      "region": "Unova",
+      "variant": "Pokémon Black Version 2 and Pokémon White Version 2",
+      "number": 6,
+      "name": "Skyla",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Skyla",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/9/9f/Skyla.png/revision/latest",
+      "location": "Mistralton City",
+      "locationUrl": null,
+      "gym": "Mistralton City Gym",
+      "gymUrl": null,
+      "type": "Flying",
+      "badge": {
+        "name": "Jet Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/9/9c/Jet_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Jet_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "unova-pokemon-black-version-2-and-pokemon-white-version-2-drayden",
+      "region": "Unova",
+      "variant": "Pokémon Black Version 2 and Pokémon White Version 2",
+      "number": 7,
+      "name": "Drayden",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Drayden",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/e/ee/Drayden.png/revision/latest",
+      "location": "Opelucid City",
+      "locationUrl": null,
+      "gym": "Opelucid City Gym",
+      "gymUrl": null,
+      "type": "Dragon",
+      "badge": {
+        "name": "Legend Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/c/c0/Legend_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Legend_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "unova-pokemon-black-version-2-and-pokemon-white-version-2-marlon",
+      "region": "Unova",
+      "variant": "Pokémon Black Version 2 and Pokémon White Version 2",
+      "number": 8,
+      "name": "Marlon",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Marlon",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/3/37/Marlon.png/revision/latest",
+      "location": "Humilau City",
+      "locationUrl": null,
+      "gym": "Humilau City Gym",
+      "gymUrl": null,
+      "type": "Water",
+      "badge": {
+        "name": "Wave Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/0/00/Wave_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Wave_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "kalos-viola",
+      "region": "Kalos",
+      "variant": null,
+      "number": 1,
+      "name": "Viola",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Viola",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/4/48/Viola.png/revision/latest",
+      "location": "Santalune City",
+      "locationUrl": null,
+      "gym": "Santalune City Gym",
+      "gymUrl": null,
+      "type": "Bug",
+      "badge": {
+        "name": "Bug Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/3/3c/Bug_Badge_Viola.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "kalos-grant",
+      "region": "Kalos",
+      "variant": null,
+      "number": 2,
+      "name": "Grant",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Grant",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/1/16/Grant.png/revision/latest",
+      "location": "Cyllage City",
+      "locationUrl": null,
+      "gym": "Cyllage City Gym",
+      "gymUrl": null,
+      "type": "Rock",
+      "badge": {
+        "name": "Cliff Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/3/39/Cliff_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Cliff_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "kalos-korrina",
+      "region": "Kalos",
+      "variant": null,
+      "number": 3,
+      "name": "Korrina",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Korrina",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/1/13/Korrina.png/revision/latest",
+      "location": "Shalour City",
+      "locationUrl": null,
+      "gym": "Shalour City Gym",
+      "gymUrl": null,
+      "type": "Fighting",
+      "badge": {
+        "name": "Rumble Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/d/d4/Rumble_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Rumble_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "kalos-ramos",
+      "region": "Kalos",
+      "variant": null,
+      "number": 4,
+      "name": "Ramos",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Ramos",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/d/dd/Ramos.png/revision/latest",
+      "location": "Coumarine City",
+      "locationUrl": null,
+      "gym": "Coumarine City Gym",
+      "gymUrl": null,
+      "type": "Grass",
+      "badge": {
+        "name": "Plant Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/7/7d/Plant_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Plant_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "kalos-clemont",
+      "region": "Kalos",
+      "variant": null,
+      "number": 5,
+      "name": "Clemont",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Clemont",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/4/49/Clemont.png/revision/latest",
+      "location": "Lumiose City",
+      "locationUrl": null,
+      "gym": "Lumiose City Gym",
+      "gymUrl": null,
+      "type": "Electric",
+      "badge": {
+        "name": "Voltage Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/f/fc/Voltage_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Voltage_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "kalos-valerie",
+      "region": "Kalos",
+      "variant": null,
+      "number": 6,
+      "name": "Valerie",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Valerie",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/3/3f/Valerie.png/revision/latest",
+      "location": "Laverre City",
+      "locationUrl": null,
+      "gym": "Laverre City Gym",
+      "gymUrl": null,
+      "type": "Fairy",
+      "badge": {
+        "name": "Fairy Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/b/bb/Fairy_Badge_XY.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "kalos-olympia",
+      "region": "Kalos",
+      "variant": null,
+      "number": 7,
+      "name": "Olympia",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Olympia",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/a/a2/Olympia.png/revision/latest",
+      "location": "Anistar City",
+      "locationUrl": null,
+      "gym": "Anistar City Gym",
+      "gymUrl": null,
+      "type": "Psychic",
+      "badge": {
+        "name": "Psychic Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/1/13/Psychic_Badge.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "kalos-wulfric",
+      "region": "Kalos",
+      "variant": null,
+      "number": 8,
+      "name": "Wulfric",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Wulfric",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/b/b6/Wulfric.png/revision/latest",
+      "location": "Snowbelle City",
+      "locationUrl": null,
+      "gym": "Snowbelle City Gym",
+      "gymUrl": null,
+      "type": "Ice",
+      "badge": {
+        "name": "Iceberg Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/8/84/Iceberg_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Iceberg_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "galar-milo",
+      "region": "Galar",
+      "variant": null,
+      "number": 1,
+      "name": "Milo",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Milo",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/5/5c/Milo.png/revision/latest",
+      "location": "Turffield",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Turffield",
+      "gym": "Turffield Stadium",
+      "gymUrl": null,
+      "type": "Grass",
+      "badge": {
+        "name": "Grass Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/0/00/Grass_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Grass_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "galar-nessa",
+      "region": "Galar",
+      "variant": null,
+      "number": 2,
+      "name": "Nessa",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Nessa",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/a/af/Nessa.png/revision/latest",
+      "location": "Hulbury",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Hulbury",
+      "gym": "Hulbury Stadium",
+      "gymUrl": null,
+      "type": "Water",
+      "badge": {
+        "name": "Water Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/7/7a/Water_Badge.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "galar-kabu",
+      "region": "Galar",
+      "variant": null,
+      "number": 3,
+      "name": "Kabu",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Kabu",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/7/74/Kabu.png/revision/latest",
+      "location": "Motostoke",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Motostoke",
+      "gym": "Motostoke Stadium",
+      "gymUrl": null,
+      "type": "Fire",
+      "badge": {
+        "name": "Fire Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/c/cc/Fire_Badge.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "galar-bea",
+      "region": "Galar",
+      "variant": null,
+      "number": 4,
+      "name": "Bea",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Bea",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/5/5c/Bea.png/revision/latest",
+      "location": "Stow-on-Side",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Stow-on-Side",
+      "gym": "Stow-on-Side Stadium",
+      "gymUrl": null,
+      "type": "Fighting",
+      "badge": {
+        "name": "Fighting Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/2/20/Fighting_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Fighting_Badge"
+      },
+      "games": [],
+      "notes": "Sword only"
+    },
+    {
+      "id": "galar-allister",
+      "region": "Galar",
+      "variant": null,
+      "number": 4,
+      "name": "Allister",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Allister",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/3/38/Allister.png/revision/latest",
+      "location": "Stow-on-Side",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Stow-on-Side",
+      "gym": "Stow-on-Side Stadium",
+      "gymUrl": null,
+      "type": "Ghost",
+      "badge": {
+        "name": "Ghost Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/3/30/Ghost_Badge.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": "Shield only"
+    },
+    {
+      "id": "galar-opal",
+      "region": "Galar",
+      "variant": null,
+      "number": 5,
+      "name": "Opal",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Opal",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/2/23/Opal_Galar.png/revision/latest",
+      "location": "Ballonlea",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Ballonlea",
+      "gym": "Ballonlea Stadium",
+      "gymUrl": null,
+      "type": "Fairy",
+      "badge": {
+        "name": "Fairy Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/d/d1/Fairy_Badge.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "galar-bede",
+      "region": "Galar",
+      "variant": null,
+      "number": 5,
+      "name": "Bede",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Bede",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/4/4f/Bede.png/revision/latest",
+      "location": "Ballonlea",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Ballonlea",
+      "gym": "Ballonlea Stadium",
+      "gymUrl": null,
+      "type": "Fairy",
+      "badge": {
+        "name": "Fairy Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/d/d1/Fairy_Badge.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": "post-game"
+    },
+    {
+      "id": "galar-gordie",
+      "region": "Galar",
+      "variant": null,
+      "number": 6,
+      "name": "Gordie",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Gordie",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/e/e0/Gordie.png/revision/latest",
+      "location": "Circhester",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Circhester",
+      "gym": "Circhester Stadium",
+      "gymUrl": null,
+      "type": "Rock",
+      "badge": {
+        "name": "Rock Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/3/3e/Rock_Badge.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": "Sword only"
+    },
+    {
+      "id": "galar-melony",
+      "region": "Galar",
+      "variant": null,
+      "number": 6,
+      "name": "Melony",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Melony",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/8/88/Melony.png/revision/latest",
+      "location": "Circhester",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Circhester",
+      "gym": "Circhester Stadium",
+      "gymUrl": null,
+      "type": "Ice",
+      "badge": {
+        "name": "Ice Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/4/43/Ice_Badge.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": "Shield only"
+    },
+    {
+      "id": "galar-piers",
+      "region": "Galar",
+      "variant": null,
+      "number": 7,
+      "name": "Piers",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Piers",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/b/bb/Piers.png/revision/latest",
+      "location": "Spikemuth",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Spikemuth",
+      "gym": "Spikemuth Stadium",
+      "gymUrl": null,
+      "type": "Dark",
+      "badge": {
+        "name": "Dark Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/4/4d/Dark_Badge.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "galar-marnie",
+      "region": "Galar",
+      "variant": null,
+      "number": 7,
+      "name": "Marnie",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Marnie_(Galar)",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/0/02/Marnie_Galar.png/revision/latest",
+      "location": "Spikemuth",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Spikemuth",
+      "gym": "Spikemuth Stadium",
+      "gymUrl": null,
+      "type": "Dark",
+      "badge": {
+        "name": "Dark Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/4/4d/Dark_Badge.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": "post-game"
+    },
+    {
+      "id": "galar-raihan",
+      "region": "Galar",
+      "variant": null,
+      "number": 8,
+      "name": "Raihan",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Raihan",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/5/54/Raihan.png/revision/latest",
+      "location": "Hammerlocke",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Hammerlocke",
+      "gym": "Hammerlocke Stadium",
+      "gymUrl": null,
+      "type": "Dragon",
+      "badge": {
+        "name": "Dragon Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/2/27/Dragon_Badge.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "paldea-katy",
+      "region": "Paldea",
+      "variant": null,
+      "number": 1,
+      "name": "Katy",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Katy",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/f/fb/Katy.png/revision/latest",
+      "location": "Cortondo",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Cortondo",
+      "gym": "Cortondo Gym",
+      "gymUrl": null,
+      "type": "Bug",
+      "badge": {
+        "name": "Bug Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/0/01/Bug_Badge_SV.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "paldea-brassius",
+      "region": "Paldea",
+      "variant": null,
+      "number": 2,
+      "name": "Brassius",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Brassius",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/6/66/Brassius.png/revision/latest",
+      "location": "Artazon",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Artazon",
+      "gym": "Artazon Gym",
+      "gymUrl": null,
+      "type": "Grass",
+      "badge": {
+        "name": "Grass Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/d/d3/Grass_Badge_SV.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "paldea-iono",
+      "region": "Paldea",
+      "variant": null,
+      "number": 3,
+      "name": "Iono",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Iono",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/6/6f/Iono.png/revision/latest",
+      "location": "Levincia",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Levincia",
+      "gym": "Levincia Gym",
+      "gymUrl": null,
+      "type": "Electric",
+      "badge": {
+        "name": "Electric Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/a/a1/Electric_Badge_SV.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "paldea-kofu",
+      "region": "Paldea",
+      "variant": null,
+      "number": 4,
+      "name": "Kofu",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Kofu",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/5/53/Kofu.png/revision/latest",
+      "location": "Cascarrafa",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Cascarrafa",
+      "gym": "Cascarrafa Gym",
+      "gymUrl": null,
+      "type": "Water",
+      "badge": {
+        "name": "Water Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/6/63/Water_Badge_SV.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "paldea-larry",
+      "region": "Paldea",
+      "variant": null,
+      "number": 5,
+      "name": "Larry",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Larry",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/c/cc/Larry.png/revision/latest",
+      "location": "Medali",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Medali",
+      "gym": "Medali Gym",
+      "gymUrl": null,
+      "type": "Normal",
+      "badge": {
+        "name": "Normal Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/a/ad/Normal_Badge_SV.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "paldea-ryme",
+      "region": "Paldea",
+      "variant": null,
+      "number": 6,
+      "name": "Ryme",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Ryme",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/e/e4/Ryme.png/revision/latest",
+      "location": "Montenevera",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Montenevera",
+      "gym": "Montenevera Gym",
+      "gymUrl": null,
+      "type": "Ghost",
+      "badge": {
+        "name": "Ghost Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/3/39/Ghost_Badge_SV.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "paldea-tulip",
+      "region": "Paldea",
+      "variant": null,
+      "number": 7,
+      "name": "Tulip",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Tulip",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/c/cf/Tulip.png/revision/latest",
+      "location": "Alfornada",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Alfornada",
+      "gym": "Alfornada Gym",
+      "gymUrl": null,
+      "type": "Psychic",
+      "badge": {
+        "name": "Psychic Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/3/36/Psychic_Badge_SV.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "paldea-grusha",
+      "region": "Paldea",
+      "variant": null,
+      "number": 8,
+      "name": "Grusha",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Grusha",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/4/46/Grusha.png/revision/latest",
+      "location": "Glaseado Mountain",
+      "locationUrl": "https://pokemon.fandom.com/wiki/Glaseado_Mountain",
+      "gym": "Glaseado Gym",
+      "gymUrl": null,
+      "type": "Ice",
+      "badge": {
+        "name": "Ice Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/8/81/Ice_Badge_SV.png/revision/latest",
+        "url": null
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "orange-islands-cissy",
+      "region": "Orange Islands",
+      "variant": null,
+      "number": 1,
+      "name": "Cissy",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Cissy",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/7/7c/Cissy.png/revision/latest",
+      "location": "Mikan Island",
+      "locationUrl": null,
+      "gym": "Mikan Gym",
+      "gymUrl": null,
+      "type": null,
+      "badge": {
+        "name": "Coral-Eye Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/8/82/Coral-Eye_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Coral-Eye_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "orange-islands-danny",
+      "region": "Orange Islands",
+      "variant": null,
+      "number": 2,
+      "name": "Danny",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Danny",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/d/dd/Danny_anime.jpg/revision/latest",
+      "location": "Navel Island",
+      "locationUrl": null,
+      "gym": "Navel Gym",
+      "gymUrl": null,
+      "type": null,
+      "badge": {
+        "name": "Sea Ruby Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/c/c6/SeaRuby_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Sea_Ruby_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "orange-islands-rudy",
+      "region": "Orange Islands",
+      "variant": null,
+      "number": 3,
+      "name": "Rudy",
+      "nameUrl": "https://pokemon.fandom.com/wiki/Rudy",
+      "image": "https://static.wikia.nocookie.net/pokemon/images/e/e2/Rudy.png/revision/latest",
+      "location": "Trovita Island",
+      "locationUrl": null,
+      "gym": "Trovita Gym",
+      "gymUrl": null,
+      "type": null,
+      "badge": {
+        "name": "Spike Shell Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/c/c1/SpikeShell_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Spike_Shell_Badge"
+      },
+      "games": [],
+      "notes": null
+    },
+    {
+      "id": "orange-islands-luana",
+      "region": "Orange Islands",
+      "variant": null,
+      "number": 4,
+      "name": "Luana",
+      "nameUrl": null,
+      "image": "https://static.wikia.nocookie.net/pokemon/images/1/13/Luana.jpg/revision/latest",
+      "location": "Kumquat Island",
+      "locationUrl": null,
+      "gym": "Kumquat Gym",
+      "gymUrl": null,
+      "type": null,
+      "badge": {
+        "name": "Jade Star Badge",
+        "image": "https://static.wikia.nocookie.net/pokemon/images/6/66/JadeStar_Badge.png/revision/latest",
+        "url": "https://pokemon.fandom.com/wiki/Jade_Star_Badge"
+      },
+      "games": [],
+      "notes": null
+    }
+  ]
+}

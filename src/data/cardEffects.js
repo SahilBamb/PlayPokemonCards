@@ -78,7 +78,7 @@ export const ATTACK_EFFECTS = {
   'Electric Shock': { effects: [SELF(10, { flip: 1, if: 'tails' })] },
   'Whirlwind': {
     effects: [
-      { type: 'CHOOSE', what: 'pokemon', player: 'opp', zone: 'bench', optional: true, prompt: 'Opponent chooses a Benched Pokémon to switch in' },
+      { type: 'CHOOSE', what: 'pokemon', player: 'opp', zone: 'bench', optional: true, chooser: 'opp', prompt: 'Opponent chooses a Benched Pokémon to switch in' },
       { type: 'SWITCH_ACTIVE', player: 'opp' },
     ],
   },
@@ -181,7 +181,9 @@ export const TRAINER_EFFECTS = {
     MV({ player: 'opp', from: 'hand', to: 'deck', count: 'all', filter: { supertype: 'trainer' }, shuffle: true }),
   ],
   'Pokémon Breeder': [
-    CH_CARDS({ from: 'hand', count: 1, filter: { stage: 'stage2' }, prompt: 'Choose a Stage 2 card from your hand' }),
+    // breederUsable: only offer Stage 2s whose matching Basic is in play and
+    // legal to evolve right now, so the card can't be wasted on nothing.
+    CH_CARDS({ from: 'hand', count: 1, filter: { stage: 'stage2', breederUsable: true }, prompt: 'Choose a Stage 2 card from your hand' }),
     CH_POKE({ player: 'self', zone: 'all', filter: { breederTarget: true }, prompt: 'Choose the matching Basic Pokémon' }),
     { type: 'EVOLVE', useChosenCard: true },
   ],
@@ -211,7 +213,8 @@ export const TRAINER_EFFECTS = {
   'Energy Retrieval': [
     CH_CARDS({ from: 'hand', count: 1, prompt: 'Discard 1 card from your hand' }),
     MV({ from: 'chosen', to: 'discard' }),
-    CH_CARDS({ from: 'discard', upTo: 2, filter: { basicEnergy: true }, prompt: 'Choose up to 2 basic Energy cards from your discard pile' }),
+    // precheck: unplayable unless the discard pile already has basic energy
+    CH_CARDS({ from: 'discard', upTo: 2, filter: { basicEnergy: true }, precheck: true, prompt: 'Choose up to 2 basic Energy cards from your discard pile' }),
     MV({ from: 'chosen', to: 'hand' }),
   ],
   'Full Heal': [{ type: 'CURE_STATUS', target: 'active' }],
@@ -280,6 +283,7 @@ export const POWER_EFFECTS = {
     ],
   },
   'Buzzap': {
+    oncePerTurn: true,
     effects: [
       { type: 'CHOOSE', what: 'type', prompt: 'Choose the energy type Electrode will provide' },
       CH_POKE({ player: 'self', zone: 'all', filter: { notSelf: true }, prompt: 'Attach Electrode to which Pokémon?' }),

@@ -1,4 +1,5 @@
-import { useGame } from './GameContext.jsx'
+import { useGame, usePlayerControl } from './GameContext.jsx'
+import { useCardPreview } from './CardPreview.jsx'
 import { TypeIcon, StatusIcon, GuardIcon } from './icons.jsx'
 import { costMatch, handleDragOver } from '../engine/utils.js'
 import { getPowerEffects } from '../engine/cards.js'
@@ -14,26 +15,52 @@ function CardFace({ card, className = '' }) {
   )
 }
 
+export function CardBack({ className = '' }) {
+  return (
+    <div
+      data-testid="card-back"
+      className={`rounded-sm border-2 border-zinc-900 flex items-center justify-center select-none overflow-hidden
+        bg-[linear-gradient(to_bottom,#e3350d_0%,#e3350d_46%,#17181c_46%,#17181c_54%,#f1f5f9_54%,#f1f5f9_100%)] ${className}`}
+    >
+      <img src="/pokeball.svg" alt="" className="w-1/2 drop-shadow" draggable={false} />
+    </div>
+  )
+}
+
 // A card in the player's hand: drag to play, click to play Trainers.
+// Hidden cards (opponent's hand in a match) render as card backs.
 export function HandCard({ card, player }) {
   const { dispatch, state } = useGame()
+  const { controls } = usePlayerControl(player)
+  const preview = useCardPreview()
+  if (card.hidden) {
+    return (
+      <div className="w-20 shrink-0">
+        <CardBack className="w-20 h-28" />
+      </div>
+    )
+  }
   const isTrainer = card.supertype === 'trainer' && !card.doll
   const busy = !!state.pending || state.effectsQueue.length > 0
 
   return (
     <div
-      draggable
+      draggable={controls}
       onDragStart={(e) => e.dataTransfer.setData('application/json', JSON.stringify({ from: 'hand', player, uid: card.uid }))}
-      onClick={() => isTrainer && !busy && dispatch({ type: 'play-trainer', player, uid: card.uid })}
+      onClick={() => controls && isTrainer && !busy && dispatch({ type: 'play-trainer', player, uid: card.uid })}
+      onContextMenu={(e) => {
+        e.preventDefault()
+        preview(card)
+      }}
       title={card.text || card.name}
-      className={`w-20 shrink-0 cursor-grab transition hover:-translate-y-3 hover:z-10 ${isTrainer ? 'hover:ring-2 hover:ring-emerald-400 rounded' : ''}`}
+      className={`w-20 shrink-0 ${controls ? 'cursor-grab' : ''} transition hover:-translate-y-3 hover:z-10 ${isTrainer && controls ? 'hover:ring-2 hover:ring-emerald-400 rounded' : ''}`}
     >
       <CardFace card={card} className="w-20 h-28 object-cover" />
     </div>
   )
 }
 
-function AttackRow({ slot, atk, player, id }) {
+function AttackRow({ slot, atk, player, id, canAct }) {
   const { state, dispatch } = useGame()
   const burn = slot.power?.name === 'Energy Burn' ? 'fire' : null
   const affordable = costMatch({ cost: atk.cost, energyAttached: slot.energyAttached, burn })
@@ -41,10 +68,10 @@ function AttackRow({ slot, atk, player, id }) {
   return (
     <button
       onClick={() => dispatch({ type: 'attack', player, id, attackName: atk.name })}
-      disabled={!affordable || locked || !!state.pending}
+      disabled={!affordable || locked || !!state.pending || !canAct}
       title={atk.text || atk.name}
-      className={`w-full flex items-center justify-between gap-1 px-1 py-0.5 rounded text-[10px] leading-tight border
-        ${affordable && !locked ? 'bg-white hover:bg-red-50 border-red-300 cursor-pointer' : 'bg-gray-100 border-gray-200 text-gray-400'}`}
+      className={`w-full flex items-center justify-between gap-1 px-1 py-0.5 rounded-sm text-[10px] leading-tight border
+        ${affordable && !locked ? 'bg-white hover:bg-red-50 border-poke-red/50 cursor-pointer' : 'bg-gray-100 border-gray-200 text-gray-400'}`}
     >
       <span className="flex items-center gap-0.5">
         {Object.entries(atk.cost).flatMap(([t, n]) => Array.from({ length: n }).map((_, i) => <TypeIcon key={t + i} type={t} size={7} />))}
@@ -57,7 +84,11 @@ function AttackRow({ slot, atk, player, id }) {
 
 // A pokemon (or Clefairy Doll) in play.
 export function BoardCard({ slot, player, id }) {
-  const { state, dispatch, validTargets } = useGame()
+  const { state, dispatch, validTargets, mode, humanPlayer } = useGame()
+  const { myTurn } = usePlayerControl(player)
+  const preview = useCardPreview()
+  const canAct = mode !== 'match' ? true : myTurn
+  const clickActor = mode === 'match' ? humanPlayer : player
   const ref = { player, id }
   const isValidTarget = validTargets.some((r) => r.player === ref.player && r.id === ref.id)
   const hpLeft = Math.max(0, slot.hp - (slot.dc ?? 0))
@@ -74,8 +105,12 @@ export function BoardCard({ slot, player, id }) {
     <div
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      onClick={() => state.pending && dispatch({ type: 'click', ...ref })}
-      className={`relative w-28 rounded-lg bg-white shadow-md p-1 flex flex-col gap-1 transition
+      onClick={() => state.pending && dispatch({ type: 'click', ...ref, actor: clickActor })}
+      onContextMenu={(e) => {
+        e.preventDefault()
+        preview(slot)
+      }}
+      className={`relative w-28 rounded-sm bg-white border border-zinc-300 shadow-md p-1 flex flex-col gap-1 transition
         ${isValidTarget ? 'ring-4 ring-yellow-400 cursor-pointer animate-pulse' : ''}`}
     >
       <div className="relative">
@@ -104,7 +139,7 @@ export function BoardCard({ slot, player, id }) {
         {Object.keys(slot.markers ?? {}).length > 0 && (
           <div className="absolute top-0 right-0 translate-x-1/3 flex flex-col gap-0.5">
             {Object.keys(slot.markers).map((m) => (
-              <span key={m} title={m} className="bg-fuchsia-200 text-fuchsia-800 text-[8px] px-1 rounded-full shadow">
+              <span key={m} title={m} className="bg-fuchsia-200 text-fuchsia-800 text-[8px] px-1 rounded-sm shadow">
                 {m}
               </span>
             ))}
@@ -118,30 +153,30 @@ export function BoardCard({ slot, player, id }) {
       </div>
 
       {(slot.attacks ?? []).map((atk) => (
-        <AttackRow key={atk.name} slot={slot} atk={atk} player={player} id={id} />
+        <AttackRow key={atk.name} slot={slot} atk={atk} player={player} id={id} canAct={canAct} />
       ))}
 
       <div className="flex gap-1">
         {power && !power.passive && (
           <button
             onClick={() => dispatch({ type: 'use-power', player, id })}
-            disabled={busy}
+            disabled={busy || !canAct}
             title={slot.power.text}
-            className="flex-1 text-[9px] bg-purple-100 hover:bg-purple-200 border border-purple-300 rounded px-1 py-0.5 disabled:opacity-40"
+            className="flex-1 text-[9px] bg-purple-100 hover:bg-purple-200 border border-purple-300 rounded-sm px-1 py-0.5 disabled:opacity-40"
           >
             {slot.power.name}
           </button>
         )}
         {power?.passive && (
-          <span title={slot.power.text} className="flex-1 text-center text-[9px] bg-purple-50 text-purple-500 border border-purple-200 rounded px-1 py-0.5">
+          <span title={slot.power.text} className="flex-1 text-center text-[9px] bg-purple-50 text-purple-500 border border-purple-200 rounded-sm px-1 py-0.5">
             {slot.power.name}
           </span>
         )}
         {id === 0 && !slot.doll && (
           <button
             onClick={() => dispatch({ type: 'retreat', player })}
-            disabled={busy}
-            className="flex-1 text-[9px] bg-sky-100 hover:bg-sky-200 border border-sky-300 rounded px-1 py-0.5 disabled:opacity-40"
+            disabled={busy || !canAct}
+            className="flex-1 text-[9px] bg-sky-100 hover:bg-sky-200 border border-sky-300 rounded-sm px-1 py-0.5 disabled:opacity-40"
           >
             Retreat ({slot.retreatCost ?? 0})
           </button>
@@ -149,8 +184,8 @@ export function BoardCard({ slot, player, id }) {
         {slot.doll && (
           <button
             onClick={() => dispatch({ type: 'discard-doll', player, id })}
-            disabled={busy}
-            className="flex-1 text-[9px] bg-rose-100 hover:bg-rose-200 border border-rose-300 rounded px-1 py-0.5 disabled:opacity-40"
+            disabled={busy || !canAct}
+            className="flex-1 text-[9px] bg-rose-100 hover:bg-rose-200 border border-rose-300 rounded-sm px-1 py-0.5 disabled:opacity-40"
           >
             Discard
           </button>
@@ -161,7 +196,8 @@ export function BoardCard({ slot, player, id }) {
 }
 
 export function EmptySpot({ player, id, label }) {
-  const { state, dispatch } = useGame()
+  const { state, dispatch, mode, humanPlayer } = useGame()
+  const clickActor = mode === 'match' ? humanPlayer : player
   const handleDrop = (e) => {
     e.preventDefault()
     const data = JSON.parse(e.dataTransfer.getData('application/json'))
@@ -171,8 +207,8 @@ export function EmptySpot({ player, id, label }) {
     <div
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      onClick={() => state.pending && dispatch({ type: 'click', player, id })}
-      className="w-28 h-40 rounded-lg border-2 border-dashed border-gray-300 bg-gray-100/60 flex items-center justify-center text-[10px] text-gray-400"
+      onClick={() => state.pending && dispatch({ type: 'click', player, id, actor: clickActor })}
+      className="w-28 h-40 rounded-sm border-2 border-dashed border-zinc-300 bg-zinc-100/60 flex items-center justify-center text-[10px] text-zinc-400 uppercase tracking-wide font-semibold"
     >
       {label ?? (id === 0 ? 'Active' : 'Bench')}
     </div>

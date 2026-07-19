@@ -14,6 +14,9 @@ page.on('console', (m) => m.type() === 'error' && errors.push('console: ' + m.te
 
 await page.goto('http://localhost:5199', { waitUntil: 'networkidle' })
 await page.waitForTimeout(600)
+// Navigate the main menu into the sandbox
+await page.getByRole('button', { name: 'Sandbox' }).click()
+await page.waitForTimeout(400)
 
 const logTail = () => page.evaluate(() => window.__game.state.log.slice(-4))
 

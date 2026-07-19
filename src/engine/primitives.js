@@ -1,6 +1,6 @@
 import { opposite, shuffle } from './utils.js'
 import { getSlot, updateSlot, setSlot, updateZone, pushLog, setContext, resolveTarget, eachTargets } from './state.js'
-import { applyDamage, resolveAmount, checkKO } from './damage.js'
+import { applyDamage, resolveAmount, checkKO, awardPrizeFor } from './damage.js'
 import { makeSlot, getAttackEffects, byName } from './cards.js'
 import { chooseHasOptions } from './targets.js'
 
@@ -371,7 +371,9 @@ function BUZZAP(state) {
   const slot = getSlot(state, sourceRef)
   const target = getSlot(state, ctx.chosen)
   if (!slot || !target || !ctx.chosenType) return state
-  // Electrode is Knocked Out; its card becomes a 2-unit energy on the target.
+  // Electrode is Knocked Out (counts for a prize); its card becomes a 2-unit
+  // energy on the target.
+  state = awardPrizeFor(state, sourceRef.player)
   const stack = [...(slot.prevStack ?? []), ...slot.energyAttached.map(({ isBuzzap, originalCard, ...e }) => (isBuzzap ? originalCard : e))]
   state = updateZone(state, sourceRef.player, 'discard', (d) => [...d, ...stack])
   state = setSlot(state, sourceRef, null)
@@ -402,12 +404,15 @@ function REORDER_DECK(state) {
 
 // CHOOSE pauses the queue by setting state.pending. If nothing legal exists,
 // it resolves to "no choice" so downstream primitives no-op.
+// `chooser: 'opp'` (e.g. Whirlwind) hands the decision to the opponent of the
+// acting player; chooserPlayer tells the UI and AI whose input is required.
 function CHOOSE(state, effect) {
   if (!chooseHasOptions(state, effect)) {
     state = pushLog(state, `No valid choice for: ${effect.prompt ?? effect.what}`)
     return clearChoice(state, effect)
   }
-  return { ...state, pending: effect }
+  const chooserPlayer = effect.chooser === 'opp' ? opposite[state.context.player] : state.context.player
+  return { ...state, pending: { ...effect, chooserPlayer } }
 }
 
 function clearChoice(state, effect) {

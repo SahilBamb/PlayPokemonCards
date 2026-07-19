@@ -8,8 +8,20 @@
   font-display: swap;
 }
 
+/* Closest freely-available match to the Fontworks Rodin family used by
+   Pokémon Scarlet/Violet: M PLUS Rounded 1c (loaded in index.html). */
+body {
+  font-family: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", system-ui, -apple-system, sans-serif;
+  background-color: #101014;
+}
+
 @theme {
   --font-pixeled: "Pixeled", serif;
+
+  /* Pokéball brand palette */
+  --color-poke-red: #e3350d;
+  --color-poke-red-dark: #b32a0a;
+  --color-poke-black: #17181c;
 
   /* 1. Define your custom glow animation */
   --animate-glow: glow 2s ease-in-out infinite alternate;
@@ -22,5 +34,18 @@
     to { 
       box-shadow: 0 0 20px rgba(147, 51, 234, 0.8), 0 0 40px rgba(147, 51, 234, 0.4); 
     }
+  }
+
+  /* Card preview pop-in */
+  @keyframes zoomIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  /* Tiled pokéball layers drifting left (distance = a whole number of tiles
+     for both layer sizes, so the loop is seamless) */
+  @keyframes ballScroll {
+    from { background-position-x: 0px; }
+    to { background-position-x: -672px; }
   }
 }

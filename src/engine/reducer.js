@@ -3,7 +3,8 @@ import { getSlot, updateSlot, updateZone, pushLog, setContext } from './state.js
 import { EFFECTS, buildAttackEffects, evolveSlot } from './primitives.js'
 import { applyDamage, checkKO } from './damage.js'
 import { makeCard, makeSlot, getAttackEffects, getTrainerEffects, getPowerEffects, initialGameState } from './cards.js'
-import { validPokemonRefs, candidateCards, energyCandidates, energyChooseSlotRef, chooseZoneOwner } from './targets.js'
+import { validPokemonRefs, candidateCards, energyCandidates, energyChooseSlotRef, chooseZoneOwner, trainerPlayable } from './targets.js'
+import { matchGuard, settleMatch, canAttachEnergy, beginPlay, drawForTurn, gameOver, initialMatchState } from './match.js'
 
 function condition(state, cond) {
   const ctx = state.context
@@ -19,7 +20,7 @@ function condition(state, cond) {
   }
 }
 
-function checkRequires(state, req, sourceRef) {
+export function checkRequires(state, req, sourceRef) {
   const slot = getSlot(state, sourceRef)
   const defender = getSlot(state, { player: opposite[sourceRef.player], id: 0 })
   if (req.startsWith('notMarked:')) return !slot?.markers?.[req.split(':')[1]]
@@ -86,6 +87,10 @@ function doAttack(state, action) {
     return pushLog(state, `Not enough energy for ${attackName}.`)
   }
 
+  // In a match, declaring an attack ends the turn once it resolves —
+  // including attacks that fizzle to confusion or Sand-attack.
+  if (state.mode === 'match') state = { ...state, endTurnAfterResolve: true }
+
   const ctx = { player, source: ref, isAttack: true, attackCost: atk.cost, attackName }
   state = { ...state, context: ctx }
 
@@ -115,6 +120,9 @@ function playTrainer(state, action) {
   if (!card || card.supertype !== 'trainer' || card.doll) return state
   const effects = getTrainerEffects(card.name)
   if (!effects) return pushLog(state, `${card.name} isn't implemented.`)
+  if (!trainerPlayable(state, player, effects, uid)) {
+    return pushLog(state, `${card.name} can't be played right now — it would have no effect.`)
+  }
   state = updateZone(state, player, 'hand', (h) => h.filter((c) => c.uid !== uid))
   state = updateZone(state, player, 'discard', (d) => [...d, card])
   state = pushLog(state, `${player} played ${card.name}.`)
@@ -129,6 +137,9 @@ function usePower(state, action) {
   const power = slot?.power ? getPowerEffects(slot.power.name) : null
   if (!power || power.passive) return state
   if (slot.status) return pushLog(state, `${slot.name} is ${slot.status}; its power can't be used.`)
+  if (state.mode === 'match' && power.oncePerTurn) {
+    state = { ...state, turnFlags: { ...state.turnFlags, powersUsed: { ...state.turnFlags.powersUsed, [slot.uid]: true } } }
+  }
   state = pushLog(state, `${slot.name} used ${slot.power.name}.`)
   return startActivation(state, { player, source: ref }, power.effects)
 }
@@ -143,6 +154,8 @@ function retreat(state, action) {
   if (slot.status === 'asleep' || slot.status === 'paralyzed') {
     return pushLog(state, `${slot.name} is ${slot.status} and can't retreat.`)
   }
+  // Retreating (even a failed confused attempt) uses the once-per-turn retreat
+  if (state.mode === 'match') state = { ...state, turnFlags: { ...state.turnFlags, retreated: true } }
   if (slot.status === 'confused') {
     const f = flipCoins(1)
     state = pushLog(state, `Confused retreat flip: ${f.results[0]}`)
@@ -171,12 +184,20 @@ function handleDrop(state, action) {
 
   // attach energy
   if (card.supertype === 'energy' && destSlot) {
+    const check = canAttachEnergy(state, source.player, card, destSlot)
+    if (!check.ok) return pushLog(state, check.reason)
+    if (check.consumesFlag) {
+      state = { ...state, turnFlags: { ...state.turnFlags, energyAttached: true } }
+    }
     state = updateZone(state, source.player, 'hand', (h) => h.filter((c) => c.uid !== card.uid))
+    // Keep the whole card on the attachment: when it later hits the discard
+    // pile (KO, attack cost, retreat...) it must still be a real energy card
+    // so filters like Energy Retrieval's `basicEnergy` can find it.
     state = updateSlot(state, dest, (s) => ({
       ...s,
-      energyAttached: [...s.energyAttached, { uid: card.uid, name: card.name, energy: card.energy, units: card.units ?? 1 }],
+      energyAttached: [...s.energyAttached, { ...card, units: card.units ?? 1 }],
     }))
-    return pushLog(state, `Attached ${card.name} to ${destSlot.name}.`)
+    return pushLog(state, `Attached ${card.name} to ${destSlot.name}${check.rainDance ? ' (Rain Dance)' : ''}.`)
   }
   // play a basic (or Clefairy Doll) to an empty spot
   if ((card.stage === 'basic' || card.doll) && !destSlot && dest.player === source.player) {
@@ -258,19 +279,42 @@ function endTurn(state) {
   }
 
   state = { ...state, turnPlayer: opposite[player], turnNumber: state.turnNumber + 1, context: {} }
-  return pushLog(state, `--- ${opposite[player]}'s turn (turn ${state.turnNumber}) ---`)
+  state = pushLog(state, `--- ${opposite[player]}'s turn (turn ${state.turnNumber}) ---`)
+
+  if (state.mode === 'match' && state.phase !== 'gameover') {
+    state = { ...state, turnFlags: { energyAttached: false, retreated: false, powersUsed: {} } }
+    state = drawForTurn(state, state.turnPlayer)
+  }
+  return state
 }
 
 // --- pending-choice resolution ---
+
+// All refs a board click may currently select (promotion or a CHOOSE).
+export function pendingClickTargets(state) {
+  const pending = state.pending
+  if (!pending || pending.what !== 'pokemon') return []
+  if (pending.promote) {
+    const p = pending.chooserPlayer
+    return state[p].mon.map((s, i) => (s && i > 0 ? { player: p, id: i } : null)).filter(Boolean)
+  }
+  return validPokemonRefs(state, pending)
+}
 
 function boardClick(state, action) {
   const pending = state.pending
   if (!pending) return state
   if (pending.what !== 'pokemon') return state
   const ref = { player: action.player, id: action.id }
-  const valid = validPokemonRefs(state, pending)
+  const valid = pendingClickTargets(state)
   if (!valid.some((r) => r.player === ref.player && r.id === ref.id)) {
     return pushLog(state, 'Invalid target.')
+  }
+  if (pending.promote) {
+    const slot = getSlot(state, ref)
+    state = updateZone(state, ref.player, 'mon', (m) => m.map((s, i) => (i === 0 ? slot : i === ref.id ? null : s)))
+    state = { ...state, pending: null }
+    return pushLog(state, `${ref.player} promoted ${slot.name} to Active.`)
   }
   const key = pending.storeAs ?? 'chosen'
   state = setContext(state, { [key]: ref })
@@ -278,9 +322,27 @@ function boardClick(state, action) {
   return runQueue(state)
 }
 
+function takePrize(state, action) {
+  const pending = state.pending
+  const p = pending.chooserPlayer
+  const index = action.payload?.index ?? 0
+  const card = state[p].prizes[index]
+  if (!card) return state
+  state = updateZone(state, p, 'prizes', (z) => z.filter((_, i) => i !== index))
+  state = updateZone(state, p, 'hand', (h) => [...h, card])
+  state = { ...state, prizesOwed: { ...state.prizesOwed, [p]: state.prizesOwed[p] - 1 }, pending: null }
+  state = pushLog(state, `${p} took a prize card (${state[p].prizes.length} left).`)
+  if (state[p].prizes.length === 0) return gameOver(state, p, `${p} took all their prizes`)
+  if (state.prizesOwed[p] > 0 && state[p].prizes.length > 0) {
+    state = { ...state, pending: { ...pending, prompt: `Take a prize card (${state.prizesOwed[p]} owed)` } }
+  }
+  return state
+}
+
 function resolveChoice(state, action) {
   const pending = state.pending
   if (!pending) return state
+  if (pending.what === 'prize') return takePrize(state, action)
   const { payload } = action
   let patch = {}
   switch (pending.what) {
@@ -322,8 +384,29 @@ function skipChoice(state) {
   return runQueue(state)
 }
 
+function setupDone(state, action) {
+  const { player } = action
+  state = { ...state, setupDone: { ...state.setupDone, [player]: true } }
+  state = pushLog(state, `${player} is ready.`)
+  if (state.setupDone.p1 && state.setupDone.p2) state = beginPlay(state)
+  return state
+}
+
 export function reducer(state, action) {
+  // Match-mode gating: turn ownership, phase, once-per-turn limits.
+  const rejection = matchGuard(state, action)
+  if (rejection) return pushLog(state, rejection)
+  state = baseReducer(state, action)
+  // Match-mode settlement: prizes, promotion, win conditions, auto end-turn.
+  return settleMatch(state, endTurn)
+}
+
+function baseReducer(state, action) {
   switch (action.type) {
+    case 'setup-done':
+      return setupDone(state, action)
+    case 'concede':
+      return gameOver(state, opposite[action.player], `${action.player} conceded`)
     case 'draw': {
       if (state.pending) return state
       const { player } = action
@@ -369,4 +452,4 @@ export function reducer(state, action) {
   }
 }
 
-export { initialGameState, validPokemonRefs, candidateCards, energyCandidates }
+export { initialGameState, initialMatchState, validPokemonRefs, candidateCards, energyCandidates }

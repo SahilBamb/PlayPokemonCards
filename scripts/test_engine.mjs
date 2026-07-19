@@ -342,6 +342,47 @@ test('Revive benches basic with half HP damage', () => {
   assert.equal(benched.dc, Math.floor(benched.hp / 2 / 10) * 10)
 })
 
+test('Energy Retrieval recovers energy that was discarded from play', () => {
+  let s = fresh()
+  s = place(s, 'p1', 0, 'Charmander')
+  s = place(s, 'p2', 0, 'Chansey')
+  // attach two Fire Energy through the real drop path
+  const e1 = makeCard('Fire Energy')
+  const e2 = makeCard('Fire Energy')
+  s.p1.hand = [e1, e2]
+  s = reducer(s, { type: 'drop', source: { player: 'p1', from: 'hand', uid: e1.uid }, dest: { player: 'p1', id: 0 } })
+  s = reducer(s, { type: 'drop', source: { player: 'p1', from: 'hand', uid: e2.uid }, dest: { player: 'p1', id: 0 } })
+  // Ember's cost discards one of them into the discard pile
+  s = reducer(s, { type: 'attack', player: 'p1', id: 0, attackName: 'Ember' })
+  s = reducer(s, { type: 'resolve-choice', payload: { uids: [e1.uid] } })
+  const discarded = s.p1.discard.find((c) => c.uid === e1.uid)
+  assert.ok(discarded, 'energy in discard pile')
+  assert.equal(discarded.supertype, 'energy', 'discarded energy is still a real card')
+  // Energy Retrieval trades a card for it
+  const rt = makeCard('Energy Retrieval')
+  const filler = makeCard('Potion')
+  s.p1.hand = [rt, filler]
+  s = reducer(s, { type: 'play-trainer', player: 'p1', uid: rt.uid })
+  s = reducer(s, { type: 'resolve-choice', payload: { uids: [filler.uid] } })
+  assert.ok(s.pending, 'energy pick offered from discard')
+  s = reducer(s, { type: 'resolve-choice', payload: { uids: [e1.uid] } })
+  assert.ok(s.p1.hand.some((c) => c.uid === e1.uid), 'Fire Energy back in hand')
+  assert.ok(!s.p1.discard.some((c) => c.uid === e1.uid), 'no longer in discard')
+})
+
+test('Energy Retrieval unplayable with no basic energy in discard', () => {
+  let s = fresh()
+  s = place(s, 'p1', 0, 'Charmander')
+  const rt = makeCard('Energy Retrieval')
+  const filler = makeCard('Potion')
+  s.p1.hand = [rt, filler]
+  s.p1.discard = [makeCard('Bill')]
+  s = reducer(s, { type: 'play-trainer', player: 'p1', uid: rt.uid })
+  assert.equal(s.pending, null, 'no choice started')
+  assert.ok(s.p1.hand.some((c) => c.uid === rt.uid), 'Energy Retrieval stays in hand')
+  assert.ok(s.p1.hand.some((c) => c.uid === filler.uid), 'Potion not traded away')
+})
+
 test('PlusPower adds 10 to attack and expires end of turn', () => {
   let s = fresh()
   s = place(s, 'p1', 0, 'Machop', ['Fighting Energy'])

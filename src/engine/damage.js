@@ -26,11 +26,20 @@ export function resolveAmount(state, amount, target) {
   return Math.max(0, dmg)
 }
 
+// In match mode a KO awards a prize to the opponent of the KO'd Pokémon's
+// owner (Clefairy Doll excepted). Prizes are collected during settlement.
+export function awardPrizeFor(state, koOwner) {
+  if (state.mode !== 'match') return state
+  const taker = koOwner === 'p1' ? 'p2' : 'p1'
+  return { ...state, prizesOwed: { ...state.prizesOwed, [taker]: (state.prizesOwed[taker] ?? 0) + 1 } }
+}
+
 // Remove a KO'd slot: top card, evolution stack, and energy all go to that
 // player's discard pile.
 export function knockOut(state, ref) {
   const slot = getSlot(state, ref)
   if (!slot) return state
+  if (!slot.doll) state = awardPrizeFor(state, ref.player)
   const cards = []
   if (!slot.isBuzzapEnergy) {
     const { supertype, name, number, image, stage, hp, type, evolvesFrom, weakness, resistance, retreatCost, power, attacks, text, energy, units, doll, uid } = slot

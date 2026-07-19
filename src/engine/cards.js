@@ -82,22 +82,79 @@ const DECK_P2 = [
   ...Array(9).fill('Grass Energy'), ...Array(8).fill('Psychic Energy'), 'Double Colorless Energy', 'Double Colorless Energy',
 ]
 
+const DECK_P3 = [
+  ...Array(4).fill('Pikachu'), ...Array(3).fill('Raichu'),
+  ...Array(3).fill('Voltorb'), ...Array(2).fill('Electrode'),
+  ...Array(2).fill('Electabuzz'), ...Array(2).fill('Zapdos'),
+  ...Array(4).fill('Machop'), ...Array(3).fill('Machoke'), ...Array(2).fill('Machamp'),
+  ...Array(2).fill('Hitmonchan'),
+  'Bill', 'Bill', 'Professor Oak', 'Potion', 'Potion', 'Switch', 'Gust of Wind',
+  'Energy Removal', 'Energy Removal', 'PlusPower', 'Defender', 'Full Heal',
+  ...Array(11).fill('Lightning Energy'), ...Array(8).fill('Fighting Energy'),
+  'Double Colorless Energy', 'Double Colorless Energy',
+]
+
+export const DECKS = {
+  blazeSurf: {
+    id: 'blazeSurf',
+    name: 'Blaze & Surf',
+    description: 'Charizard and Blastoise lines with Water/Fire energy.',
+    coverCards: ['Charizard', 'Blastoise'],
+    list: DECK_P1,
+  },
+  jungleMind: {
+    id: 'jungleMind',
+    name: 'Jungle Mind',
+    description: 'Venusaur, Alakazam, and Mewtwo with Grass/Psychic energy.',
+    coverCards: ['Venusaur', 'Alakazam'],
+    list: DECK_P2,
+  },
+  boltFist: {
+    id: 'boltFist',
+    name: 'Bolt & Fist',
+    description: 'Raichu, Zapdos, and Machamp with Lightning/Fighting energy.',
+    coverCards: ['Zapdos', 'Machamp'],
+    list: DECK_P3,
+  },
+}
+
 export function makeDeck(list) {
   return shuffle(list.map(makeCard))
+}
+
+const emptySide = () => ({ hand: [], deck: [], mon: [null, null, null, null, null, null], discard: [], prizes: [] })
+
+// Shared state shape. Sandbox is "always playing, nothing enforced".
+export function baseGameState() {
+  return {
+    mode: 'sandbox',
+    phase: 'playing', // setup | playing | gameover
+    p1: emptySide(),
+    p2: emptySide(),
+    turnPlayer: 'p1',
+    turnNumber: 1,
+    setupDone: { p1: true, p2: true },
+    turnFlags: { energyAttached: false, retreated: false, powersUsed: {} },
+    prizesOwed: { p1: 0, p2: 0 },
+    endTurnAfterResolve: false,
+    winner: null,
+    winReason: null,
+    effectsQueue: [],
+    context: {},
+    pending: null,
+    viewZone: null, // { player, zone } when browsing a discard pile etc.
+    log: [],
+  }
 }
 
 export function initialGameState() {
   const d1 = makeDeck(DECK_P1)
   const d2 = makeDeck(DECK_P2)
+  const state = baseGameState()
   return {
-    p1: { hand: d1.slice(0, 7), deck: d1.slice(7), mon: [null, null, null, null, null, null], discard: [] },
-    p2: { hand: d2.slice(0, 7), deck: d2.slice(7), mon: [null, null, null, null, null, null], discard: [] },
-    turnPlayer: 'p1',
-    turnNumber: 1,
-    effectsQueue: [],
-    context: {},
-    pending: null,
-    viewZone: null, // { player, zone } when browsing a discard pile etc.
+    ...state,
+    p1: { ...state.p1, hand: d1.slice(0, 7), deck: d1.slice(7) },
+    p2: { ...state.p2, hand: d2.slice(0, 7), deck: d2.slice(7) },
     log: ['Sandbox started. Drag Basic Pokémon from your hand onto the board.'],
   }
 }
