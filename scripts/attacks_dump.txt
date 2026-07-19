@@ -1,0 +1,114 @@
+1|Alakazam|Confuse Ray|30|Psychic,Psychic,Psychic|Flip a coin. If heads, the Defending Pokémon is now Confused.
+2|Blastoise|Hydro Pump|40+|Water,Water,Water|Does 40 damage plus 10 more damage for each Water Energy attached to Blastoise but not used to pay for this attack's Energy cost. Extra Water Energy after the 2nd doesn't count.
+3|Chansey|Scrunch||Colorless,Colorless|Flip a coin. If heads, prevent all damage done to Chansey during your opponent's next turn. (Any other effects of attacks still happen.)
+3|Chansey|Double-edge|80|Colorless,Colorless,Colorless,Colorless|Chansey does 80 damage to itself.
+4|Charizard|Fire Spin|100|Fire,Fire,Fire,Fire|Discard 2 Energy cards attached to Charizard in order to use this attack.
+5|Clefairy|Sing||Colorless|Flip a coin. If heads, the Defending Pokémon is now Asleep.
+5|Clefairy|Metronome||Colorless,Colorless,Colorless|Choose 1 of the Defending Pokémon's attacks. Metronome copies that attack except for its Energy costs and anything else required in order to use that attack, such as discarding Energy cards. (No matter what type the Defending Pokémon is, Clefairy's type is still Colorless.)
+6|Gyarados|Dragon Rage|50|Water,Water,Water|
+6|Gyarados|Bubblebeam|40|Water,Water,Water,Water|Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+7|Hitmonchan|Jab|20|Fighting|
+7|Hitmonchan|Special Punch|40|Fighting,Fighting,Colorless|
+8|Machamp|Seismic Toss|60|Fighting,Fighting,Fighting,Colorless|
+9|Magneton|Thunder Wave|30|Lightning,Lightning,Colorless|Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+9|Magneton|Selfdestruct|80|Lightning,Lightning,Colorless,Colorless|Does 20 damage to each Pokémon on each player's Bench. (Don't apply Weakness and Resistance for Benched Pokémon.) Magneton does 80 damage to itself.
+10|Mewtwo|Psychic|10+|Psychic,Colorless|Does 10 damage plus 10 more damage for each Energy card attached to the Defending Pokémon.
+10|Mewtwo|Barrier||Psychic,Psychic|Discard 1 Psychic Energy card attached to Mewtwo in order to prevent all effects of attacks, including damage, done to Mewtwo during your opponent's next turn.
+11|Nidoking|Thrash|30+|Grass,Colorless,Colorless|Flip a coin. If heads, this attack does 30 damage plus 10 more damage; if tails, this attack does 30 damage and Nidoking does 10 damage to itself.
+11|Nidoking|Toxic|20|Grass,Grass,Grass|The Defending Pokémon is now Poisoned. It now takes 20 Poison damage instead of 10 after each player's turn (even if it was already Poisoned).
+12|Ninetales|Lure||Colorless,Colorless|If your opponent has any Benched Pokémon, choose 1 of them and switch it with his or her Active Pokémon.
+12|Ninetales|Fire Blast|80|Fire,Fire,Fire,Fire|Discard 1 Fire Energy card attached to Ninetales in order to use this attack.
+13|Poliwrath|Water Gun|30+|Water,Water,Colorless|Does 30 damage plus 10 more damage for each Water Energy attached to Poliwrath but not used to pay for this attack's Energy cost. Extra Water Energy after the 2nd doesn't count.
+13|Poliwrath|Whirlpool|40|Water,Water,Colorless,Colorless|If the Defending Pokémon has any Energy cards attached to it, choose 1 of them and discard it.
+14|Raichu|Agility|20|Lightning,Colorless,Colorless|Flip a coin. If heads, during your opponent's next turn, prevent all effects of attacks, including damage, done to Raichu.
+14|Raichu|Thunder|60|Lightning,Lightning,Lightning,Colorless|Flip a coin. If tails, Raichu does 30 damage to itself.
+15|Venusaur|Solarbeam|60|Grass,Grass,Grass,Grass|
+16|Zapdos|Thunder|60|Lightning,Lightning,Lightning,Colorless|Flip a coin. If tails, Zapdos does 30 damage to itself.
+16|Zapdos|Thunderbolt|100|Lightning,Lightning,Lightning,Lightning|Discard all Energy cards attached to Zapdos in order to use this attack.
+17|Beedrill|Twineedle|30×|Colorless,Colorless,Colorless|Flip 2 coins. This attack does 30 damage times the number of heads.
+17|Beedrill|Poison Sting|40|Grass,Grass,Grass|Flip a coin. If heads, the Defending Pokémon is now Poisoned.
+18|Dragonair|Slam|30×|Colorless,Colorless,Colorless|Flip 2 coins. This attack does 30 damage times the number of heads.
+18|Dragonair|Hyper Beam|20|Colorless,Colorless,Colorless,Colorless|If the Defending Pokémon has any Energy cards attached to it, choose 1 of them and discard it.
+19|Dugtrio|Slash|40|Fighting,Fighting,Colorless|
+19|Dugtrio|Earthquake|70|Fighting,Fighting,Fighting,Fighting|Does 10 damage to each of your own Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)
+20|Electabuzz|Thundershock|10|Lightning|Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+20|Electabuzz|Thunderpunch|30+|Lightning,Colorless|Flip a coin. If heads, this attack does 30 damage plus 10 more damage; if tails, this attack does 30 damage plus Electabuzz does 10 damage to itself.
+21|Electrode|Electric Shock|50|Lightning,Lightning,Lightning|Flip a coin. If tails, Electrode does 10 damage to itself.
+22|Pidgeotto|Whirlwind|20|Colorless,Colorless|If your opponent has any Benched Pokémon, he or she chooses 1 of them and switches it with the Defending Pokémon. (Do the damage before switching the Pokémon.)
+22|Pidgeotto|Mirror Move||Colorless,Colorless,Colorless|If Pidgeotto was attacked last turn, do the final result of that attack on Pidgeotto to the Defending Pokémon.
+23|Arcanine|Flamethrower|50|Fire,Fire,Colorless|Discard 1 Fire Energy card attached to Arcanine in order to use this attack.
+23|Arcanine|Take Down|80|Fire,Fire,Colorless,Colorless|Arcanine does 30 damage to itself.
+24|Charmeleon|Slash|30|Colorless,Colorless,Colorless|
+24|Charmeleon|Flamethrower|50|Fire,Fire,Colorless|Discard 1 Fire Energy card attached to Charmeleon in order to use this attack.
+25|Dewgong|Aurora Beam|50|Water,Water,Colorless|
+25|Dewgong|Ice Beam|30|Water,Water,Colorless,Colorless|Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+26|Dratini|Pound|10|Colorless|
+27|Farfetch'd|Leek Slap|30|Colorless|Flip a coin. If tails, this attack does nothing. Either way, you can't use this attack again as long as Farfetch'd stays in play (even putting Farfetch'd on the Bench won't let you use it again).
+27|Farfetch'd|Pot Smash|30|Colorless,Colorless,Colorless|
+28|Growlithe|Flare|20|Fire,Colorless|
+29|Haunter|Hypnosis||Psychic|The Defending Pokémon is now Asleep.
+29|Haunter|Dream Eater|50|Psychic,Psychic|You can't use this attack unless the Defending Pokémon is Asleep.
+30|Ivysaur|Vine Whip|30|Grass,Colorless,Colorless|
+30|Ivysaur|Poisonpowder|20|Grass,Grass,Grass|The Defending Pokémon is now Poisoned.
+31|Jynx|Doubleslap|10×|Psychic|Flip 2 coins. This attack does 10 damage times the number of heads.
+31|Jynx|Meditate|20+|Psychic,Psychic,Colorless|Does 20 damage plus 10 more damage for each damage counter on the Defending Pokémon.
+32|Kadabra|Recover||Psychic,Psychic|Discard 1 Psychic Energy card attached to Kadabra in order to use this attack. Remove all damage counters from Kadabra.
+32|Kadabra|Super Psy|50|Psychic,Psychic,Colorless|
+33|Kakuna|Stiffen||Colorless,Colorless|Flip a coin. If heads, prevent all damage done to Kakuna during your opponent's next turn. (Any other effects of attacks still happen.)
+33|Kakuna|Poisonpowder|20|Grass,Grass|Flip a coin. If heads, the Defending Pokémon is now Poisoned.
+34|Machoke|Karate Chop|50-|Fighting,Fighting,Colorless|Does 50 damage minus 10 damage for each damage counter on Machoke.
+34|Machoke|Submission|60|Fighting,Fighting,Colorless,Colorless|Machoke does 20 damage to itself.
+35|Magikarp|Tackle|10|Colorless|
+35|Magikarp|Flail|10×|Water|Does 10 damage times the number of damage counters on Magikarp.
+36|Magmar|Fire Punch|30|Fire,Fire|
+36|Magmar|Flamethrower|50|Fire,Fire,Colorless|Discard 1 Fire Energy card attached to Magmar in order to use this attack.
+37|Nidorino|Double Kick|30×|Grass,Colorless,Colorless|Flip 2 coins. This attack does 30 damage times the number of heads.
+37|Nidorino|Horn Drill|50|Grass,Grass,Colorless,Colorless|
+38|Poliwhirl|Amnesia||Water,Water|Choose 1 of the Defending Pokémon's attacks. That Pokémon can't use that attack during your opponent's next turn.
+38|Poliwhirl|Doubleslap|30×|Water,Water,Colorless|Flip 2 coins. This attack does 30 damage times the number of heads.
+39|Porygon|Conversion 1||Colorless|If the Defending Pokémon has a Weakness, you may change it to a type of your choice other than Colorless.
+39|Porygon|Conversion 2||Colorless,Colorless|Change Porygon's Resistance to a type of your choice other than Colorless.
+40|Raticate|Bite|20|Colorless|
+40|Raticate|Super Fang||Colorless,Colorless,Colorless|Does damage to the Defending Pokémon equal to half the Defending Pokémon's remaining HP (rounded up to the nearest 10).
+41|Seel|Headbutt|10|Water|
+42|Wartortle|Withdraw||Water,Colorless|Flip a coin. If heads, prevent all damage done to Wartortle during your opponent's next turn. (Any other effects of attacks still happen.)
+42|Wartortle|Bite|40|Water,Colorless,Colorless|
+43|Abra|Psyshock|10|Psychic|Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+44|Bulbasaur|Leech Seed|20|Grass,Grass|Unless all damage from this attack is prevented, you may remove 1 damage counter from Bulbasaur.
+45|Caterpie|String Shot|10|Grass|Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+46|Charmander|Scratch|10|Colorless|
+46|Charmander|Ember|30|Fire,Colorless|Discard 1 Fire Energy card attached to Charmander in order to use this attack.
+47|Diglett|Dig|10|Fighting|
+47|Diglett|Mud Slap|30|Fighting,Fighting|
+48|Doduo|Fury Attack|10×|Colorless|Flip 2 coins. This attack does 10 damage times the number of heads.
+49|Drowzee|Pound|10|Colorless|
+49|Drowzee|Confuse Ray|10|Psychic,Psychic|Flip a coin. If heads, the Defending Pokémon is now Confused.
+50|Gastly|Sleeping Gas||Psychic|Flip a coin. If heads, the Defending Pokémon is now Asleep.
+50|Gastly|Destiny Bond||Psychic,Colorless|Discard 1 Psychic Energy card attached to Gastly in order to use this attack. If a Pokémon Knocks Out Gastly during your opponent's next turn, Knock Out that Pokémon.
+51|Koffing|Foul Gas|10|Grass,Grass|Flip a coin. If heads, the Defending Pokémon is now Poisoned; if tails, it is now Confused.
+52|Machop|Low Kick|20|Fighting|
+53|Magnemite|Thunder Wave|10|Lightning|Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+53|Magnemite|Selfdestruct|40|Lightning,Colorless|Does 10 damage to each Pokémon on each player's Bench. (Don't apply Weakness and Resistance for Benched Pokémon.) Magnemite does 40 damage to itself.
+54|Metapod|Stiffen||Colorless,Colorless|Flip a coin. If heads, prevent all damage done to Metapod during your opponent's next turn. (Any other effects of attacks still happen.)
+54|Metapod|Stun Spore|20|Grass,Grass|Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+55|Nidoran ♂|Horn Hazard|30|Grass|Flip a coin. If tails, this attack does nothing.
+56|Onix|Rock Throw|10|Fighting|
+56|Onix|Harden||Fighting,Fighting|During your opponent's next turn, whenever 30 or less damage is done to Onix (after applying Weakness and Resistance), prevent that damage. (Any other effects of attacks still happen.)
+57|Pidgey|Whirlwind|10|Colorless,Colorless|If your opponent has any Benched Pokémon, he or she chooses 1 of them and switches it with the Defending Pokémon. (Do the damage before switching the Pokémon.)
+58|Pikachu|Gnaw|10|Colorless|
+58|Pikachu|Thunder Jolt|30|Lightning,Colorless|Flip a coin. If tails, Pikachu does 10 damage to itself.
+59|Poliwag|Water Gun|10+|Water|Does 10 damage plus 10 more damage for each Water Energy attached to Poliwag but not used to pay for this attack's Energy cost. Extra Water Energy after the 2nd don't count.
+60|Ponyta|Smash Kick|20|Colorless,Colorless|
+60|Ponyta|Flame Tail|30|Fire,Fire|
+61|Rattata|Bite|20|Colorless|
+62|Sandshrew|Sand-attack|10|Fighting|If the Defending Pokémon tries to attack during your opponent's next turn, your opponent flips a coin. If tails, that attack does nothing.
+63|Squirtle|Bubble|10|Water|Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+63|Squirtle|Withdraw||Water,Colorless|Flip a coin. If heads, prevent all damage done to Squirtle during your opponent's next turn. (Any other effects of attacks still happen.)
+64|Starmie|Recover||Water,Water|Discard 1 Water Energy card attached to Starmie in order to use this attack. Remove all damage counters from Starmie.
+64|Starmie|Star Freeze|20|Water,Colorless,Colorless|Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+65|Staryu|Slap|20|Water|
+66|Tangela|Bind|20|Grass,Colorless|Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+66|Tangela|Poisonpowder|20|Grass,Grass,Grass|The Defending Pokémon is now Poisoned.
+67|Voltorb|Tackle|10|Colorless|
+68|Vulpix|Confuse Ray|10|Fire,Fire|Flip a coin. If heads, the Defending Pokémon is now Confused.
+69|Weedle|Poison Sting|10|Grass|Flip a coin. If heads, the Defending Pokémon is now Poisoned.

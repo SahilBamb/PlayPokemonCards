@@ -1,0 +1,34 @@
+70|Clefairy Doll|Play Clefairy Doll as if it were a Basic Pokémon. While in play, Clefairy Doll counts a a Pokémon (instead of a Trainer card). Clefairy Doll has no attacks, can't retreat, and can't be Asleep, Confused, Paralyzed, or Poisoned. If Clefairy Doll is Knocked Out, it doesn't count as a Knocked Out Pokémon. At any time during your turn before your attack, you may discard Clefairy Doll.
+71|Computer Search|Discard 2 of the other cards from your hand in order to search your deck for any card and put it into your hand. Shuffle your deck afterward.
+72|Devolution Spray|Choose 1 of your own Pokémon in play and a Stage of Evolution. Discard all Evolution cards of that Stage or higher attached to that Pokémon. That Pokémon is no longer Asleep, Confused, Paralyzed, Poisoned, or anything else that might be the result of an attack (just as if you had evolved it).
+73|Impostor Professor Oak|Your opponent shuffles his or her hand into his or her deck, then draws 7 cards.
+74|Item Finder|Discard 2 of the other cards from your hand in order to put a Trainer card from your discard pile into your hand.
+75|Lass|You and your opponent show each other your hands, then shuffle all the Trainer cards from your hands into your decks.
+76|Pokémon Breeder|Put a Stage 2 Evolution card from your hand on the matching Basic Pokémon. You can only play this card when you would be allowed to evolve that Pokémon anyway.
+77|Pokémon Trader|Trade 1 of the Basic Pokémon or Evolution cards in your hand for 1 of the Basic Pokémon or Evolution cards from your deck. Show both cards to your opponent. Shuffle your deck afterward.
+78|Scoop Up|Choose 1 of your Pokémon in play and return its Basic Pokémon card to your hand. (Discard all cards attached to that card.)
+79|Super Energy Removal|Discard 1 Energy card attached to 1 of your Pokémon in order to choose 1 of your opponent's Pokémon and up to 2 Energy cards attached to it. Discard those Energy cards.
+80|Defender|Attach Defender to 1 of your Pokémon. At the end of your opponent's next turn, discard Defender. Damage done to that Pokémon by attacks is reduced by 20 (after applying Weakness and Resistance).
+81|Energy Retrieval|Trade 1 of the other cards in your hand for up to 2 basic Energy cards from your discard pile.
+82|Full Heal|Your Active Pokémon is no longer Asleep, Confused, Paralyzed, or Poisoned.
+83|Maintenance|Shuffle 2 of the other cards from your hand into your deck in order to draw a card.
+84|PlusPower|Attach PlusPower to your Active Pokémon. At the end of your turn, discard PlusPower. If this Pokémon's attack does damage to the Defending Pokémon (after applying Weakness and Resistance), the attack does 10 more damage to the Defending Pokémon.
+85|Pokémon Center|Remove all damage counters from all of your own Pokémon with damage counters on them, then discard all Energy cards attached to those Pokémon.
+86|Pokémon Flute|Choose 1 Basic Pokémon card from your opponent's discard pile and put it onto his or her Bench. (You can't play Pokémon Flute if your opponent's Bench is full.)
+87|Pokédex|Look at up to 5 cards from the top of your deck and rearrange them as you like.
+88|Professor Oak|Discard your hand, then draw 7 cards.
+89|Revive|Put 1 Basic Pokémon card from your discard pile onto your Bench. Put damage counters on that Pokémon equal to half its HP (rounded down to the nearest 10). (You can't play Revive if your Bench is full.)
+90|Super Potion|Discard 1 Energy card attached to your own Pokémon in order to remove up to 4 damage counters from that Pokémon.
+91|Bill|Draw 2 cards.
+92|Energy Removal|Choose 1 Energy card attached to 1 of your opponent's Pokémon and discard it.
+93|Gust of Wind|Choose 1 of your opponent's Benched Pokémon and switch it with his or her Active Pokémon.
+94|Potion|Remove up to 2 damage counters from 1 of your Pokémon.
+95|Switch|Switch 1 of your own Benched Pokémon with your Active Pokémon.
+96|Double Colorless Energy|Special|Provides ColorlessColorless energy.
+Doesn't count as a basic Energy card.
+97|Fighting Energy|Basic|
+98|Fire Energy|Basic|
+99|Grass Energy|Basic|
+100|Lightning Energy|Basic|
+101|Psychic Energy|Basic|
+102|Water Energy|Basic|
