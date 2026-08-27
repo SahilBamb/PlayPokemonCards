@@ -15,6 +15,11 @@ export function usePlayerControl(player) {
   }
   const controls = humanPlayer === player
   const myTurn =
-    controls && state.phase === 'playing' && state.turnPlayer === player && !state.pending && !state.effectsQueue.length
+    controls &&
+    state.phase === 'playing' &&
+    state.turnPlayer === player &&
+    !state.pending &&
+    !state.effectsQueue.length &&
+    !state.fxQueue.length
   return { controls, myTurn, actor: humanPlayer }
 }

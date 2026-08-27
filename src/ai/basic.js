@@ -14,7 +14,7 @@ export function estimateDamage(atk) {
   return n
 }
 
-const bestAffordable = (slot) => {
+export const bestAffordable = (slot) => {
   const burn = slot?.power?.name === 'Energy Burn' ? 'fire' : null
   return Math.max(
     0,
@@ -24,12 +24,12 @@ const bestAffordable = (slot) => {
   )
 }
 
-const hasUnaffordableAttack = (slot) => {
+export const hasUnaffordableAttack = (slot) => {
   const burn = slot?.power?.name === 'Energy Burn' ? 'fire' : null
   return (slot?.attacks ?? []).some((a) => !costMatch({ cost: a.cost, energyAttached: slot.energyAttached, burn }))
 }
 
-function pickBest(actions, score) {
+export function pickBest(actions, score) {
   let best = null
   let bestScore = -Infinity
   for (const a of actions) {
@@ -42,7 +42,7 @@ function pickBest(actions, score) {
   return best
 }
 
-function answerPending(actions, state, player) {
+export function answerPending(actions, state, player) {
   const pending = state.pending
   const clicks = actions.filter((a) => a.type === 'click')
   if (clicks.length) {
@@ -68,7 +68,7 @@ function answerPending(actions, state, player) {
   return actions[0] // skip-choice or whatever is left
 }
 
-function setupMove(actions, state, player) {
+export function setupMove(actions, state, player) {
   const side = state[player]
   const drops = actions.filter((a) => a.type === 'drop')
   const done = actions.find((a) => a.type === 'setup-done')

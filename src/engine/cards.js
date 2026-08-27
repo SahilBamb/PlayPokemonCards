@@ -1,10 +1,13 @@
-import BASE_STATS from '../data/baseStats.js'
+import CARD_STATS from '../data/cardStats.js'
 import { ATTACK_EFFECTS, TRAINER_EFFECTS, POWER_EFFECTS } from '../data/cardEffects.js'
+import { PRESET_DECK_DEFS } from '../data/presetDecks.js'
 import { nextUid, shuffle } from './utils.js'
 
-export const CARD_DB = BASE_STATS
-export const byName = Object.fromEntries(BASE_STATS.map((c) => [c.name, c]))
-export const byNumber = Object.fromEntries(BASE_STATS.map((c) => [c.number, c]))
+// Card names are unique across all sets (re-prints carry a set suffix, e.g.
+// "Zapdos (Fossil)"); card.species holds the printed name for evolution
+// matching and shared copy limits.
+export const CARD_DB = CARD_STATS
+export const byName = Object.fromEntries(CARD_STATS.map((c) => [c.name, c]))
 
 // Attack encodings: "CardName:AttackName" wins over "AttackName".
 export function getAttackEffects(cardName, attackName) {
@@ -21,13 +24,13 @@ export function getPowerEffects(powerName) {
 
 // Create a card instance (hand/deck representation) from the DB.
 export function makeCard(ref) {
-  const stats = typeof ref === 'number' ? byNumber[ref] : byName[ref]
+  const stats = byName[ref]
   if (!stats) throw new Error(`Unknown card: ${ref}`)
   const card = { ...stats, uid: nextUid() }
   if (card.supertype === 'energy') {
     card.units = card.energy === 'doublecolorless' ? 2 : 1
   }
-  if (card.name === 'Clefairy Doll') {
+  if (card.name === 'Clefairy Doll' || card.name === 'Mysterious Fossil') {
     card.doll = true
     card.hp = 10
   }
@@ -94,10 +97,13 @@ const DECK_P3 = [
   'Double Colorless Energy', 'Double Colorless Energy',
 ]
 
+const countsToList = (counts) => Object.entries(counts).flatMap(([name, n]) => Array(n).fill(name))
+
 export const DECKS = {
   blazeSurf: {
     id: 'blazeSurf',
     name: 'Blaze & Surf',
+    group: 'starter',
     description: 'Charizard and Blastoise lines with Water/Fire energy.',
     coverCards: ['Charizard', 'Blastoise'],
     list: DECK_P1,
@@ -105,6 +111,7 @@ export const DECKS = {
   jungleMind: {
     id: 'jungleMind',
     name: 'Jungle Mind',
+    group: 'starter',
     description: 'Venusaur, Alakazam, and Mewtwo with Grass/Psychic energy.',
     coverCards: ['Venusaur', 'Alakazam'],
     list: DECK_P2,
@@ -112,10 +119,15 @@ export const DECKS = {
   boltFist: {
     id: 'boltFist',
     name: 'Bolt & Fist',
+    group: 'starter',
     description: 'Raichu, Zapdos, and Machamp with Lightning/Fighting energy.',
     coverCards: ['Zapdos', 'Machamp'],
     list: DECK_P3,
   },
+  // Historical Base–Fossil and Game Boy decks (see src/data/presetDecks.js)
+  ...Object.fromEntries(
+    PRESET_DECK_DEFS.map((d) => [d.id, { group: 'basefossil', ...d, list: countsToList(d.counts) }])
+  ),
 }
 
 export function makeDeck(list) {
@@ -135,7 +147,11 @@ export function baseGameState() {
     turnNumber: 1,
     setupDone: { p1: true, p2: true },
     turnFlags: { energyAttached: false, retreated: false, powersUsed: {} },
+    enforceTurns: false, // sandbox "turn based" toggle
+    fxQueue: [], // visual/sound events awaiting playback (pauses the game)
+    fxEnabled: false, // set by the UI from settings; false for headless runs
     prizesOwed: { p1: 0, p2: 0 },
+    trainerBlock: null, // { player, turnNumber } after Psyduck's Headache
     endTurnAfterResolve: false,
     winner: null,
     winReason: null,
@@ -143,6 +159,7 @@ export function baseGameState() {
     context: {},
     pending: null,
     viewZone: null, // { player, zone } when browsing a discard pile etc.
+    reveal: null, // { player, cards, label } after a Peek-style effect
     log: [],
   }
 }

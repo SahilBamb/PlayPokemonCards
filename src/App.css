@@ -48,4 +48,51 @@ body {
     from { background-position-x: 0px; }
     to { background-position-x: -672px; }
   }
+
+  /* --- battle fx --- */
+
+  /* Spinning coin (vertical squash reads as a 3D flip) */
+  @keyframes coinSpin {
+    0% { transform: scaleY(1); }
+    50% { transform: scaleY(0.08); }
+    100% { transform: scaleY(1); }
+  }
+
+  /* Badge / result pop-in */
+  @keyframes badgePop {
+    0% { transform: scale(0.2); opacity: 0; }
+    65% { transform: scale(1.25); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Attacker lunge toward the opponent (p1 lunges up, p2 down) */
+  @keyframes lungeUp {
+    0% { transform: translateY(0); }
+    35% { transform: translateY(-26px) scale(1.06); }
+    60% { transform: translateY(6px); }
+    100% { transform: translateY(0); }
+  }
+  @keyframes lungeDown {
+    0% { transform: translateY(0); }
+    35% { transform: translateY(26px) scale(1.06); }
+    60% { transform: translateY(-6px); }
+    100% { transform: translateY(0); }
+  }
+
+  /* Getting hit: quick shake */
+  @keyframes hitShake {
+    0%, 100% { transform: translateX(0); }
+    15% { transform: translateX(-7px) rotate(-2deg); }
+    35% { transform: translateX(6px) rotate(2deg); }
+    55% { transform: translateX(-4px); }
+    75% { transform: translateX(3px); }
+  }
+
+  /* Colored hue wash over an affected card (color set via --fx-hue) */
+  @keyframes huePulse {
+    0% { opacity: 0; }
+    30% { opacity: 0.75; }
+    70% { opacity: 0.6; }
+    100% { opacity: 0; }
+  }
 }

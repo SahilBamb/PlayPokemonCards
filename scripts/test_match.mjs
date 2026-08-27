@@ -388,4 +388,14 @@ test('RandomAI vs RandomAI plays to completion', () => {
   assert.ok(['p1', 'p2'].includes(s.winner))
 })
 
+test('AggroAI vs AggroAI plays to completion', () => {
+  const s = runAiGame('aggro')
+  assert.ok(['p1', 'p2'].includes(s.winner))
+})
+
+test('StallAI vs StallAI plays to completion', () => {
+  const s = runAiGame('stall', 8000)
+  assert.ok(['p1', 'p2'].includes(s.winner))
+})
+
 console.log(`\n${passed} tests passed`)

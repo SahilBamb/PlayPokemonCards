@@ -4,9 +4,10 @@
 import { opposite, costMatch, energyUnits } from './utils.js'
 import { getSlot } from './state.js'
 import { getAttackEffects, getPowerEffects, getTrainerEffects } from './cards.js'
-import { candidateCards, energyCandidates, trainerPlayable } from './targets.js'
+import { candidateCards, energyCandidates, trainerPlayable, trainerBlocked, orderDeckOwner } from './targets.js'
 import { checkRequires, pendingClickTargets } from './reducer.js'
 import { RULES, canAttachEnergy, canEvolveTarget } from './match.js'
+import { powerActive, combatView, canUsePower, retreatCostOf } from './powers.js'
 
 const ENERGY_TYPES = ['grass', 'fire', 'water', 'lightning', 'psychic', 'fighting', 'colorless']
 
@@ -50,9 +51,11 @@ function pendingActions(state, player) {
     }
   } else if (pending.what === 'type') {
     for (const t of ENERGY_TYPES) acts.push({ type: 'resolve-choice', actor: player, payload: { type: t } })
+  } else if (pending.what === 'option') {
+    for (const o of pending.options ?? []) acts.push({ type: 'resolve-choice', actor: player, payload: { option: o.id } })
   } else if (pending.what === 'order') {
     const n = pending.count ?? 1
-    const uids = state[state.context.player].deck.slice(0, n).map((c) => c.uid)
+    const uids = state[orderDeckOwner(state, pending)].deck.slice(0, n).map((c) => c.uid)
     acts.push({ type: 'resolve-choice', actor: player, payload: { uids } })
   }
 
@@ -95,12 +98,12 @@ function turnActions(state, player) {
     } else if (card.supertype === 'pokemon' && card.evolvesFrom) {
       for (const id of occupied) {
         const slot = side.mon[id]
-        if (slot.name === card.evolvesFrom && canEvolveTarget(state, slot).ok) {
+        if ((slot.species ?? slot.name) === card.evolvesFrom && canEvolveTarget(state, slot).ok) {
           acts.push({ type: 'drop', source: { player, from: 'hand', uid: card.uid }, dest: { player, id } })
         }
       }
     } else if (card.supertype === 'trainer' && !card.doll) {
-      if (trainerPlayable(state, player, getTrainerEffects(card.name), card.uid)) {
+      if (!trainerBlocked(state, player) && trainerPlayable(state, player, getTrainerEffects(card.name), card.uid)) {
         acts.push({ type: 'play-trainer', player, uid: card.uid })
       }
     }
@@ -110,20 +113,26 @@ function turnActions(state, player) {
     const slot = side.mon[id]
     if (slot.doll) acts.push({ type: 'discard-doll', player, id })
     const power = slot.power ? getPowerEffects(slot.power.name) : null
-    if (power && !power.passive && !slot.status && !(power.oncePerTurn && state.turnFlags.powersUsed[slot.uid])) {
+    if (
+      power && !power.passive &&
+      canUsePower(state, { player, id }, slot, power).ok &&
+      !(power.oncePerTurn && state.turnFlags.powersUsed[slot.uid])
+    ) {
       acts.push({ type: 'use-power', player, id })
     }
   }
 
-  // attacks (active only)
+  // attacks (active only; combatView covers Ditto's copied attacks)
   const active = side.mon[0]
+  const activeView = active ? combatView(state, { player, id: 0 }) : null
   const firstTurnBlock = state.mode === 'match' && state.turnNumber === 1 && !RULES.firstPlayerCanAttack
   if (active && !active.doll && !firstTurnBlock && active.status !== 'asleep' && active.status !== 'paralyzed') {
-    const burn = active.power?.name === 'Energy Burn' ? 'fire' : null
-    for (const atk of active.attacks ?? []) {
+    const burn = powerActive(state, active, 'Energy Burn') ? 'fire' : null
+    const wild = powerActive(state, active, 'Transform')
+    for (const atk of activeView.attacks ?? []) {
       if (active.attackLock?.name === atk.name) continue
-      if (!costMatch({ cost: atk.cost, energyAttached: active.energyAttached, burn })) continue
-      const enc = getAttackEffects(active.name, atk.name)
+      if (!costMatch({ cost: atk.cost, energyAttached: active.energyAttached, burn, wild })) continue
+      const enc = getAttackEffects(activeView.effectName, atk.name)
       if (enc?.requires && !checkRequires(state, enc.requires, { player, id: 0 })) continue
       acts.push({ type: 'attack', player, id: 0, attackName: atk.name })
     }
@@ -134,7 +143,8 @@ function turnActions(state, player) {
   if (
     active && !active.doll && benched && !state.turnFlags.retreated &&
     active.status !== 'asleep' && active.status !== 'paralyzed' &&
-    energyUnits(active.energyAttached).length >= (active.retreatCost ?? 0)
+    !active.markers?.noRetreat &&
+    energyUnits(active.energyAttached).length >= retreatCostOf(state, player)
   ) {
     acts.push({ type: 'retreat', player })
   }
@@ -145,6 +155,7 @@ function turnActions(state, player) {
 
 export function enumerateActions(state, player) {
   if (state.phase === 'gameover') return []
+  if (state.fxQueue.length) return []
   if (state.pending) return pendingActions(state, player)
   if (state.effectsQueue.length) return []
   if (state.phase === 'setup') return state.setupDone[player] ? [] : setupActions(state, player)

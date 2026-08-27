@@ -1,5 +1,16 @@
 import { useGame } from './GameContext.jsx'
 import { HandCard, BoardCard, EmptySpot, CardBack } from './Card.jsx'
+import { handleDragOver } from '../engine/utils.js'
+
+// Drop handler for whole-zone targets (deck / discard / hand).
+function zoneDrop(dispatch, player, zone) {
+  return (e) => {
+    e.preventDefault()
+    const raw = e.dataTransfer.getData('application/json')
+    if (!raw) return
+    dispatch({ type: 'drop', source: JSON.parse(raw), dest: { player, zone } })
+  }
+}
 
 export function Deck({ player }) {
   const { state, dispatch, mode } = useGame()
@@ -7,6 +18,8 @@ export function Deck({ player }) {
   return (
     <div
       onClick={() => clickable && dispatch({ type: 'draw', player })}
+      onDragOver={handleDragOver}
+      onDrop={zoneDrop(dispatch, player, 'deck')}
       title={clickable ? 'Click to draw' : 'Deck (draws are automatic)'}
       className={`relative w-20 h-28 shrink-0 flex items-center justify-center rounded-sm shadow-md overflow-hidden
         bg-gradient-to-br from-poke-red to-poke-red-dark text-white font-bold border-2 border-zinc-900 border-b-4
@@ -25,6 +38,8 @@ export function DiscardPile({ player }) {
   return (
     <div
       onClick={() => dispatch({ type: 'view-zone', player, zone: 'discard' })}
+      onDragOver={handleDragOver}
+      onDrop={zoneDrop(dispatch, player, 'discard')}
       title="Click to view discard pile"
       className="w-20 h-28 shrink-0 cursor-pointer rounded-sm border-2 border-dashed border-zinc-400 bg-zinc-200/70
         flex items-center justify-center text-xs text-zinc-500 hover:bg-zinc-300/70 overflow-hidden"
@@ -57,9 +72,14 @@ export function Prizes({ player }) {
 }
 
 export function Hand({ player }) {
-  const { view } = useGame()
+  const { view, dispatch } = useGame()
   return (
-    <div data-testid={`hand-${player}`} className="flex justify-center min-w-0">
+    <div
+      data-testid={`hand-${player}`}
+      onDragOver={handleDragOver}
+      onDrop={zoneDrop(dispatch, player, 'hand')}
+      className="flex justify-center min-w-0 min-h-10"
+    >
       <div className="flex min-w-0 [&>*+*]:-ml-6 hover:[&>*+*]:-ml-2 transition-all">
         {view[player].hand.map((card) => (
           <HandCard key={card.uid} card={card} player={player} />

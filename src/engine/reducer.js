@@ -1,13 +1,17 @@
-import { opposite, flipCoins, costMatch } from './utils.js'
-import { getSlot, updateSlot, updateZone, pushLog, setContext } from './state.js'
+import { opposite, flipCoins, costMatch, energyUnits } from './utils.js'
+import { getSlot, updateSlot, updateZone, pushLog, pushFx, setContext } from './state.js'
 import { EFFECTS, buildAttackEffects, evolveSlot } from './primitives.js'
 import { applyDamage, checkKO } from './damage.js'
 import { makeCard, makeSlot, getAttackEffects, getTrainerEffects, getPowerEffects, initialGameState } from './cards.js'
-import { validPokemonRefs, candidateCards, energyCandidates, energyChooseSlotRef, chooseZoneOwner, trainerPlayable } from './targets.js'
-import { matchGuard, settleMatch, canAttachEnergy, beginPlay, drawForTurn, gameOver, initialMatchState } from './match.js'
+import { validPokemonRefs, candidateCards, energyCandidates, energyChooseSlotRef, chooseZoneOwner, chooseZoneCards, chooseHasOptions, trainerPlayable, trainerBlocked, handBlocked, orderDeckOwner } from './targets.js'
+import { STADIUM_ACTIONS } from '../data/cardEffects.js'
+import { matchGuard, settleMatch, canAttachEnergy, beginPlay, drawForTurn, gameOver, initialMatchState, turnRulesActive } from './match.js'
+import { powerActive, combatView, canUsePower, retreatCostOf, benchCap, maxHpOf, stadiumActive } from './powers.js'
 
 function condition(state, cond) {
   const ctx = state.context
+  // 'option:x': branch on a prior CHOOSE what:'option' pick (Treaty, Wish)
+  if (cond.startsWith('option:')) return ctx.chosenOption === cond.split(':')[1]
   switch (cond) {
     case 'heads':
       return (ctx.heads ?? 0) > 0
@@ -15,6 +19,37 @@ function condition(state, cond) {
       return (ctx.tails ?? 0) > 0
     case 'didDamage':
       return !!ctx.didDamage
+    case 'allHeads': // "if both coins are heads"
+      return (ctx.heads ?? 0) > 0 && (ctx.tails ?? 0) === 0
+    case 'allTails':
+      return (ctx.tails ?? 0) > 0 && (ctx.heads ?? 0) === 0
+    case 'notAllHeads': // Knockout Needle's fallback damage
+      return (ctx.tails ?? 0) > 0
+    case 'headsEq1': // Misty's Psyduck's ESP
+      return (ctx.heads ?? 0) === 1
+    case 'headsEq2':
+      return (ctx.heads ?? 0) === 2
+    case 'headsEq3':
+      return (ctx.heads ?? 0) === 3
+    case 'noChosen': // fallbacks when an optional choice was skipped/impossible
+      return !ctx.chosen
+    case 'discardedEnergy': // Flame Pillar's bench snipe needs the discard
+      return (ctx.lastDiscardCount ?? 0) > 0
+    case 'noSelfBench': // Energy Bomb's discard fallback
+      return !state[ctx.player].mon.some((s, i) => i > 0 && s)
+    case 'defenderMaxHp50': { // Giovanni's Nidoking's Intimidate
+      const def = getSlot(state, { player: opposite[ctx.player], id: 0 })
+      return !!def && maxHpOf(state, def) <= 50
+    }
+    case 'defenderDamaged': {
+      const def = getSlot(state, { player: opposite[ctx.player], id: 0 })
+      return (def?.dc ?? 0) > 0
+    }
+    case 'defenderHasWeakness': {
+      // Texture Magic only rewrites a weakness the defender actually has
+      const def = getSlot(state, { player: opposite[ctx.player], id: 0 })
+      return !!(def?.weaknessOverride ?? def?.weakness)
+    }
     default:
       return true
   }
@@ -24,6 +59,12 @@ export function checkRequires(state, req, sourceRef) {
   const slot = getSlot(state, sourceRef)
   const defender = getSlot(state, { player: opposite[sourceRef.player], id: 0 })
   if (req.startsWith('notMarked:')) return !slot?.markers?.[req.split(':')[1]]
+  if (req.startsWith('marked:')) return !!slot?.markers?.[req.split(':')[1]] // Earthdrill needs Lie Low
+  if (req.startsWith('hasEnergyType:')) {
+    // Fireball / Playing with Fire: only with that energy type attached
+    const t = req.split(':')[1]
+    return (slot?.energyAttached ?? []).some((e) => e.energy === t)
+  }
   switch (req) {
     case 'defenderAsleep':
       return defender?.status === 'asleep'
@@ -31,20 +72,96 @@ export function checkRequires(state, req, sourceRef) {
       return slot?.lastHit?.turnNumber === state.turnNumber - 1
     case 'defenderHasWeakness':
       return !!(defender?.weaknessOverride ?? defender?.weakness)
+    case 'benchSpace': // Call for Family and friends
+      return state[sourceRef.player].mon.some((s, i) => i > 0 && !s)
+    case 'selfDamaged': // Spacing Out
+      return (slot?.dc ?? 0) > 0
+    case 'oppBench': // attacks that need an opposing benched pokemon
+      return state[opposite[sourceRef.player]].mon.some((s, i) => i > 0 && s)
+    case 'selfBench': // Scram-style escapes need somewhere to go
+      return state[sourceRef.player].mon.some((s, i) => i > 0 && s)
+    case 'selfDamaged2': // Giovanni's Nidoran ♂'s Retaliation
+      return (slot?.dc ?? 0) >= 20
+    case 'sameEnergyCount': // Sabrina's Abra's Synchronize
+      return !!defender && (slot?.energyAttached?.length ?? 0) === defender.energyAttached.length
     default:
       return true
   }
 }
 
-// Drain the effects queue until it's empty or a CHOOSE pauses it.
+// Dynamic coin counts: { count: 'oppBench' | 'defenderDc' | 'selfEnergyType'
+// | 'lastDiscarded' | 'speciesInPlay', ... }.
+function dynamicFlipCount(state, spec) {
+  const ctx = state.context
+  const opp = opposite[ctx.player]
+  switch (spec.count) {
+    case 'oppBench': // Dark Hypno's Bench Manipulation
+      return state[opp].mon.filter((s, i) => i > 0 && s).length
+    case 'defenderDc': // Pendulum Curse
+      return (getSlot(state, { player: opp, id: 0 })?.dc ?? 0) / 10
+    case 'selfEnergyType': { // Continuous Fireball / Water Punch
+      const src = getSlot(state, ctx.source)
+      return (src?.energyAttached ?? []).reduce((n, e) => n + (e.energy === spec.energyType ? e.units ?? 1 : 0), 0)
+    }
+    case 'lastDiscarded': // Discharge: per energy just discarded
+      return ctx.lastDiscardCount ?? 0
+    case 'speciesInPlay': { // Night Spirits
+      let n = 0
+      state[ctx.player].mon.forEach((s) => {
+        if (s && spec.species.includes(s.species ?? s.name)) n++
+      })
+      return n
+    }
+    default:
+      return 0
+  }
+}
+
+// Drain the effects queue until it's empty or a CHOOSE (or an fx event
+// awaiting playback) pauses it.
 function runQueue(state) {
-  while (state.effectsQueue.length > 0 && !state.pending) {
+  while (state.effectsQueue.length > 0 && !state.pending && !state.fxQueue.length) {
     const effect = state.effectsQueue[0]
     state = { ...state, effectsQueue: state.effectsQueue.slice(1) }
     if (effect.flip) {
-      const f = flipCoins(effect.flip)
+      let f
+      if (effect.flip === 'untilTails') {
+        // Stone Barrage: flip until tails, count the heads
+        const results = []
+        let heads = 0
+        for (;;) {
+          const h = Math.random() > 0.5
+          results.push(h ? 'H' : 'T')
+          if (!h) break
+          heads++
+        }
+        f = { coins: results.length, heads, tails: 1, results }
+      } else if (effect.flip === 'perEnergy') {
+        // Big Eggsplosion: one coin per energy attached to the attacker
+        const src = getSlot(state, state.context.source)
+        f = flipCoins(energyUnits(src?.energyAttached ?? []).length)
+      } else if (typeof effect.flip === 'object') {
+        f = flipCoins(dynamicFlipCount(state, effect.flip))
+      } else {
+        f = flipCoins(effect.flip)
+      }
+      // Sabrina's ESP: the marked attacker re-flips once when everything came
+      // up tails (the only time a re-flip is clearly worth it).
+      const src = getSlot(state, state.context.source)
+      if (state.context.isAttack && src?.markers?.esp && f.coins > 0 && f.heads === 0) {
+        state = pushLog(state, `Sabrina's ESP: re-flipping ${f.results.join(' ')}...`)
+        f = flipCoins(f.coins)
+      }
       state = setContext(state, { heads: f.heads, tails: f.tails, flipResults: f.results })
-      state = pushLog(state, `Coin flip: ${f.results.join(' ')}`)
+      state = pushLog(state, `Coin flip: ${f.results.length ? f.results.join(' ') : '(no coins)'}`)
+      if (f.results.length) state = pushFx(state, { kind: 'coins', results: f.results, label: 'Coin flip' })
+      if (state.fxQueue.length) {
+        // Show the coins before the effect resolves: re-queue the effect
+        // (flip already consumed, results in context) and pause here.
+        const rest = { ...effect }
+        delete rest.flip
+        return { ...state, effectsQueue: [rest, ...state.effectsQueue] }
+      }
     }
     if (effect.if && !condition(state, effect.if)) continue
     const fn = EFFECTS[effect.type]
@@ -68,35 +185,59 @@ function doAttack(state, action) {
   const { player, id, attackName } = action
   const ref = { player, id }
   const slot = getSlot(state, ref)
-  const atk = slot?.attacks?.find((a) => a.name === attackName)
+  // combatView: Ditto's Transform copies the defender's attacks/type
+  const view = combatView(state, ref)
+  const atk = view?.attacks?.find((a) => a.name === attackName)
   if (!slot || !atk) return state
-  if (state.pending || state.effectsQueue.length) return state
+  if (state.pending || state.effectsQueue.length || state.fxQueue.length) return state
 
   if (slot.status === 'asleep' || slot.status === 'paralyzed') {
     return pushLog(state, `${slot.name} is ${slot.status} and can't attack.`)
   }
-  if (slot.attackLock?.name === attackName) {
-    return pushLog(state, `${slot.name} can't use ${attackName} this turn (Amnesia).`)
+  // '*' locks every attack (Tunneling and other "can't attack next turn")
+  if (slot.attackLock && (slot.attackLock.name === attackName || slot.attackLock.name === '*')) {
+    return pushLog(state, slot.attackLock.name === '*'
+      ? `${slot.name} can't attack this turn.`
+      : `${slot.name} can't use ${attackName} this turn (Amnesia).`)
   }
-  const enc = getAttackEffects(slot.name, attackName)
+  const enc = getAttackEffects(view.effectName, attackName)
   if (enc?.requires && !checkRequires(state, enc.requires, ref)) {
     return pushLog(state, `${attackName} can't be used right now.`)
   }
-  const burn = slot.power?.name === 'Energy Burn' ? 'fire' : null
-  if (!costMatch({ cost: atk.cost, energyAttached: slot.energyAttached, burn })) {
+  // Energy Burn: everything counts as fire; Photosynthesis: as grass
+  const burn = powerActive(state, slot, 'Energy Burn') ? 'fire'
+    : powerActive(state, slot, 'Photosynthesis') ? 'grass'
+    : null
+  const wild = powerActive(state, slot, 'Transform') // Ditto pays with anything
+  if (!costMatch({ cost: atk.cost, energyAttached: slot.energyAttached, burn, wild })) {
     return pushLog(state, `Not enough energy for ${attackName}.`)
   }
 
-  // In a match, declaring an attack ends the turn once it resolves —
+  // Under turn rules, declaring an attack ends the turn once it resolves —
   // including attacks that fizzle to confusion or Sand-attack.
-  if (state.mode === 'match') state = { ...state, endTurnAfterResolve: true }
+  if (turnRulesActive(state)) state = { ...state, endTurnAfterResolve: true }
 
   const ctx = { player, source: ref, isAttack: true, attackCost: atk.cost, attackName }
   state = { ...state, context: ctx }
+  state = pushFx(state, { kind: 'attack', source: ref, attackName, cardType: view.type })
+
+  // Misty's Gyarados' Rebellion: two tails cancels the attack and shuffles
+  // Gyarados away (works even while confused).
+  if (slot.power?.name === 'Rebellion' && !slot.markers?.powerOff) {
+    const f = flipCoins(2)
+    state = pushLog(state, `Rebellion: ${slot.name} flips... ${f.results.join(' ')}`)
+    state = pushFx(state, { kind: 'coins', results: f.results, label: 'Rebellion' })
+    if (f.tails === 2) {
+      state = pushLog(state, `${slot.name} rebels and flees!`)
+      state = setContext(state, {})
+      return runQueue({ ...state, effectsQueue: [{ type: 'SHUFFLE_INTO_DECK', target: 'self' }] })
+    }
+  }
 
   if (slot.status === 'confused') {
     const f = flipCoins(1)
     state = pushLog(state, `${slot.name} is confused... flip: ${f.results[0]}`)
+    state = pushFx(state, { kind: 'coins', results: f.results, label: `${slot.name} is confused` })
     if (f.tails > 0) {
       state = pushLog(state, `${slot.name} hurt itself in confusion!`)
       state = applyDamage(state, ref, 20, {})
@@ -106,47 +247,153 @@ function doAttack(state, action) {
   if (slot.accuracyDebuff) {
     const f = flipCoins(1)
     state = pushLog(state, `Sand-attack: ${slot.name} flips... ${f.results[0]}`)
+    state = pushFx(state, { kind: 'coins', results: f.results, label: 'Sand-attack accuracy check' })
     if (f.tails > 0) return pushLog(state, `${slot.name}'s attack failed!`)
+  }
+  // Fossil Haunter's Transparency: heads prevents everything the attack does.
+  const defSlot = getSlot(state, { player: opposite[player], id: 0 })
+  if (powerActive(state, defSlot, 'Transparency')) {
+    const f = flipCoins(1)
+    state = pushLog(state, `Transparency: ${defSlot.name} flips... ${f.results[0]}`)
+    state = pushFx(state, { kind: 'coins', results: f.results, label: 'Transparency' })
+    if (f.heads > 0) return pushLog(state, `Transparency prevented ${attackName}!`)
+  }
+
+  // Vermilion City Gym: Lt. Surge attackers flip — heads +10, tails 10 self
+  if (stadiumActive(state, 'Vermilion City Gym') && slot.name.includes('Lt. Surge')) {
+    const f = flipCoins(1)
+    state = pushLog(state, `Vermilion City Gym: flip... ${f.results[0]}`)
+    state = pushFx(state, { kind: 'coins', results: f.results, label: 'Vermilion City Gym' })
+    if (f.heads > 0) {
+      state = setContext(state, { attackBonus: 10 })
+    } else {
+      state = applyDamage(state, ref, 10, {})
+      if (!getSlot(state, ref)) return state
+    }
   }
 
   state = pushLog(state, `${slot.name} used ${attackName}!`)
-  return startActivation(state, state.context, buildAttackEffects(slot, atk, enc))
+  const effects = buildAttackEffects(slot, atk, enc)
+  // Koga's Ninja Trick: the marked defender may slip to the bench before the
+  // attack lands (the trick is spent either way).
+  const defNow = getSlot(state, { player: opposite[player], id: 0 })
+  if (defNow?.markers?.ninjaTrick && state[opposite[player]].mon.some((s, i) => i > 0 && s)) {
+    effects.unshift(
+      { type: 'CHOOSE', what: 'pokemon', player: 'opp', zone: 'bench', chooser: 'opp', optional: true, prompt: 'Ninja Trick: switch to a Benched Pokémon before the attack?' },
+      { type: 'SWITCH_ACTIVE', player: 'opp' },
+    )
+    state = updateSlot(state, { player: opposite[player], id: 0 }, (s) => ({
+      ...s,
+      markers: Object.fromEntries(Object.entries(s.markers ?? {}).filter(([k]) => k !== 'ninjaTrick')),
+    }))
+  }
+  return startActivation(state, state.context, effects)
 }
 
 function playTrainer(state, action) {
   const { player, uid } = action
-  if (state.pending || state.effectsQueue.length) return state
+  if (state.pending || state.effectsQueue.length || state.fxQueue.length) return state
   const card = state[player].hand.find((c) => c.uid === uid)
   if (!card || card.supertype !== 'trainer' || card.doll) return state
+  if (handBlocked(state, player)) return pushLog(state, 'Your hand is set aside — you can\'t play cards from it right now.')
+  if (trainerBlocked(state, player)) return pushLog(state, "You can't play Trainer cards this turn.")
+
+  // Stadium cards sit next to the arena instead of resolving effects. A new
+  // one (different name) replaces the old, which is discarded.
+  if (card.subtype === 'stadium') {
+    if (state.stadium?.card?.name === card.name) {
+      return pushLog(state, `${card.name} is already in play.`)
+    }
+    state = updateZone(state, player, 'hand', (h) => h.filter((c) => c.uid !== uid))
+    if (state.stadium?.card) {
+      const old = state.stadium
+      state = updateZone(state, old.player, 'discard', (d) => [...d, old.card])
+      state = pushLog(state, `${old.card.name} was discarded.`)
+    }
+    state = { ...state, stadium: { card, player } }
+    return pushLog(state, `${player} played ${card.name} — it's now in play.`)
+  }
+
   const effects = getTrainerEffects(card.name)
   if (!effects) return pushLog(state, `${card.name} isn't implemented.`)
+  // Hand-composition gates (Blaine's Last Resort, Good Manners)
+  const restOfHand = state[player].hand.filter((c) => c.uid !== uid)
+  if (effects.gate === 'emptyHand' && restOfHand.length > 0) {
+    return pushLog(state, `${card.name} needs to be the only card in your hand.`)
+  }
+  if (effects.gate === 'noBasics' && restOfHand.some((c) => c.supertype === 'pokemon' && c.stage === 'basic')) {
+    return pushLog(state, `${card.name} can't be played with Basic Pokémon in your hand.`)
+  }
   if (!trainerPlayable(state, player, effects, uid)) {
     return pushLog(state, `${card.name} can't be played right now — it would have no effect.`)
+  }
+  // No Removal Gym: Energy Removal costs 2 extra discards from hand
+  const removalTax = stadiumActive(state, 'No Removal Gym') &&
+    (card.name === 'Energy Removal' || card.name === 'Super Energy Removal')
+  if (removalTax && restOfHand.length < 2) {
+    return pushLog(state, `No Removal Gym: you need 2 cards to discard to play ${card.name}.`)
   }
   state = updateZone(state, player, 'hand', (h) => h.filter((c) => c.uid !== uid))
   state = updateZone(state, player, 'discard', (d) => [...d, card])
   state = pushLog(state, `${player} played ${card.name}.`)
-  return startActivation(state, { player, trainerName: card.name }, effects)
+  // Chaos Gym: tails means the card fizzles straight to the discard pile
+  if (stadiumActive(state, 'Chaos Gym')) {
+    const f = flipCoins(1)
+    state = pushLog(state, `Chaos Gym: flip... ${f.results[0]}`)
+    state = pushFx(state, { kind: 'coins', results: f.results, label: 'Chaos Gym' })
+    if (f.tails > 0) return pushLog(state, `Chaos Gym scrambled ${card.name} — no effect.`)
+  }
+  const queue = removalTax
+    ? [
+        { type: 'CHOOSE', what: 'cards', from: 'hand', count: 2, prompt: 'No Removal Gym: discard 2 cards from your hand' },
+        { type: 'MOVE_CARDS', from: 'chosen', to: 'discard' },
+        ...effects,
+      ]
+    : [...effects]
+  return startActivation(state, { player, trainerName: card.name }, queue)
 }
 
 function usePower(state, action) {
   const { player, id } = action
-  if (state.pending || state.effectsQueue.length) return state
+  if (state.pending || state.effectsQueue.length || state.fxQueue.length) return state
   const ref = { player, id }
   const slot = getSlot(state, ref)
   const power = slot?.power ? getPowerEffects(slot.power.name) : null
   if (!power || power.passive) return state
-  if (slot.status) return pushLog(state, `${slot.name} is ${slot.status}; its power can't be used.`)
-  if (state.mode === 'match' && power.oncePerTurn) {
+  const usable = canUsePower(state, ref, slot, power)
+  if (!usable.ok) return usable.reason ? pushLog(state, usable.reason) : state
+  if (turnRulesActive(state) && power.oncePerTurn) {
     state = { ...state, turnFlags: { ...state.turnFlags, powersUsed: { ...state.turnFlags.powersUsed, [slot.uid]: true } } }
   }
   state = pushLog(state, `${slot.name} used ${slot.power.name}.`)
   return startActivation(state, { player, source: ref }, power.effects)
 }
 
+// Stadiums with a per-turn player action (Celadon / Saffron / Fuchsia gyms).
+function useStadium(state, action) {
+  const { player } = action
+  if (state.pending || state.effectsQueue.length || state.fxQueue.length) return state
+  const card = state.stadium?.card
+  const spec = card ? STADIUM_ACTIONS[card.name] : null
+  if (!spec) return state
+  if (turnRulesActive(state) && spec.oncePerTurn && state.turnFlags?.stadiumUsed) {
+    return pushLog(state, `${card.name} was already used this turn.`)
+  }
+  // No legal target: don't burn the once-per-turn use
+  const first = spec.effects[0]
+  if (first?.type === 'CHOOSE' && !chooseHasOptions({ ...state, context: { player } }, first)) {
+    return pushLog(state, `${card.name}: nothing to use it on right now.`)
+  }
+  if (turnRulesActive(state) && spec.oncePerTurn) {
+    state = { ...state, turnFlags: { ...state.turnFlags, stadiumUsed: true } }
+  }
+  state = pushLog(state, `${player} uses ${card.name}.`)
+  return startActivation(state, { player }, spec.effects)
+}
+
 function retreat(state, action) {
   const { player } = action
-  if (state.pending || state.effectsQueue.length) return state
+  if (state.pending || state.effectsQueue.length || state.fxQueue.length) return state
   const ref = { player, id: 0 }
   const slot = getSlot(state, ref)
   if (!slot || slot.doll) return state
@@ -154,14 +401,17 @@ function retreat(state, action) {
   if (slot.status === 'asleep' || slot.status === 'paralyzed') {
     return pushLog(state, `${slot.name} is ${slot.status} and can't retreat.`)
   }
+  if (slot.markers?.noRetreat) return pushLog(state, `${slot.name} can't retreat this turn.`)
   // Retreating (even a failed confused attempt) uses the once-per-turn retreat
-  if (state.mode === 'match') state = { ...state, turnFlags: { ...state.turnFlags, retreated: true } }
+  if (turnRulesActive(state)) state = { ...state, turnFlags: { ...state.turnFlags, retreated: true } }
   if (slot.status === 'confused') {
     const f = flipCoins(1)
     state = pushLog(state, `Confused retreat flip: ${f.results[0]}`)
+    state = pushFx(state, { kind: 'coins', results: f.results, label: 'Confused retreat check' })
     if (f.tails > 0) return pushLog(state, `${slot.name} failed to retreat!`)
   }
-  const cost = slot.retreatCost ?? 0
+  // retreatCostOf covers Dodrio's Retreat Aid and Ditto's copied cost
+  const cost = retreatCostOf(state, player)
   const effects = [
     ...(cost > 0
       ? [
@@ -171,6 +421,8 @@ function retreat(state, action) {
       : []),
     { type: 'CHOOSE', what: 'pokemon', player: 'self', zone: 'bench', prompt: 'Choose your new Active Pokémon' },
     { type: 'SWITCH_ACTIVE', player: 'self' },
+    // Dark Dugtrio's Sinkhole punishes the retreating pokemon on tails
+    { type: 'SINKHOLE_CHECK' },
   ]
   return startActivation(state, { player, source: ref }, effects)
 }
@@ -178,18 +430,49 @@ function retreat(state, action) {
 function handleDrop(state, action) {
   const { source, dest } = action
   if (state.pending) return state
-  const card = state[source.player]?.hand?.find((c) => c.uid === source.uid)
-  if (!card || source.from !== 'hand') return state
+
+  const fromCatalog = source.from === 'catalog'
+  const card = fromCatalog
+    ? makeCard(source.name)
+    : source.from === 'hand'
+      ? state[source.player]?.hand?.find((c) => c.uid === source.uid)
+      : null
+  if (!card) return state
+  if (!fromCatalog && handBlocked(state, source.player)) {
+    return pushLog(state, 'Your hand is set aside — you can\'t play cards from it right now.')
+  }
+  const takeFromHand = (s) =>
+    fromCatalog ? s : updateZone(s, source.player, 'hand', (h) => h.filter((c) => c.uid !== card.uid))
+
+  // drops onto a whole zone (deck / discard / hand) — sandbox testing tool
+  if (dest.zone) {
+    state = takeFromHand(state)
+    if (dest.zone === 'deck') {
+      state = updateZone(state, dest.player, 'deck', (d) => [card, ...d])
+    } else {
+      state = updateZone(state, dest.player, dest.zone, (z) => [...z, card])
+    }
+    return pushLog(state, `${card.name} was put ${dest.zone === 'deck' ? 'on top of' : 'into'} ${dest.player}'s ${dest.zone}.`)
+  }
+
   const destSlot = state[dest.player]?.mon?.[dest.id]
 
   // attach energy
   if (card.supertype === 'energy' && destSlot) {
-    const check = canAttachEnergy(state, source.player, card, destSlot)
-    if (!check.ok) return pushLog(state, check.reason)
-    if (check.consumesFlag) {
-      state = { ...state, turnFlags: { ...state.turnFlags, energyAttached: true } }
+    // Crystal Beam: no energy attachments to the marked pokemon
+    if (destSlot.markers?.energyBlock && !fromCatalog) {
+      return pushLog(state, `Crystal Beam: energy can't be attached to ${destSlot.name} this turn.`)
     }
-    state = updateZone(state, source.player, 'hand', (h) => h.filter((c) => c.uid !== card.uid))
+    let rainDance = false
+    if (!fromCatalog) {
+      const check = canAttachEnergy(state, source.player, card, destSlot)
+      if (!check.ok) return pushLog(state, check.reason)
+      if (check.consumesFlag) {
+        state = { ...state, turnFlags: { ...state.turnFlags, energyAttached: true } }
+      }
+      rainDance = !!check.rainDance
+    }
+    state = takeFromHand(state)
     // Keep the whole card on the attachment: when it later hits the discard
     // pile (KO, attack cost, retreat...) it must still be a real energy card
     // so filters like Energy Retrieval's `basicEnergy` can find it.
@@ -197,23 +480,87 @@ function handleDrop(state, action) {
       ...s,
       energyAttached: [...s.energyAttached, { ...card, units: card.units ?? 1 }],
     }))
-    return pushLog(state, `Attached ${card.name} to ${destSlot.name}${check.rainDance ? ' (Rain Dance)' : ''}.`)
+    state = pushLog(state, `Attached ${card.name} to ${destSlot.name}${rainDance ? ' (Rain Dance)' : ''}.`)
+    // Special energies do something when attached from the hand
+    if (card.special === 'rainbow' && !fromCatalog) {
+      state = pushLog(state, `Rainbow Energy did 10 damage to ${destSlot.name}.`)
+      state = applyDamage(state, dest, 10, {})
+    } else if (card.special === 'fullheal') {
+      state = updateSlot(state, dest, (s) => ({ ...s, status: null, poisoned: false, poisonAmount: 10 }))
+      state = pushLog(state, `${destSlot.name} is cured of all special conditions.`)
+    } else if (card.special === 'potion') {
+      const cur = getSlot(state, dest)
+      if (cur?.dc > 0) {
+        state = updateSlot(state, dest, (s) => ({ ...s, dc: s.dc - 10 }))
+        state = pushLog(state, `${destSlot.name} healed 10 damage.`)
+      }
+    }
+    // Blaine's Ninetales' Healing Fire: fire attachments from hand heal 10
+    if (card.energy === 'fire' && !fromCatalog && powerActive(state, getSlot(state, dest), 'Healing Fire')) {
+      const cur = getSlot(state, dest)
+      if (cur?.dc > 0) {
+        state = updateSlot(state, dest, (s) => ({ ...s, dc: s.dc - 10 }))
+        state = pushLog(state, `Healing Fire: ${destSlot.name} healed 10 damage.`)
+      }
+    }
+    return state
   }
-  // play a basic (or Clefairy Doll) to an empty spot
-  if ((card.stage === 'basic' || card.doll) && !destSlot && dest.player === source.player) {
-    state = updateZone(state, source.player, 'hand', (h) => h.filter((c) => c.uid !== card.uid))
+  // play to an empty spot: basics (or Clefairy Doll) from hand,
+  // any Pokémon straight from the catalog
+  const spawnable = fromCatalog
+    ? card.supertype === 'pokemon' || card.doll
+    : (card.stage === 'basic' || card.doll) && dest.player === source.player
+  if (spawnable && !destSlot) {
+    // Narrow Gym: at most 4 benched pokemon while it's in play
+    if (dest.id > 0 && state[dest.player].mon.filter((s, i) => i > 0 && s).length >= benchCap(state)) {
+      return pushLog(state, `The Bench is limited to ${benchCap(state)} Pokémon right now.`)
+    }
+    state = takeFromHand(state)
     state = updateZone(state, dest.player, 'mon', (m) => m.map((s, i) => (i === dest.id ? makeSlot(card, state.turnNumber) : s)))
-    return pushLog(state, `${card.name} was put into play.`)
+    state = pushLog(state, `${card.name} was put into play.`)
+    // Rocket's Minefield Gym: benching a basic from hand risks 2 counters
+    if (!fromCatalog && dest.id > 0 && !card.doll && stadiumActive(state, "Rocket's Minefield Gym")) {
+      const f = flipCoins(1)
+      state = pushLog(state, `Rocket's Minefield Gym: flip... ${f.results[0]}`)
+      state = pushFx(state, { kind: 'coins', results: f.results, label: "Rocket's Minefield Gym" })
+      if (f.tails > 0) {
+        state = updateSlot(state, dest, (s) => ({ ...s, dc: (s.dc ?? 0) + 20 }))
+        state = pushLog(state, `${card.name} took 20 damage from the minefield.`)
+        state = checkKO(state, dest)
+      }
+    }
+    return whenPlayedPower(state, card, dest, fromCatalog)
   }
-  // evolve
-  if (card.supertype === 'pokemon' && destSlot && card.evolvesFrom === destSlot.name) {
-    state = updateZone(state, source.player, 'hand', (h) => h.filter((c) => c.uid !== card.uid))
+  // evolve (matched on species so re-prints from other sets stay compatible)
+  if (card.supertype === 'pokemon' && destSlot && card.evolvesFrom === (destSlot.species ?? destSlot.name)) {
+    state = takeFromHand(state)
     state = updateZone(state, dest.player, 'mon', (m) =>
       m.map((s, i) => (i === dest.id ? evolveSlot(s, card, state.turnNumber) : s))
     )
-    return pushLog(state, `${destSlot.name} evolved into ${card.name}!`)
+    state = pushLog(state, `${destSlot.name} evolved into ${card.name}!`)
+    // Viridian City Gym: evolving a Giovanni pokemon heals 2 counters
+    if (stadiumActive(state, 'Viridian City Gym') && card.name.includes('Giovanni')) {
+      const cur = getSlot(state, dest)
+      if (cur?.dc > 0) {
+        state = updateSlot(state, dest, (s) => ({ ...s, dc: Math.max(0, s.dc - 20) }))
+        state = pushLog(state, `Viridian City Gym: ${card.name} healed 20 damage.`)
+      }
+    }
+    return whenPlayedPower(state, card, dest, fromCatalog)
   }
   return state
+}
+
+// "When you play this Pokémon from your hand..." powers (Summon Minions,
+// Sneak Attack, Reel In, Call the Boss) trigger on entering play.
+function whenPlayedPower(state, card, dest, fromCatalog) {
+  if (fromCatalog) return state
+  const power = card.power ? getPowerEffects(card.power.name) : null
+  if (!power?.whenPlayed) return state
+  const slot = getSlot(state, dest)
+  if (!slot || !powerActive(state, slot, card.power.name)) return state
+  state = pushLog(state, `${card.name}'s ${card.power.name} activates!`)
+  return startActivation(state, { player: dest.player, source: { ...dest } }, power.effects)
 }
 
 function discardDoll(state, action) {
@@ -227,12 +574,14 @@ function discardDoll(state, action) {
     { ...slot, dc: undefined, energyAttached: undefined, prevStack: undefined, markers: undefined },
     ...energy,
   ])
-  return pushLog(state, 'Clefairy Doll was discarded.')
+  return pushLog(state, `${slot.name} was discarded.`)
 }
 
-function expireForPlayer(slot, player) {
+function expireForPlayer(slot, player, turnNumber) {
   let s = slot
-  const expired = (x) => x && x.expiresAfterTurnOf === player
+  // notBeforeTurn: duration-2 markers (Swords Dance) survive until the end
+  // of their owner's *next* turn.
+  const expired = (x) => x && x.expiresAfterTurnOf === player && !(x.notBeforeTurn > turnNumber)
   if (expired(s.guard)) s = { ...s, guard: null }
   if (expired(s.attackLock)) s = { ...s, attackLock: null }
   if (expired(s.accuracyDebuff)) s = { ...s, accuracyDebuff: false }
@@ -242,7 +591,7 @@ function expireForPlayer(slot, player) {
 }
 
 function endTurn(state) {
-  if (state.pending || state.effectsQueue.length) return state
+  if (state.pending || state.effectsQueue.length || state.fxQueue.length) return state
   const player = state.turnPlayer
 
   // between-turns: poison, then sleep checks, on both actives
@@ -252,6 +601,7 @@ function endTurn(state) {
     if (!active) continue
     if (active.poisoned) {
       state = pushLog(state, `${active.name} takes ${active.poisonAmount} poison damage.`)
+      state = pushFx(state, { kind: 'poison-tick', target: ref, amount: active.poisonAmount })
       state = updateSlot(state, ref, (s) => ({ ...s, dc: (s.dc ?? 0) + s.poisonAmount }))
       state = checkKO(state, ref)
     }
@@ -259,6 +609,7 @@ function endTurn(state) {
     if (after?.status === 'asleep') {
       const f = flipCoins(1)
       state = pushLog(state, `${after.name} sleep check: ${f.results[0]}`)
+      state = pushFx(state, { kind: 'coins', results: f.results, label: `${after.name} sleep check` })
       if (f.heads > 0) {
         state = updateSlot(state, ref, (s) => ({ ...s, status: null }))
         state = pushLog(state, `${after.name} woke up!`)
@@ -275,15 +626,36 @@ function endTurn(state) {
 
   // expire guards / markers / locks keyed to the ending turn
   for (const p of ['p1', 'p2']) {
-    state = updateZone(state, p, 'mon', (mon) => mon.map((s) => (s ? expireForPlayer(s, player) : s)))
+    state = updateZone(state, p, 'mon', (mon) => mon.map((s) => (s ? expireForPlayer(s, player, state.turnNumber) : s)))
   }
 
-  state = { ...state, turnPlayer: opposite[player], turnNumber: state.turnNumber + 1, context: {} }
+  state = { ...state, turnPlayer: opposite[player], turnNumber: state.turnNumber + 1, context: {}, reveal: null }
+
+  // expire global effects keyed to turn numbers
+  if (state.powersOff && state.turnNumber > state.powersOff.untilEndOfTurn) state = { ...state, powersOff: null }
+  if (state.benchGuard && state.turnNumber > state.benchGuard.untilEndOfTurn) state = { ...state, benchGuard: null }
+  if (state.handBlock && state.turnNumber > state.handBlock.untilEndOfTurn) {
+    state = pushLog({ ...state, handBlock: null }, `${state.handBlock.player} gets their hand back.`)
+  }
+  if (state.trainerBlock && state.turnNumber > (state.trainerBlock.until ?? state.trainerBlock.turnNumber)) {
+    state = { ...state, trainerBlock: null }
+  }
+
   state = pushLog(state, `--- ${opposite[player]}'s turn (turn ${state.turnNumber}) ---`)
 
-  if (state.mode === 'match' && state.phase !== 'gameover') {
+  if (turnRulesActive(state) && state.phase !== 'gameover') {
     state = { ...state, turnFlags: { energyAttached: false, retreated: false, powersUsed: {} } }
-    state = drawForTurn(state, state.turnPlayer)
+    if (state.mode === 'match') {
+      state = drawForTurn(state, state.turnPlayer)
+    } else if (state[state.turnPlayer].deck.length > 0) {
+      // sandbox turn-based: draw for turn, but an empty deck never ends the game
+      const next = state.turnPlayer
+      state = updateZone(state, next, 'hand', (h) => [...h, state[next].deck[0]])
+      state = updateZone(state, next, 'deck', (d) => d.slice(1))
+      state = pushLog(state, `${next} drew a card.`)
+    } else {
+      state = pushLog(state, `${state.turnPlayer}'s deck is empty — no draw.`)
+    }
   }
   return state
 }
@@ -348,7 +720,9 @@ function resolveChoice(state, action) {
   switch (pending.what) {
     case 'cards': {
       const owner = chooseZoneOwner(state, pending)
-      const cards = state[owner][pending.from].filter((c) => payload.uids.includes(c.uid))
+      // deckTop pools come from a slice of the deck; MOVE_CARDS maps the
+      // 'deckTop' zone back to the real deck when it removes them.
+      const cards = chooseZoneCards(state, pending).filter((c) => payload.uids.includes(c.uid))
       patch = { chosenCards: { owner, zone: pending.from, cards } }
       break
     }
@@ -362,6 +736,9 @@ function resolveChoice(state, action) {
       break
     case 'type':
       patch = { chosenType: payload.type }
+      break
+    case 'option':
+      patch = { chosenOption: payload.option }
       break
     case 'order':
       patch = { chosenOrder: payload.uids }
@@ -424,10 +801,36 @@ function baseReducer(state, action) {
       return usePower(state, action)
     case 'retreat':
       return retreat(state, action)
+    case 'use-stadium':
+      return useStadium(state, action)
     case 'discard-doll':
       return discardDoll(state, action)
     case 'end-turn':
       return endTurn(state)
+    case 'fx-done':
+      // The UI finished playing queued fx; resume the effects queue.
+      return runQueue({ ...state, fxQueue: [] })
+    case 'set-fx-enabled': {
+      state = { ...state, fxEnabled: !!action.value }
+      // Turning fx off mid-playback must not leave the game stuck.
+      return state.fxEnabled ? state : runQueue({ ...state, fxQueue: [] })
+    }
+    case 'toggle-turn-rules': {
+      if (state.mode === 'match') return state
+      const on = !state.enforceTurns
+      state = {
+        ...state,
+        enforceTurns: on,
+        endTurnAfterResolve: false,
+        turnFlags: { energyAttached: false, retreated: false, powersUsed: {} },
+      }
+      return pushLog(
+        state,
+        on
+          ? `Turn-based rules ON — it's ${state.turnPlayer}'s turn. Attacks end the turn; energy/retreat/powers are once per turn.`
+          : 'Turn-based rules OFF — free sandbox.'
+      )
+    }
     case 'click':
       return boardClick(state, action)
     case 'resolve-choice':
@@ -438,6 +841,8 @@ function baseReducer(state, action) {
       return { ...state, viewZone: { player: action.player, zone: action.zone } }
     case 'close-view':
       return { ...state, viewZone: null }
+    case 'close-reveal':
+      return { ...state, reveal: null }
     case 'reset':
       return initialGameState()
     // sandbox console helper: put any card into a hand

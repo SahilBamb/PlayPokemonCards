@@ -13,12 +13,14 @@ const errors = []
 page.on('pageerror', (e) => errors.push('pageerror: ' + e.message))
 page.on('console', (m) => m.type() === 'error' && errors.push('console: ' + m.text()))
 
+// deterministic runs: disable battle animations and sound
+await page.addInitScript(() => localStorage.setItem('ppc-settings', JSON.stringify({ animations: false, sound: false, volume: 0 })))
 await page.goto('http://localhost:5199', { waitUntil: 'networkidle' })
 await page.waitForTimeout(500)
 await page.screenshot({ path: `${shots}/m1_menu.png` })
 
 // Menu -> deck picker -> start
-await page.getByRole('button', { name: 'Play Game' }).click()
+await page.getByRole('button', { name: 'Quick Play' }).click()
 await page.waitForTimeout(300)
 await page.screenshot({ path: `${shots}/m2_deck_picker.png` })
 await page.getByRole('button', { name: 'Start Match' }).click()

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { TypeIcon } from './icons.jsx'
+import { HoloCard } from './HoloCard.jsx'
 
 // Right-click any card to see it big and centered; click anywhere, press
 // Escape, or hit the X to dismiss. Provided app-wide so every screen gets it.
@@ -61,13 +62,17 @@ function PreviewOverlay({ card, onClose }) {
         ✕
       </button>
       {card.image ? (
-        <img
-          src={failedHires ? card.image : hiresUrl(card.image)}
-          onError={() => setFailedHires(true)}
-          alt={card.name}
-          className="max-h-[88vh] max-w-[90vw] rounded-sm shadow-2xl select-none animate-[zoomIn_120ms_ease-out]"
-          draggable={false}
-        />
+        <div onClick={(e) => e.stopPropagation()} className="cursor-default animate-[zoomIn_120ms_ease-out]">
+          <HoloCard card={card}>
+            <img
+              src={failedHires ? card.image : hiresUrl(card.image)}
+              onError={() => setFailedHires(true)}
+              alt={card.name}
+              className="holo-card__img max-h-[88vh] max-w-[90vw] select-none"
+              draggable={false}
+            />
+          </HoloCard>
+        </div>
       ) : (
         <TextFallback card={card} />
       )}

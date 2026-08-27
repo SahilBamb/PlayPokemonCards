@@ -1,0 +1,745 @@
+======================================================================
+=== SET rocket
+======================================================================
+Dark Alakazam #1 (60hp)
+  ATK [30] Teleport Blast: You may switch Dark Alakazam with 1 of your Benched Pokémon. (Do the damage before switching the Pokémon.)
+  ATK [40] Mind Shock: Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.)
+Dark Arbok #2 (60hp)
+  ATK [-] Stare: Choose 1 of your opponent's Pokémon. This attack does 10 damage to that Pokémon. Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.) If that Pokémon has a Pokémon Power, that power stops working until the end of your opponent's next turn.
+  ATK [10] Poison Vapor: The Defending Pokémon is now Poisoned. This attack does 10 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Dark Blastoise #3 (70hp)
+  ATK [30+] Hydrocannon: Does 30 damage plus 20 more damage for each Water Energy attached to Dark Blastoise but not used to pay for this attack. You can't add more than 40 damage in this way.
+  ATK [40] Rocket Tackle: Dark Blastoise does 10 damage to itself. Flip a coin. If heads, prevent all damage done to Dark Blastoise during your opponent's next turn. (Any other effects of attacks still happen.)
+Dark Charizard #4 (80hp)
+  ATK [50×] Continuous Fireball: Flip a number of coins equal to the number of Fire Energy cards attached to Dark Charizard. This attack does 50 damage times the number of heads. Discard a number of Fire Energy cards attached to Dark Charizard equal to the number of heads.
+Dark Dragonite #5 (70hp)
+  POWER Summon Minions: When you play Dark Dragonite from your hand, search your deck for up to 2 Basic Pokémon and put them onto your Bench. Shuffle your deck afterward.
+  ATK [70] Giant Tail: Flip a coin. If tails, this attack does nothing.
+Dark Dugtrio #6 (50hp)
+  POWER Sinkhole: Whenever your opponent's Active Pokémon retreats, your opponent flips a coin. If tails, this power does 20 damage to that Pokémon. (Don't apply Weakness and Resistance.) This power stops working while Dark Dugtrio is Asleep, Confused, or Paralyzed.
+  ATK [20+] Knock Down: Your opponent flips a coin. If tails, this attack does 20 damage plus 20 more damage; if heads, this attack does 20 damage.
+Dark Golbat #7 (50hp)
+  POWER Sneak Attack: When you play Dark Golbat from your hand, you may choose 1 of your opponent's Pokémon. If you do, Dark Golbat does 10 damage to that Pokémon. Apply Weakness and Resistance.
+  ATK [-] Flitter: Choose 1 of your opponent's Pokémon. This attack does 20 damage to that Pokémon. Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.)
+Dark Gyarados #8 (70hp)
+  POWER Final Beam: When Dark Gyarados is Knocked Out by an attack, flip a coin. If heads, this power does 20 damage for each Water Energy attached to Dark Gyarados to the Pokémon that Knocked Out Dark Gyarados. Apply Weakness and Resistance. This power doesn't work if Dark Gyarados is Asleep, Confused, or Paralyzed.
+  ATK [30] Ice Beam: Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+Dark Hypno #9 (60hp)
+  ATK [20×] Bench Manipulation: Your opponent flips a number of coins equal to the number of Pokémon on his or her Bench. This attack does 20 damage times the number of tails. Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.)
+Dark Machamp #10 (70hp)
+  ATK [-] Fling: Your opponent shuffles his or her Active Pokémon and all cards attached to it into his or her deck. This attack can't be used if your opponent has no Benched Pokémon.
+Dark Magneton #11 (60hp)
+  ATK [20] Sonicboom: Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.)
+  ATK [30] Magnetic Lines: If the Defending Pokémon has any basic Energy cards attached to it, choose 1 of them. If your opponent has any Benched Pokémon, choose 1 of them and attach that Energy card to it.
+Dark Slowbro #12 (60hp)
+  POWER Reel In: When you play Dark Slowbro from your hand, choose up to 3 Basic Pokémon and/or Evolution cards from your discard pile and put them into your hand.
+  ATK [40] Fickle Attack: Flip a coin. If tails, this attack does nothing.
+Dark Vileplume #13 (60hp)
+  POWER Hay Fever: No Trainer cards can be played. This power stops working while Dark Vileplume is Asleep, Confused, or Paralyzed.
+  ATK [30×] Petal Whirlwind: Flip a coins. This attack does 30 damage times the number of heads. If you get 2 or more heads, Dark Vileplume is now Confused (after doing damage).
+Dark Weezing #14 (60hp)
+  ATK [20×] Mass Explosion: Does 20 damage times the total number of Koffings, Weezings, and Dark Weezings in play (Apply Weakness and Resistance.). Then, this attack does 20 damage to each Koffing, Weezing, and Dark Weezing (even your own). Don't apply Weakness and Resistance.
+  ATK [20] Stun Gas: Flip a coin. If heads, the Defending Pokémon is now Poisoned; if tails, the Defending Pokémon is now Paralyzed.
+TRAINER Here Comes Team Rocket! #15
+  Each player plays with his or her Prize cards face up for the rest of the game.
+TRAINER Rocket's Sneak Attack #16
+  Look at your opponent's hand. If he or she has any Trainer cards, choose 1 of them. Your opponent shuffles that card into his or her deck.
+ENERGY Rainbow Energy #17
+  Attach Rainbow Energy to 1 of your Pokémon. While in play, Rainbow Energy counts as every type of basic Energy but only provides 1 Energy at a time. (Doesn't count as a basic Energy card when not in play.) When you attach this card from your hand to 1 of your Pokémon, it does 10 damage to that Pokémon. (Don't apply Weakness and Resistance.)
+Dark Charmeleon #32 (50hp)
+  ATK [70] Fireball: Use this attack only if there are any Fire Energy cards attached to Dark Charmeleon. Flip a coin. If heads, discard 1 of those Energy cards. If tails, this attack does nothing (not even damage).
+Dark Dragonair #33 (60hp)
+  POWER Evolutionary Light: Once during your turn (before your attack), you may search your deck for an Evolution card. Show it to your opponent and put it into your hand. Shuffle your deck afterward. This power can't be used if Dark Dragonair is Asleep, Confused, or Paralyzed.
+  ATK [20+] Tail Strike: Flip a coin. If heads, this attack does 20 damage plus 20 more damage; if tails, this attack does 20 damage.
+Dark Electrode #34 (60hp)
+  ATK [30] Energy Bomb: Take all Energy cards attached to Dark Electrode and attach them to your Benched Pokémon (in any way you choose). If you have no Benched Pokémon, discard all Energy cards attached to Dark Electrode.
+Dark Flareon #35 (50hp)
+  ATK [10+] Rage: Does 10 damage plus 10 more damage for each damage counter on Dark Flareon.
+  ATK [30+] Playing with Fire: Use this attack only if there are any Fire Energy cards attached to Dark Flareon. Flip a coin. If heads, discard 1 of those Energy cards and this attack does 30 damage plus 20 more damage; if tails, this attack does 30 damage.
+Dark Gloom #36 (50hp)
+  POWER Pollen Stench: Once during your turn (before your attack), you may flip a coin. If heads, the Defending Pokémon is now Confused; if tails, your Active Pokémon is now Confused. This power can't be used if Dark Gloom is Asleep, Confused, or Paralyzed.
+  ATK [10] Poisonpowder: The Defending Pokémon is now Poisoned.
+Dark Golduck #37 (60hp)
+  ATK [-] Third Eye: Discard 1 Energy card attached to Dark Golduck in order to draw up to 3 cards.
+Dark Jolteon #38 (50hp)
+  ATK [20] Lightning Flash: If the Defending Pokémon tries to attack during your opponent's next turn, your opponent flips a coin. If tails, that attack does nothing.
+  ATK [30] Thunder Attack: Flip a coin. If heads, the Defending Pokémon is now Paralyzed. If tails, Dark Jolteon does 10 damage to itself.
+Dark Kadabra #39 (50hp)
+  POWER Matter Exchange: Once during your turn (before your attack), you may discard a card from your hand in order to draw a card. This power can't be used if Dark Kadabra is Asleep, Confused, or Paralyzed.
+  ATK [30] Mind Shock: Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.)
+Dark Machoke #40 (60hp)
+  ATK [20] Drag Off: Before doing damage, choose 1 of your opponent's Benched Pokémon and switch it with the Defending Pokémon. Do the damage to the new Defending Pokémon. This attack can't be used if your opponent has no Benched Pokémon.
+  ATK [30] Knock Back: If your opponent has any Benched Pokémon, he or she chooses 1 of them and switches it with the Defending Pokémon. (Do the damage before switching the Pokémon.)
+Dark Muk #41 (60hp)
+  POWER Sticky Goo: As long as Dark Muk is your Active Pokémon, your opponent pays ColorlessColorless more to retreat his or her Active Pokémon. This power stops working while Dark Muk is Asleep, Confused, or Paralyzed.
+  ATK [20] Sludge Punch: The Defending Pokémon is now Poisoned.
+Dark Persian #42 (60hp)
+  ATK [-] Fascinate: Flip a coin. If heads, choose 1 of your opponent's Benched Pokémon and switch it with the Defending Pokémon. This attack can't be used if your opponent has no Benched Pokémon.
+  ATK [10] Poison Claws: Flip a coin. If heads, the Defending Pokémon is now Poisoned.
+Dark Primeape #43 (60hp)
+  POWER Frenzy: If Dark Primeape does any damage while it's Confused (even to itself), it does 30 more damage.
+  ATK [40] Frenzied Attack: Dark Primeape is now Confused (after doing damage).
+Dark Rapidash #44 (60hp)
+  ATK [30] Flame Pillar: You may discard 1 Fire Energy card attached to Dark Rapidash when you use this attack. If you do and if your opponent has any Benched Pokémon, choose 1 of them and this attack does 10 damage to it. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Dark Vaporeon #45 (60hp)
+  ATK [20] Whirlpool: If the Defending Pokémon has any Energy cards attached to it, choose 1 of them and discard it.
+Dark Wartortle #46 (60hp)
+  ATK [10×] Doubleslap: Flip 2 coins. This attack does 10 damage times the number of heads.
+  ATK [-] Mirror Shell: If an attack does damage to Dark Wartortle during your opponent's next turn (even if Dark Wartortle is Knocked Out), Dark Wartortle attacks the Defending Pokémon for an equal amount of damage.
+Magikarp #47 (30hp)
+  ATK [-] Rapid Evolution: Search your deck for an Evolution card named Gyarados or Dark Gyarados and put it on Magikarp. (This counts as evolving Magikarp.) Shuffle your deck afterward.
+Porygon #48 (40hp)
+  ATK [-] Conversion 1: If the Defending Pokémon has a Weakness, you may change it to a type of your choice other than Colorless.
+  ATK [20] Psybeam: Flip a coin. If heads, the Defending Pokémon is now Confused.
+Abra #49 (40hp)
+  ATK [-] Vanish: Shuffle Abra into your deck. (Discard all cards attached to Abra.)
+  ATK [10] Psyshock: Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+Charmander #50 (40hp)
+  POWER Gather Fire: Once during your turn (before your attack), you may take 1 Fire Energy card attached to 1 of your other Pokémon and attach it to Charmander. This power can't be used if Charmander is Asleep, Confused, or Paralyzed.
+Dark Raticate #51 (50hp)
+  ATK [50] Hyper Fang: Flip a coin. If tails, this attack does nothing.
+Diglett #52 (40hp)
+  ATK [-] Dig Under: Choose 1 of your opponent's Pokémon. This attack does 10 damage to that Pokémon. Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.)
+Dratini #53 (40hp)
+  ATK [10] Wrap: Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+Drowzee #54 (50hp)
+  POWER Long-Distance Hypnosis: Once during your turn (before your attack), you may flip a coin. If heads, the Defending Pokémon is now Asleep; if tails, your Active Pokémon is now Asleep. This power can't be used if Drowzee is Asleep, Confused, or Paralyzed.
+  ATK [10] Nightmare: The Defending Pokémon is now Asleep.
+Eevee #55 (40hp)
+  ATK [10] Sand-attack: If the Defending Pokémon tries to attack during your opponent's next turn, your opponent flips a coin. If tails, that attack does nothing.
+Ekans #56 (50hp)
+  ATK [20] Poison Sting: Flip a coin. If heads, the Defending Pokémon is now Poisoned.
+Grimer #57 (40hp)
+  ATK [-] Poison Gas: The Defending Pokémon is now Asleep.
+  ATK [10+] Sticky Hands: Flip a coin. If heads, this attack does 10 damage plus 20 more damage and the Defending Pokémon is now Paralyzed; if tails, this attack does 10 damage.
+Koffing #58 (40hp)
+  ATK [20] Poison Gas: Flip a coin. If heads, the Defending Pokémon is now Poisoned.
+Magnemite #60 (40hp)
+  ATK [10+] Magnetism: Does 10 damage plus 10 more damage for each Magnemite, Magneton, and Dark Magneton on your Bench.
+Mankey #61 (40hp)
+  ATK [-] Mischief: Shuffle your opponent's deck.
+  ATK [20+] Anger: Flip a coin. If heads, this attack does 20 damage plus 20 more damage; if tails, this attack does 20 damage.
+Meowth #62 (40hp)
+  ATK [-] Coin Hurl: Choose 1 of your opponent's Pokémon and flip a coin. If heads, this attack does 20 damage to that Pokémon. Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.)
+Oddish #63 (50hp)
+  ATK [-] Sleep Powder: The Defending Pokémon is now Asleep.
+  ATK [-] Poisonpowder: The Defending Pokémon is now Poisoned.
+Ponyta #64 (50hp)
+  ATK [30] Ember: Discard 1 Fire Energy card attached to Ponyta in order to use this attack.
+Psyduck #65 (50hp)
+  ATK [-] Dizziness: Draw a card.
+  ATK [20+] Water Gun: Does 20 damage plus 10 more damage for each Water Energy attached to Psyduck but not used to pay for this attack. You can't add more than 20 damage in this way.
+Rattata #66 (40hp)
+  POWER Trickery: Once during your turn (before your attack), you may switch 1 of your Prizes with the top card of your deck. This power can't be used if Rattata is Asleep, Confused, or Paralyzed.
+  ATK [10+] Quick Attack: Flip a coin. If heads, this attack does 10 damage plus 10 more damage; if tails, this attack does 10 damage.
+Slowpoke #67 (50hp)
+  ATK [-] Afternoon Nap: Search your deck for a Psychic Energy card and attach it to Slowpoke. Shuffle your deck afterward.
+TRAINER The Boss's Way #73
+  Search your deck for an Evolution card with Dark in its name. Show it to your opponent and put it into your hand. Shuffle your deck afterward.
+TRAINER Challenge! #74
+  Ask your opponent if he or she accepts your challenge. If your opponent declines (or if both Benches are full), draw 2 cards. If your opponent accepts, each of you searches your decks for any number of Basic Pokémon cards and puts them face down onto your Benches. (A player can't do this if his or her Bench is full.) When you both have finished, shuffle your decks and turn those cards face up.
+TRAINER Digger #75
+  Flip a coin. If tails, do 10 damage to your Active Pokémon. If heads, your opponent flips a coin. If tails, your opponent does 10 damage to his or her Active Pokémon. If heads, you flip a coin. Keep doing this until a player gets tails.
+TRAINER Imposter Oak's Revenge #76
+  Discard a card from your hand in order to play this card. Your opponent shuffles his or her hand into his or her deck, then draws 4 cards.
+TRAINER Nightly Garbage Run #77
+  Choose up to 3 Basic Pokémon cards, Evolution cards, and/or basic Energy cards from your discard pile. Show them to your opponent and shuffle them into your deck.
+TRAINER Goop Gas Attack #78
+  All Pokémon Powers stop working until the end of your opponent's next turn.
+TRAINER Sleep! #79
+  Flip a coin. If heads, the Defending Pokémon is now Asleep.
+ENERGY Full Heal Energy #81
+  If you play this card from your hand, the Pokémon you attach it to is no longer Asleep, Confused, Paralyzed, or Poisoned. Full Heal Energy provides Colorless energy. (Doesn't count as a basic Energy card.)
+ENERGY Potion Energy #82
+  If you play this card from your hand, remove 1 damage counter from the Pokémon you attach it to, if it has any. Potion Energy provides Colorless energy. (Doesn't count as a basic Energy card.)
+Dark Raichu #83 (70hp)
+  ATK [30] Surprise Thunder: Flip a coin. If heads, flip another coin. If the second coin is heads, this attack does 20 damage to each of your opponent's Benched Pokémon. If the second coin is tails, this attack does 10 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)
+======================================================================
+=== SET gym1
+======================================================================
+Blaine's Moltres #1 (90hp)
+  ATK [90] Phoenix Flame: Flip a coin. If tails, shuffle Blaine's Moltres and all cards attached to it into your deck (after doing damage).
+Brock's Rhydon #2 (80hp)
+  POWER Bench Guard: As long as Brock's Rhydon is Benched, whenever 1 of your Benched Pokémon is damaged, you may do 10 of that damage to Brock's Rhydon instead. (If more than 1 of your Benched Pokémon is damaged at the same time, you may use this power once for each of them.)
+  ATK [70] Lariat: Flip a coin. If tails, this attack does nothing.
+Erika's Clefable #3 (70hp)
+  ATK [-] Fairy Power: Flip a coin. If heads, you may return any number of your Pokémon in play and all cards attached to them to your hand.
+Erika's Dragonair #4 (80hp)
+  ATK [30] Blizzard: Flip a coin. If heads, this attack does 10 damage to each of your opponent's Benched Pokémon. If tails, this attack does 10 damage to each of your own Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)
+  ATK [-] Take Away: Shuffle Erika's Dragonair and all cards attached to it into your deck. Then, your opponent shuffles his or her Active Pokémon and all cards attached to it into his or her deck.
+Erika's Vileplume #5 (80hp)
+  POWER Pollen Defense: If an attack does damage to Erika's Vileplume while it's your Active Pokémon (even if it's Knocked Out), flip a coin. If heads, your opponent's Active Pokémon is now Confused. This power works even while Erika's Vileplume is Asleep, Confused, or Paralyzed.
+  ATK [30] Mega Drain: If Erika's Vileplume does damage to the Defending Pokémon (after applying Weakness and Resistance), remove a number of damage counters from Erika's Vileplume equal to half the damage done to the Defending Pokémon (rounded up to the nearest 10). If Erika's Vileplume has fewer damage counters than that, remove all of them.
+Lt. Surge's Electabuzz #6 (70hp)
+  ATK [-] Charge: Take up to 2 Lightning Energy cards from your discard pile and attach them to Lt. Surge's Electabuzz.
+  ATK [30×] Discharge: Discard all Lightning Energy cards attached to Lt. Surge's Electabuzz in order to use this attack. Flip a number of coins equal to the number of Lightning Energy cards you discarded. This attack does 30 damage times the number of heads.
+Lt. Surge's Fearow #7 (70hp)
+  ATK [10×] Repeating Drill: Flip 5 coins. This attack does 10 damage times the number of heads.
+  ATK [30] Clutch: The Defending Pokémon can't retreat during your opponent's next turn.
+Lt. Surge's Magneton #8 (70hp)
+  POWER Energy Charge: As often as you like during your turn (before your attack), if Lt. Surge's Magneton is your Active Pokémon, you may take 1 Lightning Energy card attached to 1 of your Pokémon and attach it to Lt. Surge's Magneton. This power can't be used if Lt. Surge's Magneton is Asleep, Confused, or Paralyzed.
+  ATK [50] Mega Shock: Flip a coin. If tails, Lt. Surge's Magneton does 20 damage to itself.
+Misty's Seadra #9 (70hp)
+  ATK [30+] Knockout Needle: Flip 2 coins. If both of them are heads, this attack does 30 damage plus 60 more damage. If 1 or both of them are tails, this attack does 30 damage.
+Misty's Tentacruel #10 (70hp)
+  POWER Flee: If an attack does damage to Misty's Tentacruel while it's your Active Pokémon, you may switch it with 1 of your Benched Pokémon, which prevents all other effects of that attack on Misty's Tentacruel. This power can't be used if Misty's Tentacruel is already Asleep, Confused, or Paralyzed.
+  ATK [30] Jellyfish Poison: Flip a coin. If heads, the Defending Pokémon is now Poisoned. If tails, the Defending Pokémon is now Confused.
+Rocket's Hitmonchan #11 (60hp)
+  ATK [-] Crosscounter: If an attack does damage to Rocket's Hitmonchan during your opponent's next turn (even if Rocket's Hitmonchan is Knocked Out), flip a coin. If heads, Rocket's Hitmonchan attacks your opponent's Active Pokémon for double that amount of damage. (If Rocket's Hitmonchan takes 20 damage, it does 40 damage to that Pokémon.)
+Rocket's Moltres #12 (60hp)
+  POWER Rebirth: When Rocket's Moltres is Knocked Out, you may return it to your hand after discarding it. This power can't be used if Rocket's Moltres is Asleep, Confused, or Paralyzed when it is Knocked Out.
+  ATK [40] Fire Wall: If an attack does damage to Rocket's Moltres during your opponent's next turn (even if Rocket's Moltres is Knocked Out), Rocket's Moltres attacks your opponent's Active Pokémon for 10 damage. (Apply Weakness and Resistance.)
+Rocket's Scyther #13 (60hp)
+  ATK [-] Shadow Images: Whenever Rocket's Scyther is attacked, your opponent flips a coin. If tails, that attack does no damage to Rocket's Scyther. (Any other effects of the attack still happen.) This effect lasts until Rocket's Scyther takes damage (or is Benched or is evolved).
+Sabrina's Gengar #14 (80hp)
+  ATK [-] Pain Amplifier: Put a damage counter on each of your opponent's Pokémon has already has any damage counters on it.
+  ATK [40] Call of the Night: Unless this attack Knocks Out the Defending Pokémon, flip 2 coins. If both of them are heads, your opponent shuffles his or her Active Pokémon and all cards attached to it into his or her deck.
+TRAINER Brock #15
+  Remove 1 damage counter from each of your Pokémon that has any damage counters on it.
+TRAINER Erika #16
+  You may draw up to 3 cards, then your opponent may draw up to 3 cards.
+TRAINER Lt. Surge #17
+  You can play this card only if you have at least 1 Basic Pokémon card in your hand. Put a Basic Pokémon card from your hand into play as your Active Pokémon. Put your old Active Pokémon onto your Bench. (You can't play this card if your Bench is full.)
+TRAINER Misty #18
+  Discard 2 of the other cards in your hand in order to play this card. If this turn's attack does damage to the Defending Pokémon (after applying Weakness and Resistance), and if the attacking Pokémon has Misty in its name, the attack does 20 more damage to the Defending Pokémon.
+TRAINER The Rocket's Trap #19
+  Flip a coin. If heads, choose up to 3 cards at random from your opponent's hand (don't look at them). Your opponent shuffles those cards into his or her deck.
+Brock's Golem #20 (90hp)
+  ATK [20] Rock Slide: If your opponent has any Benched Pokémon, choose up to 3 of them. This attack does 10 damage to each of them. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Brock's Onix #21 (70hp)
+  ATK [20] Bind: Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+  ATK [-] Tunneling: If your opponent has any Benched Pokémon, choose up to 2 of them. This attack does 20 damage to each of them. (Don't apply Weakness and Resistance for Benched Pokémon.) Brock's Onix can't attack during your next turn.
+Brock's Rhyhorn #22 (60hp)
+  ATK [20] Horn Toss: If your opponent has any Benched Pokémon, he or she chooses 1 of them and switches it with the Defending Pokémon. (Do the damage before switching the Pokémon.)
+  ATK [40] Take Down: Brock's Rhyhorn does 10 damage to itself.
+Brock's Sandslash #23 (60hp)
+  ATK [10] Needles: Flip a coin. If heads, the Defending Pokémon is now Paralyzed and Poisoned.
+  ATK [20] Sandstorm: If the Defending Pokémon tries to attack during your opponent's next turn, your opponent flips a coin. If tails, that attack does nothing.
+Brock's Zubat #24 (30hp)
+  ATK [-] Alert: Draw a card. Then, switch Brock's Zubat with 1 of your Benched Pokémon. You can't use this attack if your Bench is empty.
+Erika's Clefairy #25 (50hp)
+  ATK [-] Moonwatching: Search your deck for a basic Energy card. Show that card to your opponent, then put it into your hand. Shuffle your deck afterward.
+  ATK [10×] Comet Slap: Flip 3 coins. This attack does 10 damage times the number of heads.
+Erika's Victreebel #26 (80hp)
+  POWER Fragrance Trap: Once during your turn (before your attack), you may flip a coin. If heads, and if your opponent has any Benched Pokémon, choose 1 of them and switch it with his or her Active Pokémon. This power can't be used if Erika's Victreebel is Asleep, Confused, or Paralyzed.
+Lt. Surge's Electabuzz #27 (60hp)
+  ATK [-] Charge: Take up to 2 Lightning Energy cards from your discard pile and attach them to Lt. Surge's Electabuzz.
+  ATK [20] Electric Current: Take 1 Lightning Energy card attached to Lt. Surge's Electabuzz and attach it to 1 of your Benched Pokémon. If you have no Benched Pokémon, discard that Energy card.
+Lt. Surge's Raichu #28 (70hp)
+  ATK [100] Thunderbolt: Discard all Energy cards attached to Lt. Surge's Raichu in order to use this attack.
+Misty's Cloyster #29 (70hp)
+  POWER Shell Armor: You may reduce all damage done by attacks to Misty's Cloyster by 10 (after applying Weakness and Resistance). (Any other effects of attacks still happen). This power can't be used if Misty's Cloyster is Asleep, Confused, or Paralyzed.
+  ATK [20×] Triple Cannon: Flip 3 coins. This attack does 20 damage times the number of heads.
+Misty's Goldeen #30 (30hp)
+  ATK [30] Horn Hazard: Flip a coin. If tails, this attack does nothing.
+Misty's Poliwrath #31 (90hp)
+  ATK [30] Water Ring: Does 10 damage to each Pokémon that isn't Water on each player's Bench. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Misty's Tentacool #32 (40hp)
+  ATK [-] Mysterious Light: Flip a coin. If heads, the Defending Pokémon is now Asleep.
+  ATK [-] Jellyfish Pod: Search your deck for any number of Pokémon named Tentacool, Tentacruel, Misty's Tentacool, and/or Misty's Tentacruel. Show those cards to your opponent, then put them into your hand. Shuffle your deck afterward.
+Rocket's Snorlax #33 (90hp)
+  POWER Restless Sleep: If your opponent's attack does damage to Rocket's Snorlax and Rocket's Snorlax is already Asleep (even if it's Knocked Out), this power does 20 damage to the attacking Pokémon.
+  ATK [20] Collapse: Rocket's Snorlax is now Asleep (after doing damage).
+Sabrina's Venomoth #34 (60hp)
+  ATK [-] Healing Pollen: Flip 3 coins. For each heads, remove 1 damage counter from each of your Pokémon. If a Pokémon has fewer damage counters than the number of heads, remove all of them.
+  ATK [10] Sonic Distortion: Flip 2 coins. If 1 or both of them are heads, the Defending Pokémon is now Confused.
+Blaine's Growlithe #35 (50hp)
+  ATK [10] Shake: If your opponent has any Benched Pokémon, he or she chooses 1 of them and switches it with the Defending Pokémon. (Do the damage before switching the Pokémon.)
+  ATK [30] Fire Tackle: Blaine's Growlithe does 10 damage to itself.
+Blaine's Kangaskhan #36 (80hp)
+  ATK [10] Child's Punch: Flip a coin. If tails, this attack does nothing.
+  ATK [30+] One-Two Punch: Flip a coin. If heads, this attack does 30 damage plus 10 more damage; if tails, this attack does 30 damage.
+Blaine's Magmar #37 (60hp)
+  ATK [10+] Firebreathing: Flip a coin. If heads, this attack does 10 damage plus 10 more damage; if tails, this attack does 10 damage.
+  ATK [20×] Lava Burst: Discard the top 5 cards of your deck. (If there are fewer than 5 cards in your deck, discard all of them.) This attack does 20 damage for each Fire Energy card you discarded in this way.
+Brock's Geodude #38 (50hp)
+  ATK [-] Lucky Shot: Choose 1 of your opponent's Benched Pokémon and flip a coin. If heads, this attack does 30 damage to that Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.) This attack can't be used if your opponent has no Benched Pokémon.
+Brock's Golbat #39 (70hp)
+  ATK [-] Spiral Dive: Does 10 damage to each of your opponent's Pokémon. Don't apply Weakness and Resistance.
+Brock's Graveler #40 (70hp)
+  ATK [20×] Rock Toss: Flip 3 coins. This attack does 20 damage times the number of heads.
+Brock's Lickitung #41 (80hp)
+  ATK [30×] Slam: Flip 2 coins. This attack does 30 damage times the number of heads.
+Erika's Dratini #42 (40hp)
+  POWER Strange Barrier: Whenever an attack by a Basic Pokémon (including your own) does 20 or more damage to Erika's Dratini (after applying Weakness and Resistance), reduce that damage to 10. (Any other effects of attacks still happen.) This power stops working while Erika's Dratini is Asleep, Confused, or Paralyzed.
+  ATK [10+] Tail Strike: Flip a coin. If heads, this attack does 10 damage plus 20 more damage; if tails, this attack does 10 damage.
+Erika's Exeggcute #43 (50hp)
+  ATK [-] Deflector: During your opponent's next turn, whenever Erika's Exeggcute takes damage, divide that damage in half (rounded down to the nearest 10). (Any other effects still happen.)
+  ATK [40] Egg Bomb: Flip a coin. If tails, this attack does nothing to the Defending Pokémon and Erika's Exeggcute does 20 damage to itself.
+Erika's Exeggutor #44 (70hp)
+  ATK [-] Psychic Exchange: Shuffle your hand into your deck, then draw 5 cards.
+  ATK [30+] Stomp: Flip a coin. If heads, this attack does 30 damage plus 10 more damage; if tails, this attack does 30 damage.
+Erika's Gloom #45 (60hp)
+  ATK [-] Healing Pollen: Flip a coin. If heads, remove 4 damage counters from Erika's Gloom. If Erika's Gloom has fewer damage counters than that, remove all of them.
+  ATK [30] Magic Pollen: Flip a coin. If heads, the Defending Pokémon is now Asleep, Confused, Paralyzed, or Poisoned (your choice).
+Erika's Gloom #46 (70hp)
+  ATK [10] Dream Dance: Both the Defending Pokémon and Erika's Gloom are now Asleep (after doing damage).
+  ATK [30] Vile Smell: Both the Defending Pokémon and Erika's Gloom are now Confused (after doing damage).
+Erika's Oddish #47 (40hp)
+  POWER Photosynthesis: All Energy cards attached to Erika's Oddish provide Grass Energy instead of their usual type. This power works even while Erika's Oddish is Asleep, Confused, or Paralyzed.
+  ATK [20] Poisonpowder: Flip a coin. If heads, the Defending Pokémon is now Poisoned.
+Erika's Weepinbell #48 (60hp)
+  ATK [20] Flytrap: Before doing damage, choose 1 of your opponent's Benched Pokémon and switch it with his or her Active Pokémon. This attack can't be used if your opponent has no Benched Pokémon.
+Erika's Weepinbell #49 (70hp)
+  ATK [-] Sleep Poison: The Defending Pokémon is now Asleep and Poisoned.
+Lt. Surge's Magnemite #50 (30hp)
+  ATK [10] Removal Pulse: If the Defending Pokémon has any Energy cards attached to it, flip a coin. If heads, choose 1 of those Energy cards and discard it.
+  ATK [20] Confusion Pulse: Flip a coin. If heads, the Defending Pokémon is now Confused.
+Lt. Surge's Raticate #51 (70hp)
+  ATK [?] Super Fang: Does damage to the Defending Pokémon equal to half the Defending Pokémon's remaining HP (rounded up to the nearest 10).
+Misty's Poliwhirl #53 (70hp)
+  ATK [20] Rapids: If the Defending Pokémon has any Energy cards attached to it, flip a coin. If heads, choose 1 of those Energy cards and discard it.
+  ATK [30+] Water Punch: Flip a number of coins equal to the number of Water Energy attached to Misty's Poliwhirl. This attack does 30 damage plus 10 damage for each heads.
+Misty's Psyduck #54 (50hp)
+  ATK [-] Call for Friend: Flip a coin. If heads, you may search your deck for a Basic Pokémon with Misty in its name and put it onto your Bench. (You can't use this attack if your Bench is full.) Shuffle your deck afterward.
+Misty's Seaking #55 (70hp)
+  ATK [30] Mud Splash: If your opponent has any Benched Pokémon, choose 1 of them and flip a coin. If heads, this attack does 10 damage to that Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Misty's Starmie #56 (80hp)
+  ATK [10+] Water Gun: Does 10 damage plus 10 more damage for each Water Energy attached to Misty's Starmie but not used to pay for this attack's Energy cost. You can't add more than 20 damage in this way.
+  ATK [30] Bubblebeam: Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+Misty's Tentacool #57 (50hp)
+  ATK [20] Crystal Beam: Flip a coin. If heads, your opponent can't attach Energy cards to the Defending Pokémon during his or her next turn.
+Sabrina's Haunter #58 (50hp)
+  ATK [30×] Night Spirits: Flip a number of coins equal to the total number of Sabrina's Gastlys, Sabrina's Haunters, and Sabrina's Gengars you have in play. This attack does 30 damage times the number of heads.
+Sabrina's Jynx #59 (60hp)
+  ATK [10] Good Night: The Defending Pokémon is now Asleep.
+  ATK [20] Good Morning: If the Defending Pokémon was Asleep, it is no longer Asleep.
+Sabrina's Slowbro #60 (70hp)
+  ATK [-] Naptime: Flip a coin. If heads, remove 3 damage counters from Sabrina's Slowbro and Sabrina's Slowbro is now Asleep. If Sabrina's Slowbro has fewer damage counters than that, remove all of them.
+  ATK [40] Screaming Headbutt: You can't use this attack during your next turn.
+Blaine's Charmander #61 (50hp)
+  ATK [10] Kindle: Discard 1 Energy card attached to Blaine's Charmander in order to use this attack. If the Defending Pokémon has any Energy cards attached to it, choose 1 of them and discard it.
+Blaine's Growlithe #62 (50hp)
+  ATK [20] Blaze: Does 10 damage to each Grass Pokémon on your opponent's Bench. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Blaine's Ponyta #63 (40hp)
+  ATK [20] Agility: Flip a coin. If heads, during your opponent's next turn, prevent all effects of attacks, including damage, done to Blaine's Ponyta.
+Blaine's Tauros #64 (70hp)
+  ATK [10×] 3-Pronged Tail: Flip 3 coins. This attack does 10 damage times the number of heads.
+  ATK [20×] Full Speed Charge: Flip 4 coins. This attack does 20 damage times the number of heads to the Defending Pokémon and 20 damage times the number of tails to Blaine's Tauros.
+Blaine's Vulpix #65 (40hp)
+  POWER Natural Healing: Once during your turn (before your attack), you may remove 1 damage counter from Blaine's Vulpix. This power can't be used if Blaine's Vulpix is Asleep, Confused, or Paralyzed.
+  ATK [20] Tail Fan: Flip a coin. If heads, the Defending Pokémon is now Confused.
+Brock's Geodude #66 (40hp)
+  ATK [-] Call for Friend: Flip a coin. If heads, you may search your deck for a Basic Pokémon card with Brock in its name and put it onto your Bench. Shuffle your deck afterward. (You can't use this attack if your Bench is full.)
+  ATK [20] Hook Shot: Don't apply Resistance for this attack. (Any other effects that would happen after applying Resistance still happen.)
+Brock's Mankey #67 (40hp)
+  ATK [-] Taunt: If your opponent has any Benched Pokémon, choose 1 of them and switch it with the Defending Pokémon.
+Brock's Mankey #68 (40hp)
+  ATK [-] Fidget: Shuffle your deck.
+  ATK [40-] Karate Chop: Does 40 damage minus 10 damage for each damage counter on Brock's Mankey.
+Brock's Onix #69 (100hp)
+  ATK [-] Bellow: Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+Brock's Rhyhorn #70 (70hp)
+  ATK [70] Drill Tackle: Flip 2 coins. If 1 or both of them are tails, this attack does nothing.
+Brock's Sandshrew #71 (40hp)
+  ATK [-] Defense Curl: Flip a coin. If heads, prevent all damage done to Brock's Sandshrew during your opponent's next turn. (Any other effects of attacks still happen.)
+Brock's Sandshrew #72 (50hp)
+  ATK [20] Sand Pit: The Defending Pokémon can't retreat during your opponent's next turn.
+Brock's Vulpix #73 (40hp)
+  ATK [10+] Quick Attack: Flip a coin. If heads, this attack does 10 damage plus 20 more damage; if tails, this attack does 10 damage.
+Brock's Zubat #74 (40hp)
+  ATK [20] Poison Fang: Flip a coin. If heads, the Defending Pokémon is now Poisoned.
+Erika's Bellsprout #75 (40hp)
+  ATK [10] Poison Vine: Flip a coin. If heads, the Defending Pokémon is now Poisoned.
+Erika's Bellsprout #76 (50hp)
+  ATK [20] Careless Tackle: Erika's Bellsprout does 10 damage to itself.
+Erika's Exeggcute #77 (40hp)
+  ATK [10×] Eggsplosion: Flip a number of coins equal to the number of Energy attached to Erika's Exeggcute. This attack does 10 damage times the number of heads.
+  ATK [10+] Psychic: Does 10 damage plus 10 more damage for each Energy card attached to the Defending Pokémon.
+Erika's Oddish #78 (50hp)
+  ATK [10] Blot: If there are any damage counters on Erika's Oddish, remove 1 of them.
+  ATK [20] Sporadic Sponging: If Erika's Oddish has any damage counters on it, flip a coin. If heads, remove 1 of those damage counters.
+Erika's Tangela #79 (60hp)
+  ATK [-] Stretch Vine: If your opponent has any Benched Pokémon, choose 1 of them and this attack does 20 damage to it. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Lt. Surge's Magnemite #80 (40hp)
+  ATK [10] Thundershock: Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+Lt. Surge's Pikachu #81 (50hp)
+  ATK [-] Charge: Take 1 Lightning Energy card from your discard pile and attach it to Lt. Surge's Pikachu.
+  ATK [20] Lightning Tail: Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+Lt. Surge's Rattata #82 (40hp)
+  ATK [-] Focus Energy: During your next turn, Lt. Surge's Rattata's Gnaw attack's base damage is doubled.
+Lt. Surge's Spearow #83 (50hp)
+  ATK [10] Whirlwind: If your opponent has any Benched Pokémon, he or she chooses 1 of them and switches it with the Defending Pokémon. (Do the damage before switching the Pokémon.)
+  ATK [40] Razor Wind: Flip a coin. If tails, this attack does nothing.
+Lt. Surge's Voltorb #84 (40hp)
+  ATK [20×] Spin Ball: Flip 1 coin. This attack does 20 damage times the number of heads.
+  ATK [20×] Double Spin: Flip 2 coins. This attack does 20 damage times the number of heads.
+Misty's Goldeen #85 (40hp)
+  ATK [10×] Fury Attack: Flip 2 coins. This attack does 10 damage times the number of heads.
+  ATK [-] Supersonic: Flip a coin. If heads, the Defending Pokémon is now Confused.
+Misty's Horsea #86 (40hp)
+  ATK [20] Smokescreen: If the Defending Pokémon tries to attack during your opponent's next turn, your opponent flips a coin. If tails, that attack does nothing.
+Misty's Poliwag #87 (50hp)
+  ATK [-] Hypnotic Stare: Flip a coin. If heads, the Defending Pokémon is now Paralyzed. If tails, the Defending Pokémon is now Asleep.
+  ATK [20×] Tail Rap: Flip 2 coins. This attack does 20 damage times the number of heads.
+Misty's Shellder #89 (40hp)
+  ATK [20] Clamp: Flip a coin. If heads, the Defending Pokémon is now Paralyzed. If tails, this attack does nothing (not even damage).
+Misty's Staryu #90 (50hp)
+  ATK [20] Swift: This attack's damage isn't affected by Weakness, Resistance, Pokémon Powers, or any other effects on the Defending Pokémon.
+Sabrina's Abra #91 (40hp)
+  ATK [20] Energy Loop: Return a Psychic Energy card attached to Sabrina's Abra to your hand in order to use this attack.
+Sabrina's Drowzee #92 (50hp)
+  ATK [-] Suggestion: Flip a coin. If heads, the Defending Pokémon can't attack during your opponent's next turn.
+Sabrina's Gastly #93 (50hp)
+  ATK [20] Spook: The Defending Pokémon can't retreat during your opponent's next turn.
+Sabrina's Mr. Mime #94 (50hp)
+  ATK [-] Sleight of Hand: Choose up to 3 cards from your hand and put them on top of your deck. Then search your deck for that many basic Energy cards. Show those cards to your opponent, then put them into your hand. Shuffle your deck afterward.
+Sabrina's Slowpoke #95 (50hp)
+  ATK [30] Lazy Attack: Sabrina's Slowpoke is now Asleep (after doing damage).
+Sabrina's Venonat #96 (40hp)
+  ATK [-] Poison Antennae: The Defending Pokémon is now Poisoned.
+  ATK [20] Removal Beam: If the Defending Pokémon has any Energy cards attached to it, flip a coin. If heads, choose 1 of those Energy cards and discard it.
+TRAINER Blaine's Quiz #1 #97
+  Put a Basic Pokémon or Evolution card from your hand face down in front of you and tell your opponent its name. Your opponent guesses the length of that Pokémon. Flip the card over. If your opponent guessed right, he or she draws 2 cards. If your opponent guessed wrong, you draw 2 cards. Either way, return the card to your hand.
+TRAINER Charity #99
+  Attach Charity to your Active Pokémon. Unless that Pokémon gets Knocked Out, return Charity to your hand at the end of your turn. If that Pokémon attacks and does damage to the Defending Pokémon, you may reduce that damage by any amount (rounded to the nearest 10).
+TRAINER [STADIUM] No Removal Gym #103
+  This card stays in play when you play it. Discard this card if another Stadium card comes into play. A player must discard 2 cards from his or her hand in order to play an Energy Removal or Super Energy Removal card.
+TRAINER [STADIUM] The Rocket's Training Gym #104
+  This card stays in play when you play it. Discard this card if another Stadium card comes into play. Each player pays Colorless more to retreat his or her Active Pokémon.
+TRAINER Blaine's Last Resort #105
+  You can't play this card if you have any cards in your hand other than Blaine's Last Resort. Show your hand to your opponent, then draw 5 cards.
+TRAINER Brock's Training Method #106
+  Search your deck for a Basic Pokémon or Evolution card with Brock in its name. Show that card to your opponent, then put it into your hand. Shuffle your deck afterward.
+TRAINER [STADIUM] Celadon City Gym #107
+  This card stays in play when you play it. Discard this card if another Stadium card comes into play. During each player's turn, that player may choose to discard an Energy card attached to 1 of his or her Pokémon with Erika in its name. If that player does so, that Pokémon is no longer Asleep, Confused, Paralyzed, or Poisoned.
+TRAINER [STADIUM] Cerulean City Gym #108
+  This card stays in play when you play it. Discard this card if another Stadium card comes into play. Each player pays Colorless less to retreat his or her Pokémon if it has Misty in its name.
+TRAINER Erika's Maids #109
+  Trade 2 of the other cards in your hand for up to 2 Basic Pokémon and/or Evolution cards with Erika in their names from your deck. Show those cards to your opponent, then put them into your hand. Shuffle your deck afterward.
+TRAINER Erika's Perfume #110
+  Look at your opponent's hand. If he or she has any Basic Pokémon cards there, you may put any number of them onto your opponent's Bench (as long as there's room).
+TRAINER Good Manners #111
+  In order to play this card, you can't have any Basic Pokémon cards in your hand. Show your hand to your opponent, then search your deck for a Basic Pokémon card, show it to your opponent, and put it into your hand. Shuffle your deck afterward.
+TRAINER Lt. Surge's Treaty #112
+  Your opponent chooses 1 of the following: everyone chooses 1 of his or her own Prizes and put it into his or her hand, or you draw a card.
+TRAINER Minion of Team Rocket #113
+  Flip 2 coins. If both of them are heads, choose 1 of your opponent's Benched Pokémon and return it and all cards attached to it to his or her hand. If 1 or both of them are tails, your turn ends immediately (you can't attack this turn).
+TRAINER Misty's Wrath #114
+  Look at the top 7 cards of your deck. Choose 2 of those cards and put them into your hand. Discard the rest.
+TRAINER [STADIUM] Pewter City Gym #115
+  This card stays in play when you play it. Discard this card if another Stadium card comes into play. Don't apply Resistance to any attacks made by Pokémon with Brock in their names.
+TRAINER Recall #116
+  For your attack this turn, your Active Pokémon can use any attack from its Basic Pokémon card or any Evolution card attached to it. (You still have to pay for that attack's Energy cost.)
+TRAINER Sabrina's ESP #117
+  Attach Sabrina's ESP to 1 of your Pokémon with Sabrina in its name. At the end of your turn, discard Sabrina's ESP. If that Pokémon uses and attack that involves flipping coins, Sabrina's ESP lets you re-flip those coins once. If you do, re-flip all the coins.
+TRAINER Secret Mission #118
+  Look at your opponent's hand. Then, you may discard as many other cards as you want from your hand and draw that many cards.
+TRAINER Tickling Machine #119
+  Flip a coin. If heads, your opponent sets aside all the cards in his or her hand face down. Nobody may look at those cards. At the end of your opponent's next turn, your opponent puts those cards back into his or her hand. If tails, your turn ends immediately (you can't attack this turn).
+TRAINER [STADIUM] Vermilion City Gym #120
+  This card stays in play when you play it. Discard this card if another Stadium card comes into play. Whenever a player attacks with a Pokémon with Lt. Surge in its name, he or she may flip a coin. If heads, and if that Pokémon's attack does damage to the Defending Pokémon (after applying Weakness and Resistance), that attack does 10 more damage to the Defending Pokémon. If tails, the attacking Pokémon does 10 damage to itself in addition to whatever its attack usually does.
+TRAINER Blaine's Gamble #121
+  Discard any number of other cards from your hand, then flip a coin. If heads, draw twice that many cards.
+TRAINER Energy Flow #122
+  For each of your Pokémon, you may return any number of Energy cards attached to it to your hand.
+TRAINER Misty's Duel #123
+  You and your opponent play a game of Rock-Paper-Scissors. The winner shuffles his or her hand into his or her deck and draws a new hand of 5 cards. (If you don't know how to play Rock-Paper-Scissors, flip a coin to decide who's the winner.)
+TRAINER [STADIUM] Narrow Gym #124
+  This card stays in play when you play it. Discard this card if another Stadium card comes into play. No player may have more than 4 Pokémon on his or her Bench. When this card is played, if a player has 5 Pokémon on his or her Bench, that player chooses 1 of them and returns it and all cards attached to it to his or her hand. (If both players have to return a Pokémon, your opponent returns a Pokémon first.)
+TRAINER Sabrina's Gaze #125
+  Each player shuffles his or her hand into his or her deck and draws a new hand of the same number of cards.
+TRAINER Trash Exchange #126
+  Count the number of cards in your discard pile and shuffle them into your deck. Then discard that many cards from the top of your deck.
+======================================================================
+=== SET gym2
+======================================================================
+Blaine's Arcanine #1 (90hp)
+  ATK [40] Heat Tackle: Blaine's Arcanine does 10 damage to itself.
+  ATK [120] Firestorm: Discard 3 Fire Energy cards attached to Blaine's Arcanine in order to use this attack.
+Blaine's Charizard #2 (100hp)
+  ATK [20+] Roaring Flames: Discard all Fire Energy cards attached to Blaine's Charizard. If all Energy cards attached to Blaine's Charizard provide 2 Fire Energy, discard all of them. This attack does 20 damage plus 20 more damage for each Fire Energy discarded in this way.
+  ATK [-] Flame Jet: Flip a coin. If heads, choose 1 of your opponent's Pokémon. This attack does 40 damage to that Pokémon. Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.)
+Brock's Ninetales #3 (70hp)
+  POWER Shapeshift: Once during your turn (before your attack), you may attach an Evolution card from your hand to Brock's Ninetales. (This doesn't count as evolving Brock's Ninetales.) Treat Brock's Ninetales as if it were that Pokémon instead. It can't evolve, devolve, or use the Pokémon Power of that Pokémon. During your turn, you may discard the Evolution card attached to Brock's Ninetales. This power can't be used if Brock's Ninetales is Asleep, Confused, or Paralyzed. If Brock's Ninetales becomes Asleep, Confused, or Paralyzed, discard all Evolution cards attached to it.
+Erika's Venusaur #4 (90hp)
+  ATK [-] Growth: Flip a coin. If heads, you may attach up to 2 Grass Energy cards from your hand to Erika's Venusaur.
+  ATK [20] Wide Solarbeam: If your opponent has any Benched Pokémon, choose 2 of them (or 1 if he or she only has 1). This attack does 20 damage to each of them. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Giovanni's Gyarados #5 (90hp)
+  ATK [-] Summon Storm: Flip 2 coins. If both of them are heads, this attack does 20 damage to each other Pokémon (even your own). Don't apply Weakness and Resistance for this attack.
+  ATK [40] Dragon Tornado: Unless this attack Knocks Out the Defending Pokémon, choose 1 of your opponent's Benched Pokémon and switch it with the Defending Pokémon.
+Giovanni's Machamp #6 (100hp)
+  POWER Fortitude: If Giovanni's Machamp would be Knocked Out by an opponent's attack, flip a coin. If heads, Giovanni's Machamp is not Knocked Out and its remaining HP become 10 instead. This power can't be used if Giovanni's Machamp is already Asleep, Confused, or Paralyzed.
+  ATK [30×] Hurricane Punch: Flip 4 coins. This attack does 30 damage times the number of heads.
+Giovanni's Nidoking #7 (120hp)
+  ATK [-] Intimidate: If the Defending Pokémon's maximum HP is 50 or less, it can't attack Giovanni's Nidoking during your opponent's next turn. (Benching or evolving either Pokémon ends this effect.)
+  ATK [40+] Tumbling Attack: Flip a coin. If heads, this attack does 40 damage plus 30 more damage; if tails, this attack does 40 damage.
+Giovanni's Persian #8 (60hp)
+  POWER Call the Boss: When you play Giovanni's Persian from your hand, you may search your deck for the Trainer card named Giovanni, show it to your opponent, and put it into your hand. Shuffle your deck afterward.
+  ATK [20+] Ambush: Flip a coin. If heads, this attack does 20 damage plus 20 more damage; if tails, this attack does 20 damage.
+Koga's Beedrill #9 (80hp)
+  ATK [20] Nerve Poison: Flip a coin. If heads, the Defending Pokémon is now Paralyzed and Poisoned.
+  ATK [70] Hyper Needle: Flip a coin. If tails, this attack does nothing. Either way, you can't use this attack again as long as Koga's Beedrill stays in play (even putting Koga's Beedrill on the Bench won't let you use it again).
+Koga's Ditto #10 (40hp)
+  ATK [-] Giant Growth: Flip a coin. If heads, Koga's Ditto's maximum HP is now 80 and Koga's Ditto's Pound attack's base damage is 30 instead of 10. (Benching Koga's Ditto ends this effect.)
+Lt. Surge's Raichu #11 (80hp)
+  ATK [20+] Kerzap: Flip a coin. If heads, this attack does 20 damage plus 30 more damage to the Defending Pokémon and discard all Lightning Energy cards attached to Lt. Surge's Raichu. If tails, this attack does 20 damage.
+  ATK [40] Thundertackle: Flip a coin. If heads, the Defending Pokémon is now Paralyzed. If tails, Lt. Surge's Raichu does 20 damage to itself.
+Misty's Golduck #12 (70hp)
+  ATK [40] Electro Beam: Flip a coin. If tails, discard all Energy cards attached to Misty's Golduck.
+  ATK [-] Super Removal: Flip a coin. If heads, choose 1 Energy card attached to each of your opponent's Pokémon that has any Energy cards and discard those Energy cards.
+Misty's Gyarados #13 (100hp)
+  POWER Rebellion: Whenever Misty's Gyarados attacks, flip 2 coins. If both of them are tails, that attack does nothing. Instead, shuffle Misty's Gyarados and all cards attached to it into your deck. (This power works even if Misty's Gyarados is Confused.)
+Rocket's Mewtwo #14 (70hp)
+  ATK [-] Juxtapose: Flip a coin. If heads, switch the number of damage counters on Rocket's Mewtwo with the number of damage counters on the Defending Pokémon (even if it would Knock Out either Pokémon). (It's okay if 1 of the Pokémon has no damage counters on it.)
+  ATK [20] Hypnoblast: Flip a coin. If heads, the Defending Pokémon is now Asleep.
+Rocket's Zapdos #15 (70hp)
+  ATK [20] Plasma: If there are any Lightning Energy cards in your discard pile, attach 1 of them to Rocket's Zapdos.
+  ATK [70] Electroburn: Rocket's Zapdos does damage to itself equal to 10 times the number of Lightning Energy cards attached to it.
+Sabrina's Alakazam #16 (80hp)
+  POWER Psylink: Sabrina's Alakazam always has a copy of every attack your Psychic Pokémon in play have (including their Energy costs and anything else required in order to use those attacks, such as discarding Energy cards). This power can't be used if Sabrina's Alakazam is Asleep, Confused, or Paralyzed.
+  ATK [60] Mega Burn: You can't use this attack during your next turn.
+TRAINER Blaine #17
+  During this turn, instead of attaching your free Energy card, you may instead attach 2 Fire Energy cards to 1 of your Pokémon with Blaine in its name. (Playing additional copies of this card this turn has no effect.)
+TRAINER Giovanni #18
+  Choose 1 of your Pokémon in play with Giovanni in its name. For the rest of your turn, you may evolve that Pokémon even if you just played or evolved it this turn or if this is your first turn. This effect also applies to the Pokémon it evolves into.
+TRAINER Koga #19
+  If an attack from a Pokémon with Koga in its name does damage to a Defending Pokémon this turn, that Pokémon is then Poisoned.
+TRAINER Sabrina #20
+  Take all Energy cards attached to 1 of your Pokémon with Sabrina in its name and attach them to another 1 of your Pokémon with Sabrina in its name.
+Blaine's Ninetales #21 (60hp)
+  POWER Healing Fire: Whenever you attach a Fire Energy card from your hand to Blaine's Ninetales, remove 1 damage counter from it, if it has any. This power stops working when Blaine's Ninetales is Asleep, Confused, or Paralyzed.
+  ATK [50] Burn Up: Flip a coin. If tails, discard all Fire Energy cards attached to Blaine's Ninetales.
+Brock's Dugtrio #22 (60hp)
+  ATK [-] Lie Low: All damage done to Brock's Dugtrio during your opponent's next turn is reduced by 20 (after applying Weakness and Resistance).
+  ATK [60] Earthdrill: This attack can't be used unless Brock's Dugtrio used its Lie Low attack last turn.
+Giovanni's Nidoqueen #23 (100hp)
+  ATK [50+] Love Lariat: Flip a coin. If heads, this attack does 50 damage plus 50 more damage if you have at least 1 Giovanni's Nidoking on your Bench. If tails, this attack does nothing.
+Giovanni's Pinsir #24 (70hp)
+  ATK [10+] Snapping Pincers: Flip a coin. If heads, this attack does 10 damage plus 10 more damage; if tails, this attack does 10 damage.
+  ATK [40] Overhead Toss: If you have any Benched Pokémon, flip a coin. If tails, choose 1 of your Benched Pokémon. This attack does 20 damage to that Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Koga's Arbok #25 (90hp)
+  ATK [-] Poison Buildup: Koga's Arbok is now Poisoned.
+  ATK [20] Poison Power: If Koga's Arbok is Poisoned, this attack's base damage is 40 instead of 20 and the Defending Pokémon is now Poisoned.
+Koga's Muk #26 (80hp)
+  POWER Energy Drain: If an opponent's attack does damage to Koga's Muk (even if Koga's Muk is Knocked Out), flip a coin. If heads and if it has any, choose 1 Energy card attached to the attacking Pokémon and discard it. This power can't be used if Koga's Muk is already Asleep, Confused, or Paralyzed when your opponent attacks.
+Koga's Pidgeotto #27 (60hp)
+  ATK [30×] Quick Turn: Flip 2 coins. This attack does 30 damage times the number of heads.
+  ATK [10+] Aerial Maneuvers: Flip a coin. If heads, this attack does 10 damage plus 30 more damage, and, during your opponent's next turn, prevent all effects of attacks, including damage, done to Koga's Pidgeotto. If tails, this attack does 10 damage.
+Lt. Surge's Jolteon #28 (70hp)
+  ATK [20] High Voltage: Flip a coin. If heads, your opponent can't play Trainer cards during his or her next turn.
+  ATK [30+] Thunder Flare: Does 30 damage plus 10 damage times the number of damage counters on Lt. Surge's Jolteon, then flip a coin. If tails, Lt. Surge's Jolteon does 30 damage to itself.
+Sabrina's Gengar #29 (90hp)
+  ATK [20] Dark Wave: All Pokémon Powers stop working until the end of your opponent's next turn.
+  ATK [40] Shadow Bind: The Defending Pokémon can't retreat during your opponent's next turn.
+Sabrina's Golduck #30 (70hp)
+  ATK [-] Damage Shift: Move 1 damage counter from each of your Pokémon that has any on it to the Defending Pokémon. (Don't apply Weakness and Resistance.)
+  ATK [20+] Water Spray: Flip a coin. If heads, this attack does 20 damage plus 20 more damage; if tails, this attack does 20 damage.
+Blaine's Charmeleon #31 (70hp)
+  ATK [-] Bonfire: Flip 3 coins. For each heads, discard 1 Fire Energy card attached to Blaine's Charmeleon. If you can't discard Energy cards, this attack does nothing. This attack does 10 damage times the number of heads to each of your opponent's Pokémon. Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.)
+Blaine's Dodrio #32 (70hp)
+  ATK [50] Mega Peck: Flip a coin. If tails, this attack does nothing.
+Blaine's Rapidash #33 (70hp)
+  ATK [30+] Stamp: Flip a coin. If heads, this attack does 30 damage plus 10 more damage (to the Defending Pokémon) and 10 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.) If tails, this attack does 30 damage (to the Defending Pokémon).
+Brock's Graveler #34 (70hp)
+  ATK [50] Detonate: Does 10 damage to each Pokémon on each player's bench. (Don't apply Weakness and Resistance for Benched Pokémon.) Brock's Graveler does 50 damage to itself. If there is a Stadium card in play, discard it.
+Brock's Primeape #35 (70hp)
+  POWER Scram: If Brock's Primeape ever has exactly 10 HP left, shuffle it and all cards attached to it into your deck. This power stops working while Brock's Primeape is Asleep, Confused, or Paralyzed.
+  ATK [60] Mega Thrash: Brock's Primeape does 20 damage to itself. If there is a Stadium card in play, discard it.
+Brock's Sandslash #36 (70hp)
+  ATK [20] Swift: This attack's damage isn't affected by Weakness, Resistance, Pokémon Powers, or any other effects on the Defending Pokémon.
+  ATK [30] Needle Ball: Flip a coin. If heads, the Defending Pokémon is now Poisoned.
+Brock's Vulpix #37 (50hp)
+  ATK [-] Hypnotic Gaze: The Defending Pokémon is now Asleep.
+  ATK [20] Fire Ring: If your opponent has any Benched Pokémon, choose 1 of them and this attack does 10 damage to it. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Erika's Bellsprout #38 (40hp)
+  POWER Soak Up: Once during your turn (before your attack), you may take up to 2 Grass Energy cards attached to your other Pokémon and attach them to Erika's Bellsprout. This power can't be used if Erika's Bellsprout is Asleep, Confused, or Paralyzed.
+  ATK [-] Stretch Vine: Choose 1 of your opponent's Benched Pokémon, and this attack does 10 damage to it. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Erika's Bulbasaur #39 (50hp)
+  ATK [10] Sleep Seed: The Defending Pokémon is now Asleep.
+  ATK [-] Errand-Running: Flip a coin. If heads, you may search your deck for a Trainer card. Show it to your opponent and put it into your hand. Shuffle your deck afterward.
+Erika's Clefairy #40 (50hp)
+  ATK [-] Lunar Power: Flip a coin. If heads, search your deck for a card that evolves from 1 of your Benched Pokémon and put that card on that Pokémon. (This counts as evolving that Pokémon.) Shuffle your deck afterward.
+Erika's Ivysaur #41 (60hp)
+  POWER Relaxing Scent: As long as Erika's Ivysaur is your Active Pokémon, whenever an attack (even your own) does damage to any Pokémon (after applying Weakness and Resistance), that attack only does half the damage to that Pokémon (rounded up to the nearest 10). (Any other effects of attacks still happen.) This power stops working while Erika's Ivysaur is Asleep, Confused, or Paralyzed.
+  ATK [40×] Double Razor Leaf: Flip 2 coins. This attack does 40 damage times the number of heads.
+Giovanni's Machoke #42 (80hp)
+  ATK [60] Risky Attack: Flip a coin. If tails, this attack does no damage to the Defending Pokémon and Giovanni's Machoke does 100 damage to itself.
+  ATK [20+] Headlock: Flip a coin. If heads, this attack does 20 damage plus 20 more damage and the Defending Pokémon is now Paralyzed. If tails, this attack does 20 damage.
+Giovanni's Meowth #43 (40hp)
+  ATK [-] False Charity: Flip a coin. If heads, look at the top card of your opponent's deck. If it's a Trainer card, put it in your opponent's discard pile; otherwise, put it into his or her hand.
+  ATK [20×] Double Scratch: Flip 2 coins. This attack does 20 damage times the number of heads.
+Giovanni's Nidorina #44 (80hp)
+  ATK [30] Poison Sting Tackle: Giovanni's Nidorina does 20 damage to itself. Flip a coin. If heads, the Defending Pokémon is now Poisoned.
+  ATK [20] Body Slam: Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+Giovanni's Nidorino #45 (70hp)
+  ATK [20+] Rend: If the Defending Pokémon already has any damage counters on it, this attack does 20 damage plus 20 more damage. If not, this attack does 20 damage.
+Koga's Golbat #46 (60hp)
+  ATK [30] Sonic Scream: Flip a coin. If heads, the Defending Pokémon is now Confused.
+Koga's Kakuna #47 (60hp)
+  POWER Emerge: Once during your turn (before your attack), you may flip a coin. If heads, search your deck for an Evolution card named Koga's Beedrill and put it on Koga's Kakuna. (This counts as evolving Koga's Kakuna.) Shuffle your deck afterward. This power can't be used if Koga's Kakuna is Asleep, Confused, or Paralyzed.
+  ATK [-] Toxic Secretion: Flip a coin. If heads, the Defending Pokémon is now Poisoned. It now takes 20 Poison damage instead of 10 after each player's turn (even if it was already Poisoned).
+Koga's Koffing #48 (50hp)
+  ATK [10] Smokescreen: If the Defending Pokémon tries to attack during your opponent's next turn, your opponent flips a coin. If tails, that attack does nothing.
+  ATK [30] Obscuring Gas: Flip a coin. If heads, shuffle Koga's Koffing and all cards attached to it into your deck (after doing damage).
+Koga's Pidgey #49 (40hp)
+  ATK [-] Messenger: Put Koga's Pidgey and all cards attached to it on top of your deck. Then search your deck for any Basic Pokémon or Evolution card not named Koga's Pidgey. Show that card to your opponent, then put it into your hand. Shuffle your deck afterward.
+Koga's Weezing #50 (70hp)
+  ATK [10+] Spontaneous Explosion: Flip a coin. If heads, this attack does 10 damage plus 30 more damage and Koga's Weezing does 30 damage to itself; if tails, this attack does 10 damage.
+  ATK [20] Toxic Cloud: Flip a coin. If heads, the Defending Pokémon is now Poisoned. It now takes 20 Poison damage instead of 10 after each player's turn (even if it was already Poisoned).
+Lt. Surge's Eevee #51 (40hp)
+  ATK [-] Surprise: Look at a random card from your opponent's hand. Your opponent shuffles that card into his or her deck.
+Lt. Surge's Electrode #52 (70hp)
+  POWER Shock Blast: If Lt. Surge's Electrode is your Active Pokémon and gets damaged (even if it's Knocked Out), flip a coin. If tails, this power does 20 damage to each Active Pokémon. This power works even if Lt. Surge's Electrode is already Asleep, Confused, or Paralyzed when it takes damage.
+  ATK [30+] Power Ball: Flip 3 coins. This attack does 30 damage plus 10 more damage for each heads.
+Lt. Surge's Raticate #53 (60hp)
+  ATK [-] Focus Energy: During your next turn, Lt. Surge's Raticate's Double-edge attack's damage (base damage and damage to itself) is doubled.
+  ATK [40] Double-edge: Lt. Surge's Raticate does 20 damage to itself.
+Misty's Dewgong #54 (80hp)
+  ATK [20] Ice Throw: If the Defending Pokémon is Fighting, this attack's base damage is doubled.
+  ATK [60] Take Down: Misty's Dewgong does 20 damage to itself.
+Sabrina's Haunter #55 (70hp)
+  ATK [20] Nightmare: The Defending Pokémon is now Asleep.
+  ATK [-] Shadow Attack: Flip a coin. If heads, and if your opponent has any Benched Pokémon, choose 1 of them and this attack does 30 damage to it. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Sabrina's Hypno #56 (70hp)
+  ATK [-] Invigorate: Choose 1 Basic Pokémon in any player's discard pile. Put it onto that player's Bench. Put a number of damage counters on that Pokémon equal to half its HP (rounded down to the nearest 10). (You can't put a Pokémon on a Bench that's full.)
+  ATK [20×] Pendulum Curse: Flip a number of coins equal to the number of damage counters on the Defending Pokémon. This attack does 20 damage times the number of heads.
+Sabrina's Jynx #57 (60hp)
+  ATK [-] Helping Hand: Choose 1 of your opponent's Pokémon. Remove any number of damage counters from that Pokémon, then draw that many cards.
+  ATK [20] Hug: Flip a coin. If heads, the Defending Pokémon can't retreat during your opponent's next turn.
+Sabrina's Kadabra #58 (70hp)
+  ATK [-] Life Drain: Flip a coin. If heads, put a number of damage counters on the Defending Pokémon so that its remaining HP are 10.
+Sabrina's Mr. Mime #59 (60hp)
+  ATK [-] Magic Darts: Choose 1 of your opponent's Pokémon and flip 3 coins. This attack does 10 damage times the number of heads to that Pokémon. Don't apply Weakness and Resistance for this attack.
+Blaine's Charmander #60 (50hp)
+  ATK [20] Fire Tail Slap: Use this attack only if there are any Fire Energy cards attached to Blaine's Charmander. Flip a coin. If tails, discard 1 of those cards.
+Blaine's Doduo #61 (50hp)
+  ATK [20] Wild Kick: Flip a coin. If tails, this attack does nothing.
+  ATK [10×] Retaliate: Does 10 damage times the number of damage counters on Blaine's Doduo.
+Blaine's Growlithe #62 (60hp)
+  ATK [-] Stoke: Search your deck for a Fire Energy card and attach it to Blaine's Growlithe. Shuffle your deck afterward.
+  ATK [20] Body Slam: Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+Blaine's Mankey #63 (40hp)
+  ATK [-] Pranks: Flip a coin. If heads, choose a card from your opponent's discard pile and put it on top of his or her deck.
+  ATK [10×] Fury Swipes: Flip 3 coins. This attack does 10 damage times the number of heads.
+Blaine's Ponyta #64 (50hp)
+  ATK [20] Hind Kick: If you have any Benched Pokémon, flip a coin. If heads, switch Blaine's Ponyta with 1 of your Benched Pokémon.
+Blaine's Rhyhorn #65 (60hp)
+  ATK [30] Horn Charge: Flip a coin. If tails, this attack does nothing.
+  ATK [20] Overrun: Flip a coin. If heads and if your opponent has any Benched Pokémon, choose 1 of them and this attack does 20 damage to it. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Blaine's Vulpix #66 (50hp)
+  ATK [-] Call Will-o'-the-wisp: Flip 3 coins. For each heads, if you have a Fire Energy card in your discard pile, put it into your hand.
+Brock's Diglett #67 (40hp)
+  ATK [20] Surprise Attack: Flip a coin. If tails, this attack does nothing.
+  ATK [40] Tremor: Does 10 damage to each of your own Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Brock's Geodude #68 (50hp)
+  ATK [10×] Rock Toss: Flip 3 coins. This attack does 10 damage times the number of heads.
+Erika's Jigglypuff #69 (50hp)
+  ATK [-] Group Therapy: You and your opponent remove 1 damage counter from each of your Pokémon with damage counters on them.
+  ATK [40-] Pulled Punch: If the Defending Pokémon has no damage counters on it, this attack does 40 damage. If it has any damage counters on it, this attack does 10 damage.
+Erika's Oddish #70 (40hp)
+  ATK [10] Strange Powder: Flip a coin. If heads, the Defending Pokémon is now Confused; if tails, the Defending Pokémon is now Asleep.
+Erika's Paras #71 (50hp)
+  ATK [-] Poison Spore: Flip a coin. If heads, the Defending Pokémon is now Poisoned and this attack does 10 damage to each of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)
+Giovanni's Machop #72 (50hp)
+  ATK [20×] Fury Punch: Flip a coin. If heads, this attack does 20 damage times the number of damage counters on Giovanni's Machop.
+Giovanni's Magikarp #73 (30hp)
+  ATK [40] Ancestral Memory: Flip a coin. If tails, this attack does nothing. Either way, you can't use this attack again as long as Giovanni's Magikarp stays in play (even putting Giovanni's Magikarp on the Bench won't let you use it again).
+  ATK [10×] Flail Around: Flip 3 coins. This attack does 10 damage times the number of heads.
+Giovanni's Meowth #74 (50hp)
+  ATK [-] Cat Fleas: Flip a coin. If heads, the Defending Pokémon is now Confused.
+Giovanni's Nidoran ♀ #75 (50hp)
+  ATK [20] Horn Thrust: Flip a coin. If tails, this attack does nothing.
+  ATK [30] Double-edge: Giovanni's Nidoran ♀ does 20 damage to itself.
+Giovanni's Nidoran ♂ #76 (40hp)
+  ATK [10×] Double Kick: Flip 2 coins. This attack does 10 damage times the number of heads.
+  ATK [30] Retaliation: You can't use this attack unless Giovanni's Nidoran ♂ has 2 or more damage counters on it.
+Koga's Ekans #77 (50hp)
+  ATK [10] Fast-Acting Poison: Flip 2 coins. If both are heads, the Defending Pokémon is now Confused and Poisoned.
+Koga's Grimer #78 (50hp)
+  ATK [-] Sludge Grip: If your opponent has any Benched Pokémon, flip a coin. If heads, choose 1 of your opponent's Benched Pokémon and switch it with the Defending Pokémon. The new Defending Pokémon is now Poisoned.
+Koga's Koffing #79 (40hp)
+  ATK [10] Smelly Gas: Flip a coin. If heads, this attack does 10 damage to each Benched Pokémon (including your own). (Don't apply Weakness and Resistance for Benched Pokémon.)
+Koga's Pidgey #80 (50hp)
+  ATK [20] Sand-attack: If the Defending Pokémon tries to attack during your opponent's next turn, your opponent flips a coin. If tails, that attack does nothing.
+Koga's Tangela #81 (50hp)
+  ATK [10] Sleep Powder: The Defending Pokémon is now Asleep.
+  ATK [-] Grasping Vine: Flip a coin. If heads, draw 2 cards.
+Koga's Weedle #82 (40hp)
+  ATK [10] Sharp Stinger: Flip a coin. If heads, the Defending Pokémon is now Poisoned; if tails, the Defending Pokémon is now Paralyzed.
+Koga's Zubat #83 (40hp)
+  ATK [10×] Group Attack: Does 10 damage times the number of Koga's Zubats you have in play. Before doing damage, you may search your deck for any number of Basic Pokémon named Koga's Zubat and put them onto your Bench. (You can't get more cards with this attack than you have room on your Bench.) If you do, shuffle your deck afterward.
+Lt. Surge's Pikachu #84 (40hp)
+  ATK [10+] Quick Attack: Flip a coin. If heads, this attack does 10 damage plus 20 more damage; if tails, this attack does 10 damage.
+Lt. Surge's Rattata #85 (30hp)
+  ATK [-] Focus Energy: During your next turn, Lt. Surge's Rattata's Quick Attack's base damage is doubled.
+  ATK [10+] Quick Attack: Flip a coin. If heads, this attack does 10 damage plus 20 more damage; if tails, this attack does 10 damage.
+Lt. Surge's Voltorb #86 (50hp)
+  ATK [30] Bouncing Ball: Flip a coin. If tails, Lt. Surge's Voltorb does 10 damage to itself.
+Misty's Horsea #87 (50hp)
+  ATK [20] Ink Spurt: Flip a coin. If heads, whenever the Defending Pokémon tries to attack, your opponent flips a coin. If tails, that attack does nothing. (This effect lasts until the Defending Pokémon evolves or is Benched.)
+Misty's Magikarp #88 (30hp)
+  ATK [-] Play Dead: Flip a coin. If heads, during your opponent's next turn, prevent all effects of attacks, including damage, done to Misty's Magikarp.
+Misty's Poliwag #89 (50hp)
+  ATK [20] Bubbles: Flip a coin. If tails, you can't use this attack during your next turn.
+  ATK [-] Amnesia: Choose 1 of the Defending Pokémon's attacks. That Pokémon can't use that attack during your opponent's next turn.
+Misty's Psyduck #90 (60hp)
+  ATK [-] ESP: Flip 3 coins. If exactly 1 is heads, draw a card. If exactly 2 are heads, this attack does 20 damage. If all 3 are heads, choose 1 of the Defending Pokémon's attacks. Misty's Psyduck copies that attack except for its Energy costs. (No matter what type the Defending Pokémon is, Misty's Psyduck's type is still Water.)
+Misty's Seel #91 (50hp)
+  ATK [10] Frostbite: The Defending Pokémon can't retreat during your opponent's next turn.
+  ATK [10] Mirage: If the Defending Pokémon tries to attack during your opponent's next turn, your opponent flips a coin. If tails, that attack does nothing.
+Misty's Staryu #92 (40hp)
+  ATK [20] Star Boomerang: Flip a coin. If heads, return Misty's Staryu and all cards attached to it to your hand. (Either way, this attack does its damage.)
+Sabrina's Abra #93 (40hp)
+  ATK [40] Synchronize: This attack can't be used unless Sabrina's Abra and the Defending Pokémon have the same number of Energy cards attached to them.
+Sabrina's Abra #94 (50hp)
+  ATK [-] Psyscan: Look at your opponent's hand.
+  ATK [10+] Quick Attack: Flip a coin. If heads, this attack does 10 damage plus 20 more damage; if tails, this attack does 10 damage.
+Sabrina's Drowzee #95 (50hp)
+  ATK [-] Energy Support: Search your deck for a Psychic Energy card. Show that card to your opponent, then put it into your hand. Shuffle your deck afterward.
+  ATK [20] Mind Shock: Don't apply Weakness and Resistance for this attack. (Any other effects that would happen after applying Weakness and Resistance still happen.)
+Sabrina's Gastly #96 (30hp)
+  ATK [10] Lick: Flip a coin. If heads, the Defending Pokémon is now Paralyzed.
+  ATK [30] Fade Out: Return Sabrina's Gastly and all Energy cards attached to it to your hand. (Discard all other cards attached to Sabrina's Gastly.)
+Sabrina's Gastly #97 (40hp)
+  POWER Gaseous Form: Sabrina's Gastly gets +10 HP for each Psychic Energy card attached to it. This power works even if Sabrina's Gastly is Asleep, Confused, or Paralyzed.
+Sabrina's Porygon #98 (40hp)
+  ATK [20] Barrier Attack: All damage done by attacks to Sabrina's Porygon during your opponent's next turn is reduced by 10 (after applying Weakness and Resistance).
+Sabrina's Psyduck #99 (50hp)
+  ATK [20] Random ESP: Flip a coin. If heads, the Defending Pokémon is now Confused. If tails, this attack does no damage and Sabrina's Psyduck is now Confused.
+TRAINER Brock's Protection #101
+  Attach Brock's Protection to 1 of your Pokémon with Brock in its name. Energy cards attached to that Pokémon can't be removed by your opponent's attacks or Trainer cards. (This doesn't stop the rest of the attack or Trainer card from working normally.)
+TRAINER [STADIUM] Chaos Gym #102
+  This card stays in play after being played. Discard this card if another Stadium card comes into play. Whenever a player plays a Trainer card other than a Stadium card, he or she flips a coin. If heads, that player plays that card normally. If tails, the player can't play that card. If the card isn't put into play, the player's opponent may use that card instead, if he or she does everything required in order to play that card (like discarding cards). Either way, the card goes to its owner's discard pile.
+TRAINER Erika's Kindness #103
+  Remove 2 damage counters from each Pokémon (yours and your opponent's) with any damage counters on it. If a Pokémon has just 1 damage counter, remove it.
+TRAINER Giovanni's Last Resort #105
+  Remove all damage counters from 1 of your Pokémon with Giovanni in its name. Then discard your hand.
+TRAINER Lt. Surge's Secret Plan #107
+  Put 1 card from your hand face down onto your Bench. (You can't play this card if your Bench is full.) Treat that card as a Basic Pokémon as long as it's face down. Flip the card if either player needs to know what it is in order to use an attack, a Pokémon Power, or a Trainer card. Flip the card if it ever uses an attack or Pokémon Power, evolves, retreats, is damaged by an attack, or is otherwise affected by an attack. At any time during your turn, you may flip the card over. When you flip that card over, if it isn't a Basic Pokémon, discard it and all cards attached to it.
+TRAINER Misty's Wish #108
+  Look at 1 of your Prize cards. Then, ask your opponent if you may switch that card with 1 of the cards in your hand. If your opponent accepts and if you have any other cards in your hand, switch those cards. If your opponent declines, return the Prize card face down and draw a card.
+TRAINER [STADIUM] Resistance Gym #109
+  This card stays in play after being played. Discard this card if another Stadium card comes into play. Each Pokémon's Resistance is reduced by 20. (If a Pokémon's Resistance is -30, it becomes -10.)
+TRAINER Blaine's Quiz #2 #111
+  Put a card from your hand face down in front of you. Your opponent guesses whether it is an Energy card, a Trainer card, or a Pokémon (Basic or Evolution) card. Flip the card over. If your opponent guessed right, he or she draws 2 cards. If your opponent guessed wrong, you draw 2 cards. Either way, return the card to your hand.
+TRAINER Blaine's Quiz #3 #112
+  Put a Basic or Evolution card from your hand face down in front of you and tell your opponent the name of an attack of that card. Your opponent guesses the name of that card. Flip the card over. If your opponent guessed right, he or she draws 3 cards. If your opponent guessed wrong, you draw 3 cards. Either way, return the card to your hand.
+TRAINER [STADIUM] Cinnabar City Gym #113
+  This card stays in play after being played. Discard this card if another Stadium card comes into play. Ignore Weakness when a Water Pokémon does damage to a Pokémon with Blaine in its name.
+TRAINER [STADIUM] Fuchsia City Gym #114
+  This card stays in play after being played. Discard this card if another Stadium card comes into play. Once during each player's turn (before attacking), that player may flip a coin. If heads, that player may shuffle 1 of his or her Pokémon in play with Koga in its name and any cards attached to it into his or her deck.
+TRAINER Koga's Ninja Trick #115
+  Attach Koga's Ninja Trick to your Active Pokémon with Koga in its name. If this Pokémon goes to your Bench, discard this card. When your opponent attacks, you may switch this Pokémon with 1 of your Benched Pokémon (before damage or other effects of attacks).
+TRAINER Master Ball #116
+  Look at 7 cards from the top of your deck. You may choose a Basic Pokémon or Evolution card from those cards, show it to your opponent, then put it into your hand. Shuffle the rest into your deck.
+TRAINER Max Revive #117
+  Discard 2 Energy cards from your hand in order to put 1 Basic Pokémon from your discard pile onto your Bench. (You can't play Max Revive if your Bench is full.)
+TRAINER Misty's Tears #118
+  Discard 1 of the other cards in your hand in order to search your deck for up to 2 Water Energy cards. Show those cards to your opponent, then put them into your hand. Shuffle your deck afterward.
+TRAINER [STADIUM] Rocket's Minefield Gym #119
+  This card stays in play after being played. Discard this card if another Stadium card comes into play. Whenever a player puts a Basic Pokémon onto his or her Bench from his or her hand, he or she flips a coin. If tails, put damage counters on that Pokémon.
+TRAINER Rocket's Secret Experiment #120
+  Flip a coin. If heads, search your deck for any card and put it into your hand. Shuffle your deck afterward. If tails, you can't play Trainer cards until the end of your next turn.
+TRAINER Sabrina's Psychic Control #121
+  Flip a coin. If heads, choose a Trainer card in your opponent's discard pile that isn't put in play (like PlusPower or Mysterious Fossil). You may use that card as if it were in your hand, if you do everything required in order to play that card (like discarding cards). The card stays in your opponent's discard pile.
+TRAINER [STADIUM] Saffron City Gym #122
+  This card stays in play after being played. Discard this card if another Stadium card comes into play. As often as each player like during his or her turn (before attacking), that player may return 1 basic Energy card attached to 1 of his or her Pokémon with Sabrina in its name to his or her hand.
+TRAINER [STADIUM] Viridian City Gym #123
+  This card stays in play after being played. Discard this card if another Stadium card comes into play. Whenever a Pokémon with Giovanni in its name evolves, its owner removes 2 damage counters from that Pokémon (or 1 if it only has 1).
+TRAINER Fervor #124
+  Show the top 3 cards of your deck to all players. Put any Fire Energy cards there into your hand and discard the rest.
+TRAINER Transparent Walls #125
+  Until the end of your opponent's next turn, prevent all damage from attacks done to your Benched Pokémon. (Any other effects of attacks still happen.)
+TRAINER Warp Point #126
+  If your opponent has any Benched Pokémon, he or she chooses 1 of them and switches it with his or her Active Pokémon, then, if you have any Benched Pokémon, you switch 1 of them with your Active Pokémon.

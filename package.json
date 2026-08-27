@@ -10,7 +10,14 @@
     "preview": "vite preview",
     "test:engine": "node scripts/test_engine.mjs",
     "test:match": "node scripts/test_match.mjs",
-    "scrape:gym-leaders": "node scripts/scrape_gym_leaders.mjs"
+    "test:story": "node scripts/test_story.mjs",
+    "test:ui:story": "node scripts/ui_story.mjs",
+    "test:ui:sandbox-tools": "node scripts/ui_sandbox_tools.mjs",
+    "test:ui:fx": "node scripts/ui_fx.mjs",
+    "test:ui:deck-editor": "node scripts/ui_deck_editor.mjs",
+    "scrape:gym-leaders": "node scripts/scrape_gym_leaders.mjs",
+    "scrape:trainer-classes": "node scripts/scrape_trainer_classes.mjs",
+    "scrape:team-rocket": "node scripts/build_team_rocket.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",

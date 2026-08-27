@@ -62,12 +62,26 @@ function PromptBar() {
         </button>
       )}
       {!isMatch && (
-        <button
-          onClick={() => dispatch({ type: 'reset' })}
-          className="px-3 py-1 rounded-sm bg-zinc-700 hover:bg-zinc-600 border border-zinc-500 text-xs text-zinc-200"
-        >
-          Reset
-        </button>
+        <>
+          <button
+            data-testid="turn-rules-toggle"
+            onClick={() => dispatch({ type: 'toggle-turn-rules' })}
+            title="Enforce turn order, one energy per turn, once-per-turn powers, attacks ending the turn, and a draw each turn"
+            className={`px-3 py-1 rounded-sm border text-xs font-bold uppercase tracking-wide ${
+              state.enforceTurns
+                ? 'bg-poke-red hover:bg-[#f4460f] border-poke-red-dark text-white'
+                : 'bg-zinc-700 hover:bg-zinc-600 border-zinc-500 text-zinc-200'
+            }`}
+          >
+            {state.enforceTurns ? 'Exit Turn Based' : 'Enter Turn Based'}
+          </button>
+          <button
+            onClick={() => dispatch({ type: 'reset' })}
+            className="px-3 py-1 rounded-sm bg-zinc-700 hover:bg-zinc-600 border border-zinc-500 text-xs text-zinc-200"
+          >
+            Reset
+          </button>
+        </>
       )}
       {isMatch && state.phase !== 'gameover' && (
         <button
@@ -81,28 +95,34 @@ function PromptBar() {
   )
 }
 
-export function LogPanel() {
+export function LogBody() {
   const { state } = useGame()
+  return (
+    <div className="flex-1 text-zinc-200 text-xs p-3 flex flex-col-reverse overflow-y-auto">
+      <ul className="space-y-1">
+        {state.log.map((msg, i) => (
+          <li key={i} className={msg.startsWith('---') || msg.startsWith('***') ? 'text-poke-red font-bold pt-1' : msg.startsWith('Coin flip') ? 'text-amber-300' : ''}>
+            {msg}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+export function LogPanel() {
   return (
     <aside className="w-64 shrink-0 h-full bg-zinc-950/85 border border-zinc-800 rounded-sm backdrop-blur-sm flex flex-col">
       <h2 className="text-zinc-400 text-xs font-bold uppercase tracking-widest px-3 py-2 border-b-2 border-poke-red/60 flex items-center gap-2">
         <img src="/pokeball.svg" alt="" className="w-3.5 h-3.5 opacity-70" draggable={false} />
         Game Log
       </h2>
-      <div className="flex-1 text-zinc-200 text-xs p-3 flex flex-col-reverse overflow-y-auto">
-        <ul className="space-y-1">
-          {state.log.map((msg, i) => (
-            <li key={i} className={msg.startsWith('---') || msg.startsWith('***') ? 'text-poke-red font-bold pt-1' : msg.startsWith('Coin flip') ? 'text-amber-300' : ''}>
-              {msg}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <LogBody />
     </aside>
   )
 }
 
-export function GameOverOverlay({ onExit, onRematch }) {
+export function GameOverOverlay({ onExit, onRematch, exitLabel = 'Return to Menu' }) {
   const { state, mode, humanPlayer } = useGame()
   if (state.phase !== 'gameover') return null
   const won = mode !== 'match' || state.winner === humanPlayer
@@ -120,8 +140,12 @@ export function GameOverOverlay({ onExit, onRematch }) {
               Rematch
             </button>
           )}
-          <button onClick={onExit} className="px-5 py-2 rounded-sm bg-zinc-800 hover:bg-zinc-700 border-2 border-zinc-600 text-white font-bold uppercase tracking-wide">
-            Return to Menu
+          <button
+            onClick={onExit}
+            data-testid="game-over-exit"
+            className="px-5 py-2 rounded-sm bg-zinc-800 hover:bg-zinc-700 border-2 border-zinc-600 text-white font-bold uppercase tracking-wide"
+          >
+            {exitLabel}
           </button>
         </div>
       </div>

@@ -24,7 +24,7 @@ export function shuffle(arr) {
 }
 
 // Expand energy attachments into individual units of a type.
-// burn ("Energy Burn") makes every unit count as fire.
+// burn ("Energy Burn" / "Photosynthesis") makes every unit count as one type.
 export function energyUnits(energyAttached = [], burn = null) {
   const units = []
   for (const e of energyAttached) {
@@ -34,15 +34,23 @@ export function energyUnits(energyAttached = [], burn = null) {
   return units
 }
 
-export function costMatch({ cost = {}, energyAttached = [], burn = null }) {
+export function costMatch({ cost = {}, energyAttached = [], burn = null, wild = false }) {
   const units = energyUnits(energyAttached, burn)
+  // wild (Ditto's Transform): any energy counts as any type
+  if (wild) {
+    const total = Object.values(cost).reduce((a, b) => a + b, 0)
+    return units.length >= total
+  }
   for (const [type, n] of Object.entries(cost)) {
     if (type === 'colorless') continue
     let need = n
-    for (let i = 0; i < units.length && need > 0; i++) {
-      if (units[i] === type) {
-        units[i] = null
-        need--
+    // exact matches first, then Rainbow Energy wildcards
+    for (const want of [type, 'rainbow']) {
+      for (let i = 0; i < units.length && need > 0; i++) {
+        if (units[i] === want) {
+          units[i] = null
+          need--
+        }
       }
     }
     if (need > 0) return false

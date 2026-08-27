@@ -16,6 +16,10 @@ export const setSlot = (state, ref, value) =>
 
 export const pushLog = (state, msg) => ({ ...state, log: [...state.log, msg].slice(-60) })
 
+// Queue a visual/sound event for the UI to play. No-op unless the state was
+// created with fx enabled (headless tests and fx-off settings skip it all).
+export const pushFx = (state, fx) => (state.fxEnabled ? { ...state, fxQueue: [...state.fxQueue, fx] } : state)
+
 export const setContext = (state, patch) => ({ ...state, context: { ...state.context, ...patch } })
 
 // Resolve an effect's target spec into a {player, id} board reference.
@@ -39,11 +43,19 @@ export function resolveTarget(state, targetSpec) {
   }
 }
 
-// Iterate slots matching an `each` spec: { player: 'self'|'opp'|'both', zone: 'bench'|'active'|'all', filter }
+// Iterate slots matching an `each` spec:
+// { player: 'self'|'opp'|'both', zone: 'bench'|'active'|'all', filter, limit }
 export function eachTargets(state, each) {
   const ctx = state.context
   const players =
     each.player === 'both' ? ['p1', 'p2'] : each.player === 'opp' ? [opposite[ctx.player]] : [ctx.player]
+  // sameTypeAsDefender (Chain Lightning): no targets when the defender is colorless
+  let defType = null
+  if (each.filter?.sameTypeAsDefender) {
+    const def = state[opposite[ctx.player]].mon[0]
+    defType = def ? def.typeOverride ?? def.type : null
+    if (!defType || defType === 'colorless') return []
+  }
   const refs = []
   for (const p of players) {
     state[p].mon.forEach((slot, id) => {
@@ -51,8 +63,13 @@ export function eachTargets(state, each) {
       if (each.zone === 'bench' && id === 0) return
       if (each.zone === 'active' && id !== 0) return
       if (each.filter?.damaged && !(slot.dc > 0)) return
+      if (each.filter?.typeIs && (slot.typeOverride ?? slot.type) !== each.filter.typeIs) return
+      if (each.filter?.notType && (slot.typeOverride ?? slot.type) === each.filter.notType) return
+      if (each.filter?.speciesIn && !each.filter.speciesIn.includes(slot.species ?? slot.name)) return
+      if (each.filter?.notSelf && ctx.source && p === ctx.source.player && id === ctx.source.id) return
+      if (defType && (slot.typeOverride ?? slot.type) !== defType) return
       refs.push({ player: p, id })
     })
   }
-  return refs
+  return each.limit ? refs.slice(0, each.limit) : refs
 }

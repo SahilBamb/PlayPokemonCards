@@ -1,8 +1,10 @@
 import { useGame, usePlayerControl } from './GameContext.jsx'
 import { useCardPreview } from './CardPreview.jsx'
+import { useFx } from './FxPlayer.jsx'
 import { TypeIcon, StatusIcon, GuardIcon } from './icons.jsx'
 import { costMatch, handleDragOver } from '../engine/utils.js'
 import { getPowerEffects } from '../engine/cards.js'
+import { powerActive, combatView, retreatCostOf } from '../engine/powers.js'
 
 function CardFace({ card, className = '' }) {
   if (card.image) {
@@ -41,7 +43,7 @@ export function HandCard({ card, player }) {
     )
   }
   const isTrainer = card.supertype === 'trainer' && !card.doll
-  const busy = !!state.pending || state.effectsQueue.length > 0
+  const busy = !!state.pending || state.effectsQueue.length > 0 || state.fxQueue.length > 0
 
   return (
     <div
@@ -62,8 +64,9 @@ export function HandCard({ card, player }) {
 
 function AttackRow({ slot, atk, player, id, canAct }) {
   const { state, dispatch } = useGame()
-  const burn = slot.power?.name === 'Energy Burn' ? 'fire' : null
-  const affordable = costMatch({ cost: atk.cost, energyAttached: slot.energyAttached, burn })
+  const burn = powerActive(state, slot, 'Energy Burn') ? 'fire' : null
+  const wild = powerActive(state, slot, 'Transform')
+  const affordable = costMatch({ cost: atk.cost, energyAttached: slot.energyAttached, burn, wild })
   const locked = slot.attackLock?.name === atk.name
   return (
     <button
@@ -82,18 +85,70 @@ function AttackRow({ slot, atk, player, id, canAct }) {
   )
 }
 
+// Visual treatment for the fx currently targeting a card.
+const STATUS_FX = {
+  poisoned: { hue: 'rgba(34,197,94,0.55)', emoji: '☠️' },
+  asleep: { hue: 'rgba(59,130,246,0.5)', emoji: '💤' },
+  confused: { hue: 'rgba(217,70,239,0.5)', emoji: '🌀' },
+  paralyzed: { hue: 'rgba(250,204,21,0.55)', emoji: '⚡' },
+}
+
+function cardFx(fx, player, id) {
+  if (!fx) return { anim: '', overlay: null }
+  const isTarget = fx.target && fx.target.player === player && fx.target.id === id
+  const isSource = fx.source && fx.source.player === player && fx.source.id === id
+
+  if (fx.kind === 'attack' && isSource) {
+    return { anim: player === 'p1' ? 'animate-[lungeUp_0.48s_ease-in-out]' : 'animate-[lungeDown_0.48s_ease-in-out]', overlay: null }
+  }
+  if (fx.kind === 'hit' && isTarget) {
+    return {
+      anim: 'animate-[hitShake_0.5s_ease-in-out]',
+      overlay: <div className="absolute inset-0 z-20 rounded-sm pointer-events-none animate-[huePulse_0.5s_ease-out]" style={{ background: 'rgba(239,68,68,0.55)' }} />,
+    }
+  }
+  const status = fx.kind === 'status' ? STATUS_FX[fx.status] : fx.kind === 'poison-tick' ? STATUS_FX.poisoned : null
+  if (status && isTarget) {
+    return {
+      anim: '',
+      overlay: (
+        <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center">
+          <div className="absolute inset-0 rounded-sm animate-[huePulse_0.9s_ease-out]" style={{ background: status.hue }} />
+          <span className="relative text-4xl drop-shadow-lg animate-[badgePop_0.9s_ease-out]">{status.emoji}</span>
+        </div>
+      ),
+    }
+  }
+  if (fx.kind === 'heal' && isTarget) {
+    return {
+      anim: '',
+      overlay: (
+        <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center">
+          <div className="absolute inset-0 rounded-sm animate-[huePulse_0.75s_ease-out]" style={{ background: 'rgba(134,239,172,0.55)' }} />
+          <span className="relative text-3xl drop-shadow-lg animate-[badgePop_0.75s_ease-out]">✨</span>
+        </div>
+      ),
+    }
+  }
+  return { anim: '', overlay: null }
+}
+
 // A pokemon (or Clefairy Doll) in play.
 export function BoardCard({ slot, player, id }) {
   const { state, dispatch, validTargets, mode, humanPlayer } = useGame()
   const { myTurn } = usePlayerControl(player)
   const preview = useCardPreview()
+  const fx = useFx()
   const canAct = mode !== 'match' ? true : myTurn
   const clickActor = mode === 'match' ? humanPlayer : player
   const ref = { player, id }
   const isValidTarget = validTargets.some((r) => r.player === ref.player && r.id === ref.id)
   const hpLeft = Math.max(0, slot.hp - (slot.dc ?? 0))
   const power = slot.power ? getPowerEffects(slot.power.name) : null
-  const busy = !!state.pending || state.effectsQueue.length > 0
+  const busy = !!state.pending || state.effectsQueue.length > 0 || state.fxQueue.length > 0
+  const { anim: fxAnim, overlay: fxOverlay } = cardFx(fx, player, id)
+  // Transform (Ditto): render the copied attacks / retreat cost while active
+  const combat = combatView(state, ref) ?? slot
 
   const handleDrop = (e) => {
     e.preventDefault()
@@ -111,8 +166,9 @@ export function BoardCard({ slot, player, id }) {
         preview(slot)
       }}
       className={`relative w-28 rounded-sm bg-white border border-zinc-300 shadow-md p-1 flex flex-col gap-1 transition
-        ${isValidTarget ? 'ring-4 ring-yellow-400 cursor-pointer animate-pulse' : ''}`}
+        ${isValidTarget ? 'ring-4 ring-yellow-400 cursor-pointer animate-pulse' : ''} ${fxAnim}`}
     >
+      {fxOverlay}
       <div className="relative">
         <CardFace card={slot} className="w-full object-cover" />
         {slot.dc > 0 && (
@@ -152,7 +208,7 @@ export function BoardCard({ slot, player, id }) {
         <span className={hpLeft <= 20 ? 'text-red-600 font-bold' : 'text-gray-600'}>{hpLeft}/{slot.hp}</span>
       </div>
 
-      {(slot.attacks ?? []).map((atk) => (
+      {(combat.attacks ?? []).map((atk) => (
         <AttackRow key={atk.name} slot={slot} atk={atk} player={player} id={id} canAct={canAct} />
       ))}
 
@@ -178,7 +234,7 @@ export function BoardCard({ slot, player, id }) {
             disabled={busy || !canAct}
             className="flex-1 text-[9px] bg-sky-100 hover:bg-sky-200 border border-sky-300 rounded-sm px-1 py-0.5 disabled:opacity-40"
           >
-            Retreat ({slot.retreatCost ?? 0})
+            Retreat ({retreatCostOf(state, player)})
           </button>
         )}
         {slot.doll && (

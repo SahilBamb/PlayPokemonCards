@@ -12,6 +12,8 @@ const errors = []
 page.on('pageerror', (e) => errors.push('pageerror: ' + e.message))
 page.on('console', (m) => m.type() === 'error' && errors.push('console: ' + m.text()))
 
+// deterministic runs: disable battle animations and sound
+await page.addInitScript(() => localStorage.setItem('ppc-settings', JSON.stringify({ animations: false, sound: false, volume: 0 })))
 await page.goto('http://localhost:5199', { waitUntil: 'networkidle' })
 await page.waitForTimeout(800)
 // Navigate the main menu into the sandbox

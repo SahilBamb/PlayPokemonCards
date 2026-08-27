@@ -1,0 +1,186 @@
+/* Interactive holographic card, used by the right-click preview overlay.
+   HoloCard.jsx feeds pointer position in via CSS variables; the foil
+   patterns are adapted from simeydotme/pokemon-cards-css (cosmos/galaxy
+   and glitter styles). Textures in /public/holo: galaxy holo sheet by
+   aschefield101, glitter sheet from the same project. */
+
+.holo-card {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --pointer-from-left: 0.5;
+  --pointer-from-top: 0.5;
+  --pointer-from-center: 0;
+  --rotate-x: 0deg;
+  --rotate-y: 0deg;
+  --background-x: 50%;
+  --background-y: 50%;
+  --card-opacity: 0;
+
+  --holo-space: 4%;
+  --holo-1: hsl(53, 65%, 60%);
+  --holo-2: hsl(93, 56%, 50%);
+  --holo-3: hsl(176, 54%, 49%);
+  --holo-4: hsl(228, 59%, 55%);
+  --holo-5: hsl(283, 60%, 55%);
+  --holo-6: hsl(326, 59%, 51%);
+
+  perspective: 900px;
+}
+
+.holo-card__rotator {
+  display: grid;
+  transform: rotateY(var(--rotate-x)) rotateX(var(--rotate-y));
+  transform-style: preserve-3d;
+  transition: transform 0.55s ease;
+}
+
+.holo-card__rotator > * {
+  grid-area: 1 / 1;
+  /* rounded corners baked into the pokemontcg.io scans */
+  border-radius: 4.55% / 3.5%;
+}
+
+.holo-card__img {
+  display: block;
+  box-shadow: 0 15px 40px -12px rgba(0, 0, 0, 0.9);
+}
+
+.holo-card__shine,
+.holo-card__glare {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  position: relative;
+  opacity: 0;
+  transition: opacity 0.55s ease, background-position 0.55s ease;
+  will-change: background-position, opacity;
+}
+
+.holo-card__shine::before,
+.holo-card__shine::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transition: inherit;
+}
+
+/* while the pointer is on the card, track it 1:1 instead of easing */
+.holo-card.interacting .holo-card__rotator,
+.holo-card.interacting .holo-card__shine,
+.holo-card.interacting .holo-card__shine::before,
+.holo-card.interacting .holo-card__shine::after,
+.holo-card.interacting .holo-card__glare {
+  transition: none;
+}
+
+/* soft light reflection following the pointer — all rarities */
+.holo-card__glare {
+  background-image: radial-gradient(
+    farthest-corner circle at var(--pointer-x) var(--pointer-y),
+    hsla(0, 0%, 100%, 0.7) 10%,
+    hsla(0, 0%, 100%, 0.4) 24%,
+    hsla(0, 0%, 0%, 0.7) 85%
+  );
+  mix-blend-mode: overlay;
+  opacity: calc(var(--card-opacity) * 0.5);
+}
+
+/* --- Rare Holo: full-card galaxy foil (cosmos-holo style) ---------------
+   Three ingredients, blended per the demo's cosmos effect: the galaxy
+   texture gives the swirling nebula structure, a repeating rainbow strip
+   sweeps across it as the pointer moves, and a pointer-tracking radial
+   keeps the brightness centered on the cursor. */
+
+.holo-card[data-foil='holo'] .holo-card__shine {
+  background-image:
+    url('/holo/galaxy.jpg'),
+    repeating-linear-gradient(
+      82deg,
+      var(--holo-1) calc(var(--holo-space) * 1),
+      var(--holo-2) calc(var(--holo-space) * 2),
+      var(--holo-3) calc(var(--holo-space) * 3),
+      var(--holo-4) calc(var(--holo-space) * 4),
+      var(--holo-5) calc(var(--holo-space) * 5),
+      var(--holo-6) calc(var(--holo-space) * 6),
+      var(--holo-6) calc(var(--holo-space) * 7),
+      var(--holo-5) calc(var(--holo-space) * 8),
+      var(--holo-4) calc(var(--holo-space) * 9),
+      var(--holo-3) calc(var(--holo-space) * 10),
+      var(--holo-2) calc(var(--holo-space) * 11),
+      var(--holo-1) calc(var(--holo-space) * 12)
+    ),
+    radial-gradient(
+      farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsla(180, 100%, 89%, 0.5) 5%,
+      hsla(180, 14%, 57%, 0.3) 40%,
+      hsl(0, 0%, 0%) 130%
+    );
+  background-blend-mode: color-burn, multiply;
+  background-size: cover, 400% 900%, cover;
+  background-position:
+    center center,
+    calc(10% + (var(--pointer-from-left) * 80%)) calc(10% + (var(--pointer-from-top) * 80%)),
+    center center;
+  filter: brightness(1.05) contrast(1.1) saturate(1);
+  mix-blend-mode: color-dodge;
+  opacity: var(--card-opacity);
+}
+
+/* sparkle pass: glitter sheet lit up by a second, tighter rainbow sweep */
+.holo-card[data-foil='holo'] .holo-card__shine::before {
+  content: '';
+  background-image:
+    url('/holo/glitter.png'),
+    repeating-linear-gradient(
+      82deg,
+      var(--holo-1) calc(var(--holo-space) * 1),
+      var(--holo-3) calc(var(--holo-space) * 3),
+      var(--holo-5) calc(var(--holo-space) * 5),
+      var(--holo-6) calc(var(--holo-space) * 7),
+      var(--holo-4) calc(var(--holo-space) * 9),
+      var(--holo-2) calc(var(--holo-space) * 11),
+      var(--holo-1) calc(var(--holo-space) * 12)
+    );
+  background-blend-mode: lighten;
+  background-size: 55% 55%, 400% 900%;
+  background-position:
+    center center,
+    calc(15% + (var(--pointer-from-left) * 70%)) calc(15% + (var(--pointer-from-top) * 70%));
+  filter: brightness(1.2) contrast(1.9) saturate(0.9);
+  mix-blend-mode: overlay;
+  opacity: calc(var(--card-opacity) * 0.9);
+}
+
+/* --- Promo: whole-card glitter sheen (rainbow-holo style) --------------- */
+
+.holo-card[data-foil='promo'] .holo-card__shine {
+  background-image:
+    url('/holo/glitter.png'),
+    linear-gradient(
+      -30deg,
+      var(--holo-1), var(--holo-2), var(--holo-3), var(--holo-4), var(--holo-5), var(--holo-6),
+      var(--holo-1), var(--holo-2), var(--holo-3), var(--holo-4), var(--holo-5), var(--holo-6),
+      var(--holo-1)
+    );
+  background-blend-mode: soft-light;
+  background-size: 45% 45%, 400% 400%;
+  background-position:
+    center center,
+    calc(25% + (var(--pointer-from-left) * 50%)) calc(25% + (var(--pointer-from-top) * 50%));
+  filter: brightness(calc((var(--pointer-from-center) * 0.25) + 0.7)) contrast(2) saturate(0.85);
+  mix-blend-mode: color-dodge;
+  opacity: calc(var(--card-opacity) * 0.75);
+}
+
+.holo-card[data-foil='promo'] .holo-card__shine::after {
+  content: '';
+  background-image: radial-gradient(
+    farthest-corner circle at var(--pointer-x) var(--pointer-y),
+    hsla(0, 0%, 100%, 0.5) 5%,
+    hsla(0, 0%, 50%, 0.15) 45%,
+    hsla(0, 0%, 0%, 0.4) 100%
+  );
+  mix-blend-mode: soft-light;
+  opacity: calc(var(--card-opacity) * 0.8);
+}

@@ -4,6 +4,7 @@ import { useCardPreview } from './CardPreview.jsx'
 import { CardBack } from './Card.jsx'
 import { TypeIcon } from './icons.jsx'
 import { candidateCards, energyCandidates } from '../engine/reducer.js'
+import { orderDeckOwner } from '../engine/targets.js'
 import { opposite } from '../engine/utils.js'
 
 function Overlay({ children }) {
@@ -154,8 +155,18 @@ export function ChoiceModal() {
         ))}
       </div>
     )
+  } else if (pending.what === 'option') {
+    body = (
+      <div className="flex flex-col gap-2">
+        {(pending.options ?? []).map((o) => (
+          <button key={o.id} onClick={() => done({ option: o.id })} className="border rounded-sm px-3 py-2 hover:bg-red-50 text-left font-semibold">
+            {o.label}
+          </button>
+        ))}
+      </div>
+    )
   } else if (pending.what === 'order') {
-    const top = state[state.context.player].deck.slice(0, pending.count ?? 5)
+    const top = state[orderDeckOwner(state, pending)].deck.slice(0, pending.count ?? 5)
     const ok = selected.length === top.length
     body = (
       <div className="flex flex-wrap gap-2">
@@ -188,6 +199,29 @@ export function ChoiceModal() {
           </button>
         )}
         {confirm}
+      </div>
+    </Overlay>
+  )
+}
+
+// A card revealed by a Peek-style effect; only the peeking player sees it.
+export function RevealOverlay() {
+  const { state, dispatch, mode, humanPlayer } = useGame()
+  const reveal = state.reveal
+  if (!reveal) return null
+  if (mode === 'match' && reveal.player !== humanPlayer) return null
+  return (
+    <Overlay>
+      <div className="flex items-center justify-between gap-6">
+        <h2 className="font-bold text-lg">{reveal.label}</h2>
+        <button onClick={() => dispatch({ type: 'close-reveal' })} className="px-3 py-1 rounded-sm bg-gray-200 hover:bg-gray-300">
+          Close
+        </button>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {reveal.cards.map((c) => (
+          <MiniCard key={c.uid} card={c} onClick={() => {}} />
+        ))}
       </div>
     </Overlay>
   )
