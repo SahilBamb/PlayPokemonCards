@@ -8,21 +8,20 @@ cards) — built on a small library of composable effect primitives.
 
 - **Quick Play** — rule-enforced match against an AI (multiple personalities),
   with 70+ historical preset decks or your own.
+- **Multiplayer** — online play against real people: private matches by share
+  code, ranked matches with Elo, and a leaderboard. See below.
 - **Story Mode** — three campaigns (Kanto Challenge, Rocket Takeover, League
   Reborn) with booster packs, a card collection, currency, and boss battles.
 - **Sandbox** — free-form two-sided board for testing cards and interactions.
 - **Deck Editor** — build and save decks; the same editor is reused (with
   collection constraints) inside Story Mode.
 
-The game is local-first: matches, story progress, and decks all run in the
-browser. Online multiplayer lives on the `feature/multiplayer` branch and is
-not part of this mainline.
-
 ## Run it
 
 ```bash
 npm install
 npm run dev           # web client on http://localhost:5173
+npm run server        # multiplayer server on :2567 (only needed for Multiplayer)
 ```
 
 Headless test suites:
@@ -31,7 +30,85 @@ Headless test suites:
 npm run test:engine   # engine unit tests
 npm run test:match    # AI-vs-AI full matches
 npm run test:story    # story data + progression tests
+npm run test:online   # multiplayer server: private + ranked games over websockets
+npm run test:ui:online  # two real browsers play each other (needs dev server on :5199)
 ```
+
+## Multiplayer
+
+The multiplayer server ([`server/`](server/)) is built on
+[Colyseus](https://colyseus.io/) and reuses the exact same game engine as
+single-player. It is fully server-authoritative:
+
+- The complete game state lives only on the server; each client receives a
+  `maskStateFor` view (opponent hand, decks, and prizes hidden).
+- Clients send plain reducer actions; the server checks identity and the
+  engine's own `matchGuard` validates legality.
+- Each client is always addressed as "p1" — the server perspective-swaps
+  views and actions for the second seat, so the entire single-player board UI
+  is reused unchanged.
+
+**Modes** (one format for now: everything through Gym Challenge, the same
+pool the Deck Editor builds against):
+
+- **Private match** — create a room, share the 6-letter code, a friend joins
+  with it. No rating changes.
+- **Ranked match** — a queue pairs you with the next player waiting. Winners
+  take Elo (K=32) from losers; forfeits and disconnects (after a 60s
+  reconnection grace) count as losses.
+- **Leaderboard** — `GET /leaderboard` powers the in-game screen showing the
+  best (and worst) rated players.
+
+Player identity is a generated id + secret token stored in the browser's
+localStorage — no accounts or passwords. Ratings are persisted to a JSON file
+(`DATA_DIR`, default `server/data/`).
+
+### Configuration
+
+| Variable | Where | Meaning |
+|---|---|---|
+| `PORT` | server | Listen port (default `2567`) |
+| `DATA_DIR` | server | Directory for `players.json` (point at a persistent volume) |
+| `VITE_ONLINE_URL` | client build | Server URL, e.g. `wss://your-app.up.railway.app`. Defaults to same-origin in production builds and `ws://localhost:2567` in dev. |
+
+## Deploying to Railway
+
+The Express app also serves the built web client from `dist/`, so a single
+Railway service hosts both the game and the multiplayer server. From the repo
+root:
+
+```bash
+# 0. One-time: install the CLI and log in (opens a browser)
+npm install -g @railway/cli
+railway login
+
+# 1. Build the client so the server can serve it
+npm run build
+
+# 2. Create the project and deploy (Railpack detects Node and runs `npm start`)
+railway init --name playpokemoncards
+railway up --detach
+
+# 3. Persistent volume for Elo ratings + point DATA_DIR at it
+railway volume add --mount-path /data
+railway variable set DATA_DIR=/data
+
+# 4. Expose it to the internet (prints your public URL)
+railway domain
+```
+
+That's it — open the printed URL, the game loads and Multiplayer connects to
+the same origin automatically (wss). Subsequent deploys are just
+`npm run build && railway up --detach`.
+
+Notes:
+
+- `railway variable set` and `railway volume add` trigger a redeploy on their
+  own; order them before your final `railway up` if you want fewer deploys.
+- To host the web client elsewhere (e.g. Vercel/Netlify), set
+  `VITE_ONLINE_URL=wss://<your-railway-domain>` when building it, and deploy
+  only the server to Railway.
+- `GET /health` is a readiness probe you can point Railway's healthcheck at.
 
 ## Architecture
 
@@ -54,8 +131,12 @@ src/
     actions.js       # enumerateActions: every legal action for a player
     view.js          # maskStateFor: what each player is allowed to see
   ai/                # AI policies (basic, aggro, stall, random)
-  components/        # React UI (board, modals, story mode)
-  lib/               # localStorage stores (decks, profile, settings)
+  components/        # React UI (board, modals, story mode, online lobby)
+  lib/               # localStorage stores + online session plumbing
+server/
+  index.mjs          # Colyseus + Express bootstrap, /leaderboard, static dist/
+  rooms.mjs          # server-authoritative match rooms (private + ranked)
+  players.mjs        # identity, Elo, JSON persistence
 ```
 
 ### Effect model

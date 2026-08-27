@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "start": "node server/index.mjs",
+    "server": "node server/index.mjs",
+    "test:online": "node scripts/test_online.mjs",
+    "test:ui:online": "node scripts/ui_online.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "test:engine": "node scripts/test_engine.mjs",
@@ -21,6 +25,9 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
+    "colyseus": "^0.16.5",
+    "colyseus.js": "^0.16.22",
+    "express": "^5.2.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-icons": "^5.5.0",

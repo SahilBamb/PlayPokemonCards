@@ -12,6 +12,7 @@ import { SettingsProvider, SettingsButton } from './components/Settings.jsx'
 import { FxProvider } from './components/FxPlayer.jsx'
 import { MatchScreen, useFxSync } from './components/MatchScreen.jsx'
 import { StoryMode } from './components/story/StoryMode.jsx'
+import { OnlineScreen } from './components/online/OnlineScreen.jsx'
 import { reducer, initialGameState, pendingClickTargets } from './engine/reducer.js'
 import { makeCard, makeSlot } from './engine/cards.js'
 
@@ -69,7 +70,7 @@ function SandboxScreen({ onExit }) {
 }
 
 export default function App() {
-  const [screen, setScreen] = useState('menu') // menu | sandbox | game | editor | story
+  const [screen, setScreen] = useState('menu') // menu | sandbox | game | editor | story | online
   const [matchConfig, setMatchConfig] = useState(null)
   const [matchKey, setMatchKey] = useState(0)
 
@@ -82,6 +83,8 @@ export default function App() {
     content = <DeckEditor onExit={toMenu} />
   } else if (screen === 'story') {
     content = <StoryMode onExit={toMenu} />
+  } else if (screen === 'online') {
+    content = <OnlineScreen onExit={toMenu} />
   } else if (screen === 'game' && matchConfig) {
     content = (
       <MatchScreen
@@ -97,6 +100,7 @@ export default function App() {
         onSandbox={() => setScreen('sandbox')}
         onEditor={() => setScreen('editor')}
         onStory={() => setScreen('story')}
+        onOnline={() => setScreen('online')}
         onPlay={(config) => {
           setMatchConfig(config)
           setMatchKey((k) => k + 1)

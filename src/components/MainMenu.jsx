@@ -81,7 +81,7 @@ function CustomDeckOption({ deck, selected, onClick }) {
   )
 }
 
-export function MainMenu({ onSandbox, onPlay, onEditor, onStory }) {
+export function MainMenu({ onSandbox, onPlay, onEditor, onStory, onOnline }) {
   const [picking, setPicking] = useState(false)
   const [sel, setSel] = useState({ kind: 'preset', id: 'blazeSurf' })
   const [aiId, setAiId] = useState(DEFAULT_AI)
@@ -130,6 +130,14 @@ export function MainMenu({ onSandbox, onPlay, onEditor, onStory }) {
               border-b-4 border-zinc-400 shadow-xl transition hover:scale-105"
           >
             Story Mode
+          </button>
+          <button
+            onClick={onOnline}
+            data-testid="menu-online"
+            className="px-6 py-3 rounded-sm bg-zinc-900 hover:bg-zinc-800 border-2 border-poke-red/60 hover:border-poke-red
+              text-lg font-bold tracking-wide uppercase transition"
+          >
+            Multiplayer
           </button>
           <button
             onClick={onSandbox}
