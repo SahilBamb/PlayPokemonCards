@@ -10,7 +10,7 @@ import { opposite } from '../engine/utils.js'
 function Overlay({ children }) {
   return (
     <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-[2px] flex items-center justify-center p-6">
-      <div className="bg-white rounded-sm border-t-4 border-poke-red shadow-2xl p-4 max-w-3xl max-h-[80vh] overflow-auto flex flex-col gap-3">
+      <div className="bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100 rounded-sm border-t-4 border-poke-red shadow-2xl p-4 max-w-3xl max-h-[80vh] overflow-auto flex flex-col gap-3">
         {children}
       </div>
     </div>
@@ -26,12 +26,12 @@ function MiniCard({ card, selected, order, onClick }) {
         e.preventDefault()
         preview(card)
       }}
-      className={`relative w-24 cursor-pointer rounded-sm transition hover:scale-105 ${selected ? 'ring-4 ring-poke-red' : 'ring-1 ring-gray-200'}`}
+      className={`relative w-24 cursor-pointer rounded-sm transition hover:scale-105 ${selected ? 'ring-4 ring-poke-red' : 'ring-1 ring-gray-200 dark:ring-zinc-700'}`}
     >
       {card.image ? (
         <img src={card.image} alt={card.name} className="rounded-sm" />
       ) : (
-        <div className="w-24 h-32 bg-amber-50 border rounded-sm flex items-center justify-center text-[10px] text-center p-1">{card.name}</div>
+        <div className="w-24 h-32 bg-amber-50 border dark:bg-zinc-800 dark:border-zinc-600 rounded-sm flex items-center justify-center text-[10px] text-center p-1">{card.name}</div>
       )}
       {order != null && (
         <span className="absolute -top-2 -left-2 bg-poke-red text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shadow">
@@ -117,7 +117,7 @@ export function ChoiceModal() {
           <div
             key={e.uid}
             onClick={() => toggle(e.uid)}
-            className={`flex items-center gap-2 border rounded-sm px-3 py-2 cursor-pointer ${selected.includes(e.uid) ? 'ring-4 ring-poke-red' : ''}`}
+            className={`flex items-center gap-2 border dark:border-zinc-600 rounded-sm px-3 py-2 cursor-pointer ${selected.includes(e.uid) ? 'ring-4 ring-poke-red' : ''}`}
           >
             {Array.from({ length: e.units ?? 1 }).map((_, i) => (
               <TypeIcon key={i} type={e.energy} size={14} />
@@ -137,9 +137,9 @@ export function ChoiceModal() {
     body = (
       <div className="flex flex-col gap-2">
         {(defender?.attacks ?? []).map((a) => (
-          <button key={a.name} onClick={() => done({ attackName: a.name })} className="border rounded-sm px-3 py-2 hover:bg-red-50 text-left">
-            <span className="font-semibold">{a.name}</span> <span className="text-red-600 font-bold">{a.damage}</span>
-            <div className="text-xs text-gray-500">{a.text}</div>
+          <button key={a.name} onClick={() => done({ attackName: a.name })} className="border rounded-sm px-3 py-2 hover:bg-red-50 dark:border-zinc-600 dark:hover:bg-zinc-800 text-left">
+            <span className="font-semibold">{a.name}</span> <span className="text-red-600 dark:text-red-400 font-bold">{a.damage}</span>
+            <div className="text-xs text-gray-500 dark:text-zinc-400">{a.text}</div>
           </button>
         ))}
       </div>
@@ -148,7 +148,7 @@ export function ChoiceModal() {
     body = (
       <div className="flex gap-3 flex-wrap">
         {TYPES.map((t) => (
-          <button key={t} onClick={() => done({ type: t })} className="flex flex-col items-center gap-1 border rounded-sm px-3 py-2 hover:bg-red-50">
+          <button key={t} onClick={() => done({ type: t })} className="flex flex-col items-center gap-1 border rounded-sm px-3 py-2 hover:bg-red-50 dark:border-zinc-600 dark:hover:bg-zinc-800">
             <TypeIcon type={t} size={20} />
             <span className="text-xs capitalize">{t}</span>
           </button>
@@ -159,7 +159,7 @@ export function ChoiceModal() {
     body = (
       <div className="flex flex-col gap-2">
         {(pending.options ?? []).map((o) => (
-          <button key={o.id} onClick={() => done({ option: o.id })} className="border rounded-sm px-3 py-2 hover:bg-red-50 text-left font-semibold">
+          <button key={o.id} onClick={() => done({ option: o.id })} className="border rounded-sm px-3 py-2 hover:bg-red-50 dark:border-zinc-600 dark:hover:bg-zinc-800 text-left font-semibold">
             {o.label}
           </button>
         ))}
@@ -194,7 +194,7 @@ export function ChoiceModal() {
       {body}
       <div className="flex gap-2 justify-end">
         {pending.optional && (
-          <button onClick={skip} className="px-4 py-1 rounded-sm bg-gray-200 hover:bg-gray-300">
+          <button onClick={skip} className="px-4 py-1 rounded-sm bg-gray-200 hover:bg-gray-300 dark:bg-zinc-700 dark:hover:bg-zinc-600">
             Skip
           </button>
         )}
@@ -214,7 +214,7 @@ export function RevealOverlay() {
     <Overlay>
       <div className="flex items-center justify-between gap-6">
         <h2 className="font-bold text-lg">{reveal.label}</h2>
-        <button onClick={() => dispatch({ type: 'close-reveal' })} className="px-3 py-1 rounded-sm bg-gray-200 hover:bg-gray-300">
+        <button onClick={() => dispatch({ type: 'close-reveal' })} className="px-3 py-1 rounded-sm bg-gray-200 hover:bg-gray-300 dark:bg-zinc-700 dark:hover:bg-zinc-600">
           Close
         </button>
       </div>
@@ -238,7 +238,7 @@ export function ZoneViewer() {
         <h2 className="font-bold text-lg">
           {view.player} — {view.zone} ({cards.length})
         </h2>
-        <button onClick={() => dispatch({ type: 'close-view' })} className="px-3 py-1 rounded-sm bg-gray-200 hover:bg-gray-300">
+        <button onClick={() => dispatch({ type: 'close-view' })} className="px-3 py-1 rounded-sm bg-gray-200 hover:bg-gray-300 dark:bg-zinc-700 dark:hover:bg-zinc-600">
           Close
         </button>
       </div>

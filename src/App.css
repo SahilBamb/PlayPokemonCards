@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Class-based dark mode: SettingsProvider puts .dark on <html>. Gameplay
+   surfaces (board, cards, modals) use dark: variants; dark is the default. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @font-face {
   font-family: "Pixeled";
   src: url("/public/fonts/Pixeled.ttf") format("truetype");

@@ -41,8 +41,9 @@ export function DiscardPile({ player }) {
       onDragOver={handleDragOver}
       onDrop={zoneDrop(dispatch, player, 'discard')}
       title="Click to view discard pile"
-      className="w-20 h-28 shrink-0 cursor-pointer rounded-sm border-2 border-dashed border-zinc-400 bg-zinc-200/70
-        flex items-center justify-center text-xs text-zinc-500 hover:bg-zinc-300/70 overflow-hidden"
+      className="w-20 h-28 shrink-0 cursor-pointer rounded-sm border-2 border-dashed border-zinc-400 bg-zinc-200/70 hover:bg-zinc-300/70
+        dark:border-zinc-600 dark:bg-zinc-800/70 dark:hover:bg-zinc-700/70 dark:text-zinc-400
+        flex items-center justify-center text-xs text-zinc-500 overflow-hidden"
     >
       {top ? (
         top.image ? <img src={top.image} alt={top.name} className="w-full h-full object-cover opacity-80" /> : top.name
@@ -110,11 +111,11 @@ export function Row({ player, mirrored = false }) {
       {mirrored ? (
         <>
           {bench}
-          <div className="border-l-2 border-zinc-300 pl-6">{active}</div>
+          <div className="border-l-2 border-zinc-300 dark:border-zinc-700 pl-6">{active}</div>
         </>
       ) : (
         <>
-          <div className="border-r-2 border-zinc-300 pr-6">{active}</div>
+          <div className="border-r-2 border-zinc-300 dark:border-zinc-700 pr-6">{active}</div>
           {bench}
         </>
       )}

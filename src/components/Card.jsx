@@ -11,7 +11,7 @@ function CardFace({ card, className = '' }) {
     return <img src={card.image} alt={card.name} draggable={false} className={`rounded select-none ${className}`} />
   }
   return (
-    <div className={`rounded bg-amber-50 border border-amber-300 flex items-center justify-center text-[10px] text-center p-1 ${className}`}>
+    <div className={`rounded bg-amber-50 border border-amber-300 dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-200 flex items-center justify-center text-[10px] text-center p-1 ${className}`}>
       {card.name}
     </div>
   )
@@ -74,7 +74,9 @@ function AttackRow({ slot, atk, player, id, canAct }) {
       disabled={!affordable || locked || !!state.pending || !canAct}
       title={atk.text || atk.name}
       className={`w-full flex items-center justify-between gap-1 px-1 py-0.5 rounded-sm text-[10px] leading-tight border
-        ${affordable && !locked ? 'bg-white hover:bg-red-50 border-poke-red/50 cursor-pointer' : 'bg-gray-100 border-gray-200 text-gray-400'}`}
+        ${affordable && !locked
+          ? 'bg-white hover:bg-red-50 border-poke-red/50 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:text-zinc-100 cursor-pointer'
+          : 'bg-gray-100 border-gray-200 text-gray-400 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-500'}`}
     >
       <span className="flex items-center gap-0.5">
         {Object.entries(atk.cost).flatMap(([t, n]) => Array.from({ length: n }).map((_, i) => <TypeIcon key={t + i} type={t} size={7} />))}
@@ -165,7 +167,7 @@ export function BoardCard({ slot, player, id }) {
         e.preventDefault()
         preview(slot)
       }}
-      className={`relative w-28 rounded-sm bg-white border border-zinc-300 shadow-md p-1 flex flex-col gap-1 transition
+      className={`relative w-28 rounded-sm bg-white border border-zinc-300 text-zinc-900 dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-100 shadow-md p-1 flex flex-col gap-1 transition
         ${isValidTarget ? 'ring-4 ring-yellow-400 cursor-pointer animate-pulse' : ''} ${fxAnim}`}
     >
       {fxOverlay}
@@ -182,7 +184,7 @@ export function BoardCard({ slot, player, id }) {
           <GuardIcon guard={slot.guard} />
         </div>
         {slot.energyAttached.length > 0 && (
-          <div className="absolute bottom-0 left-0 right-0 flex flex-wrap gap-0.5 p-0.5 bg-white/70 rounded-b">
+          <div className="absolute bottom-0 left-0 right-0 flex flex-wrap gap-0.5 p-0.5 bg-white/70 dark:bg-zinc-900/70 rounded-b">
             {slot.energyAttached.map((e) => (
               <span key={e.uid} title={e.name} className="flex">
                 {Array.from({ length: e.units ?? 1 }).map((_, i) => (
@@ -195,7 +197,7 @@ export function BoardCard({ slot, player, id }) {
         {Object.keys(slot.markers ?? {}).length > 0 && (
           <div className="absolute top-0 right-0 translate-x-1/3 flex flex-col gap-0.5">
             {Object.keys(slot.markers).map((m) => (
-              <span key={m} title={m} className="bg-fuchsia-200 text-fuchsia-800 text-[8px] px-1 rounded-sm shadow">
+              <span key={m} title={m} className="bg-fuchsia-200 text-fuchsia-800 dark:bg-fuchsia-900 dark:text-fuchsia-200 text-[8px] px-1 rounded-sm shadow">
                 {m}
               </span>
             ))}
@@ -205,7 +207,7 @@ export function BoardCard({ slot, player, id }) {
 
       <div className="flex items-center justify-between text-[10px] px-0.5">
         <span className="font-semibold truncate">{slot.name}</span>
-        <span className={hpLeft <= 20 ? 'text-red-600 font-bold' : 'text-gray-600'}>{hpLeft}/{slot.hp}</span>
+        <span className={hpLeft <= 20 ? 'text-red-600 dark:text-red-400 font-bold' : 'text-gray-600 dark:text-zinc-400'}>{hpLeft}/{slot.hp}</span>
       </div>
 
       {(combat.attacks ?? []).map((atk) => (
@@ -218,13 +220,13 @@ export function BoardCard({ slot, player, id }) {
             onClick={() => dispatch({ type: 'use-power', player, id })}
             disabled={busy || !canAct}
             title={slot.power.text}
-            className="flex-1 text-[9px] bg-purple-100 hover:bg-purple-200 border border-purple-300 rounded-sm px-1 py-0.5 disabled:opacity-40"
+            className="flex-1 text-[9px] bg-purple-100 hover:bg-purple-200 border border-purple-300 dark:bg-purple-900/60 dark:hover:bg-purple-800/70 dark:border-purple-700 dark:text-purple-200 rounded-sm px-1 py-0.5 disabled:opacity-40"
           >
             {slot.power.name}
           </button>
         )}
         {power?.passive && (
-          <span title={slot.power.text} className="flex-1 text-center text-[9px] bg-purple-50 text-purple-500 border border-purple-200 rounded-sm px-1 py-0.5">
+          <span title={slot.power.text} className="flex-1 text-center text-[9px] bg-purple-50 text-purple-500 border border-purple-200 dark:bg-purple-950/50 dark:text-purple-300 dark:border-purple-800 rounded-sm px-1 py-0.5">
             {slot.power.name}
           </span>
         )}
@@ -232,7 +234,7 @@ export function BoardCard({ slot, player, id }) {
           <button
             onClick={() => dispatch({ type: 'retreat', player })}
             disabled={busy || !canAct}
-            className="flex-1 text-[9px] bg-sky-100 hover:bg-sky-200 border border-sky-300 rounded-sm px-1 py-0.5 disabled:opacity-40"
+            className="flex-1 text-[9px] bg-sky-100 hover:bg-sky-200 border border-sky-300 dark:bg-sky-900/60 dark:hover:bg-sky-800/70 dark:border-sky-700 dark:text-sky-200 rounded-sm px-1 py-0.5 disabled:opacity-40"
           >
             Retreat ({retreatCostOf(state, player)})
           </button>
@@ -241,7 +243,7 @@ export function BoardCard({ slot, player, id }) {
           <button
             onClick={() => dispatch({ type: 'discard-doll', player, id })}
             disabled={busy || !canAct}
-            className="flex-1 text-[9px] bg-rose-100 hover:bg-rose-200 border border-rose-300 rounded-sm px-1 py-0.5 disabled:opacity-40"
+            className="flex-1 text-[9px] bg-rose-100 hover:bg-rose-200 border border-rose-300 dark:bg-rose-900/60 dark:hover:bg-rose-800/70 dark:border-rose-700 dark:text-rose-200 rounded-sm px-1 py-0.5 disabled:opacity-40"
           >
             Discard
           </button>
@@ -264,7 +266,7 @@ export function EmptySpot({ player, id, label }) {
       onDragOver={handleDragOver}
       onDrop={handleDrop}
       onClick={() => state.pending && dispatch({ type: 'click', player, id, actor: clickActor })}
-      className="w-28 h-40 rounded-sm border-2 border-dashed border-zinc-300 bg-zinc-100/60 flex items-center justify-center text-[10px] text-zinc-400 uppercase tracking-wide font-semibold"
+      className="w-28 h-40 rounded-sm border-2 border-dashed border-zinc-300 bg-zinc-100/60 dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-500 flex items-center justify-center text-[10px] text-zinc-400 uppercase tracking-wide font-semibold"
     >
       {label ?? (id === 0 ? 'Active' : 'Bench')}
     </div>

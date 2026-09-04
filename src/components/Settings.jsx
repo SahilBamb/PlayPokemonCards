@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, useCallback } from 'rea
 import { setVolume, setSoundEnabled, playSfx } from '../lib/sfx.js'
 
 const KEY = 'ppc-settings'
-const DEFAULTS = { animations: true, sound: true, volume: 0.7 }
+const DEFAULTS = { animations: true, sound: true, volume: 0.7, theme: 'dark' }
 
 function load() {
   try {
@@ -57,6 +57,7 @@ function SettingsModal({ settings, update, onClose }) {
             ×
           </button>
         </div>
+        <Toggle label="Dark mode" checked={settings.theme !== 'light'} onChange={(v) => update({ theme: v ? 'dark' : 'light' })} />
         <Toggle label="Battle animations" checked={settings.animations} onChange={(v) => update({ animations: v })} />
         <Toggle label="Sound effects" checked={settings.sound} onChange={(v) => update({ sound: v })} />
         <label className="flex flex-col gap-1.5">
@@ -92,6 +93,11 @@ export function SettingsProvider({ children }) {
     setVolume(settings.volume)
     setSoundEnabled(settings.sound)
   }, [settings])
+
+  // Dark gameplay is the default; light mode is the opt-in.
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', settings.theme !== 'light')
+  }, [settings.theme])
 
   const update = useCallback((patch) => {
     setSettings((prev) => {

@@ -41,12 +41,12 @@ function PromptBar() {
         {isMatch ? (myTurn ? 'Your turn' : 'Opponent is thinking...') : `${state.turnPlayer}'s turn`} · #{state.turnNumber}
       </div>
       {pending ? (
-        <div className="flex items-center gap-2 bg-amber-100 border-2 border-amber-400 px-4 py-1 rounded-sm text-sm font-semibold animate-pulse">
+        <div className="flex items-center gap-2 bg-amber-100 border-2 border-amber-400 dark:bg-amber-950/80 dark:border-amber-500 dark:text-amber-100 px-4 py-1 rounded-sm text-sm font-semibold animate-pulse">
           {pendingIsMine ? (pending.prompt ?? 'Choose a target') : 'Opponent is choosing...'}
           {pendingIsMine && pending.optional && pending.what === 'pokemon' && (
             <button
               onClick={() => dispatch({ type: 'skip-choice', actor: humanPlayer })}
-              className="text-xs bg-white border rounded-sm px-2 py-0.5 hover:bg-gray-100"
+              className="text-xs bg-white border rounded-sm px-2 py-0.5 hover:bg-gray-100 dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-200 dark:hover:bg-zinc-700"
             >
               Skip
             </button>
@@ -155,7 +155,7 @@ export function GameOverOverlay({ onExit, onRematch, exitLabel = 'Return to Menu
 
 export function Board() {
   return (
-    <div className="flex-1 min-w-0 flex flex-col justify-between gap-3 p-4 overflow-auto bg-zinc-100/90 border border-zinc-300 rounded-sm shadow-2xl">
+    <div className="flex-1 min-w-0 flex flex-col justify-between gap-3 p-4 overflow-auto bg-zinc-100/90 border border-zinc-300 dark:bg-zinc-900/80 dark:border-zinc-700 rounded-sm shadow-2xl">
       <Hand player="p2" />
       <Row player="p2" mirrored />
       <div className="flex justify-center">
