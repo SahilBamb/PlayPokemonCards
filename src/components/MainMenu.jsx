@@ -1,19 +1,35 @@
 import { useState } from 'react'
+import {
+  FaStar,
+  FaSkull,
+  FaGamepad,
+  FaRocket,
+  FaMedal,
+  FaBalanceScale,
+  FaScroll,
+  FaBoxOpen,
+} from 'react-icons/fa'
 import { DECKS, byName } from '../engine/cards.js'
 import { DECK_GROUPS } from '../data/presetDecks.js'
 import { AI_POLICIES, DEFAULT_AI } from '../ai/index.js'
 import { SettingsButton } from './Settings.jsx'
 import { loadDecks, deckToList, deckSize, validateDeck } from '../lib/deckStore.js'
 
-function SectionDivider({ children }) {
-  return (
-    <div className="w-full flex items-center gap-3">
-      <span className="flex-1 h-px bg-zinc-700" />
-      <span className="text-xs font-bold uppercase tracking-widest text-zinc-400">{children}</span>
-      <span className="flex-1 h-px bg-zinc-700" />
-    </div>
-  )
+const GROUP_ICONS = {
+  starter: FaStar,
+  basefossil: FaSkull,
+  gameboy: FaGamepad,
+  baserocket: FaRocket,
+  basegym: FaMedal,
+  prop153: FaBalanceScale,
+  originalrules: FaScroll,
+  custom: FaBoxOpen,
 }
+
+const PICKER_GROUPS = [
+  ...Object.entries(DECK_GROUPS).map(([id, label]) => ({ id, label })),
+  { id: 'custom', label: 'Use Own Deck' },
+]
 
 function DeckOption({ deck, selected, onClick }) {
   return (
@@ -83,35 +99,55 @@ function CustomDeckOption({ deck, selected, onClick }) {
 
 export function MainMenu({ onSandbox, onPlay, onEditor, onStory }) {
   const [picking, setPicking] = useState(false)
+  const [group, setGroup] = useState('starter')
   const [sel, setSel] = useState({ kind: 'preset', id: 'blazeSurf' })
   const [aiId, setAiId] = useState(DEFAULT_AI)
   const [customDecks] = useState(loadDecks)
+
+  const selectGroup = (gid) => {
+    setGroup(gid)
+    if (gid === 'custom') {
+      if (sel.kind === 'custom') return
+      const first = customDecks.find((d) => validateDeck(d.counts).length === 0)
+      setSel(first ? { kind: 'custom', id: first.id } : { kind: 'custom', id: null })
+      return
+    }
+    if (sel.kind === 'preset' && DECKS[sel.id]?.group === gid) return
+    const first = Object.values(DECKS).find((d) => d.group === gid)
+    if (first) setSel({ kind: 'preset', id: first.id })
+  }
 
   const start = () => {
     const presetIds = Object.keys(DECKS)
     if (sel.kind === 'custom') {
       const deck = customDecks.find((d) => d.id === sel.id)
-      if (!deck) return
+      if (!deck || validateDeck(deck.counts).length) return
       const aiDeckId = presetIds[Math.floor(Math.random() * presetIds.length)]
       onPlay({ playerDeckList: deckToList(deck), playerDeckName: deck.name, aiDeckId, aiId })
-    } else {
+    } else if (sel.id) {
       const others = presetIds.filter((id) => id !== sel.id)
       const aiDeckId = others[Math.floor(Math.random() * others.length)]
       onPlay({ playerDeckId: sel.id, aiDeckId, aiId })
     }
   }
 
+  const canStart = sel.kind === 'preset' ? !!sel.id : !!customDecks.find((d) => d.id === sel.id && !validateDeck(d.counts).length)
+  const groupLabel = PICKER_GROUPS.find((g) => g.id === group)?.label
+  const presetDecks = Object.values(DECKS).filter((d) => d.group === group)
+
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center gap-10 text-white">
+    <div className={`w-full h-screen flex flex-col items-center text-white ${picking ? 'justify-start pt-6 gap-4' : 'justify-center gap-10'}`}>
       <div className="absolute top-4 right-4">
         <SettingsButton />
       </div>
-      <div className="flex flex-col items-center gap-4">
-        <img src="/pokeball.svg" alt="" className="w-20 h-20 drop-shadow-[0_0_24px_rgba(227,53,13,0.45)]" draggable={false} />
-        <h1 className="text-5xl font-black tracking-tight drop-shadow-lg">
-          Play<span className="text-poke-red">Pokemon</span>Cards
-        </h1>
-        <p className="text-zinc-400 font-medium">Base Set through Gym Challenge — all 530 cards playable.</p>
+      <div className={`flex items-center ${picking ? 'gap-3' : 'flex-col gap-4'}`}>
+        <img src="/pokeball.svg" alt="" className={`${picking ? 'w-10 h-10' : 'w-20 h-20'} drop-shadow-[0_0_24px_rgba(227,53,13,0.45)]`} draggable={false} />
+        <div className="flex flex-col items-center">
+          <h1 className={`${picking ? 'text-2xl' : 'text-5xl'} font-black tracking-tight drop-shadow-lg`}>
+            Play<span className="text-poke-red">Pokemon</span>Cards
+          </h1>
+          {!picking && <p className="text-zinc-400 font-medium">Base Set through Gym Challenge — all 530 cards playable.</p>}
+        </div>
       </div>
 
       {!picking ? (
@@ -147,15 +183,57 @@ export function MainMenu({ onSandbox, onPlay, onEditor, onStory }) {
           </button>
         </div>
       ) : (
-        <div className="flex flex-col items-center gap-5 bg-zinc-900/90 border-2 border-zinc-700 rounded-sm p-6 shadow-2xl backdrop-blur-sm max-h-[72vh] max-w-4xl overflow-y-auto">
-          <h2 className="text-lg font-bold uppercase tracking-wide">Choose your deck</h2>
-          {Object.entries(DECK_GROUPS).map(([gid, label]) => (
-            <div key={gid} className="w-full flex flex-col items-center gap-3">
-              <SectionDivider>{label}</SectionDivider>
-              <div className="flex flex-wrap justify-center gap-4">
-                {Object.values(DECKS)
-                  .filter((d) => d.group === gid)
-                  .map((deck) => (
+        <div className="w-[min(72rem,96vw)] h-[min(70vh,44rem)] flex bg-zinc-900/90 border-2 border-zinc-700 rounded-sm shadow-2xl backdrop-blur-sm overflow-hidden">
+          <nav className="w-52 shrink-0 border-r-2 border-zinc-700 overflow-y-auto py-2 bg-zinc-950/50">
+            {PICKER_GROUPS.map(({ id, label }) => {
+              const Icon = GROUP_ICONS[id]
+              const active = group === id
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  title={label}
+                  data-testid={`qp-group-${id}`}
+                  onClick={() => selectGroup(id)}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition border-l-4
+                    ${active ? 'border-poke-red bg-poke-red/15 text-white' : 'border-transparent text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100'}`}
+                >
+                  <Icon className={`shrink-0 text-lg ${active ? 'text-poke-red' : 'text-zinc-500'}`} />
+                  <span className="text-xs font-bold uppercase tracking-wide leading-tight">{label}</span>
+                </button>
+              )
+            })}
+          </nav>
+          <div className="flex-1 flex flex-col min-w-0">
+            <div className="px-5 pt-4 pb-2 shrink-0">
+              <h2 className="text-lg font-bold uppercase tracking-wide">{groupLabel}</h2>
+            </div>
+            <div className="flex-1 overflow-y-auto px-5 pb-4">
+              {group === 'custom' ? (
+                <div className="flex flex-wrap gap-4">
+                  {customDecks.map((deck) => (
+                    <CustomDeckOption
+                      key={deck.id}
+                      deck={deck}
+                      selected={sel.kind === 'custom' && sel.id === deck.id}
+                      onClick={() => setSel({ kind: 'custom', id: deck.id })}
+                    />
+                  ))}
+                  {customDecks.length === 0 && (
+                    <span className="text-xs text-zinc-500 self-center">No saved decks yet — build one in the Deck Editor.</span>
+                  )}
+                  <button
+                    onClick={onEditor}
+                    className="flex flex-col items-center justify-center gap-2 rounded-sm border-2 border-dashed border-zinc-700 hover:border-zinc-500
+                      p-3 w-44 min-h-[8rem] text-zinc-400 hover:text-white transition"
+                  >
+                    <span className="text-3xl font-black leading-none">+</span>
+                    <span className="font-bold text-sm uppercase tracking-wide">Deck Editor</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-4">
+                  {presetDecks.map((deck) => (
                     <DeckOption
                       key={deck.id}
                       deck={deck}
@@ -163,55 +241,37 @@ export function MainMenu({ onSandbox, onPlay, onEditor, onStory }) {
                       onClick={() => setSel({ kind: 'preset', id: deck.id })}
                     />
                   ))}
+                </div>
+              )}
+            </div>
+            <div className="shrink-0 border-t-2 border-zinc-700 px-5 py-3 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="text-sm font-semibold text-zinc-300">Opponent:</span>
+                {Object.values(AI_POLICIES).map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => setAiId(p.id)}
+                    title={p.description}
+                    className={`px-3 py-1.5 rounded-sm text-sm font-semibold border-2 transition
+                      ${aiId === p.id ? 'border-poke-red bg-poke-red/15 text-white' : 'border-zinc-700 text-zinc-300 hover:border-zinc-500'}`}
+                  >
+                    {p.name}
+                  </button>
+                ))}
+              </div>
+              <div className="flex gap-3">
+                <button onClick={() => setPicking(false)} className="px-5 py-2 rounded-sm bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 font-semibold">
+                  Back
+                </button>
+                <button
+                  onClick={start}
+                  disabled={!canStart}
+                  className="px-6 py-2 rounded-sm bg-poke-red hover:bg-[#f4460f] disabled:opacity-40 disabled:hover:bg-poke-red text-white font-bold uppercase tracking-wide border-b-4 border-poke-red-dark shadow"
+                >
+                  Start Match
+                </button>
               </div>
             </div>
-          ))}
-          <SectionDivider>Use Own Deck</SectionDivider>
-          <div className="flex flex-wrap justify-center gap-4 max-w-2xl">
-            {customDecks.map((deck) => (
-              <CustomDeckOption
-                key={deck.id}
-                deck={deck}
-                selected={sel.kind === 'custom' && sel.id === deck.id}
-                onClick={() => setSel({ kind: 'custom', id: deck.id })}
-              />
-            ))}
-            {customDecks.length === 0 && (
-              <span className="text-xs text-zinc-500 self-center">No saved decks yet — build one in the Deck Editor.</span>
-            )}
-            <button
-              onClick={onEditor}
-              className="flex flex-col items-center justify-center gap-2 rounded-sm border-2 border-dashed border-zinc-700 hover:border-zinc-500
-                p-3 w-44 min-h-[8rem] text-zinc-400 hover:text-white transition"
-            >
-              <span className="text-3xl font-black leading-none">+</span>
-              <span className="font-bold text-sm uppercase tracking-wide">Deck Editor</span>
-            </button>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-semibold text-zinc-300">Opponent:</span>
-            {Object.values(AI_POLICIES).map((p) => (
-              <button
-                key={p.id}
-                onClick={() => setAiId(p.id)}
-                title={p.description}
-                className={`px-3 py-1.5 rounded-sm text-sm font-semibold border-2 transition
-                  ${aiId === p.id ? 'border-poke-red bg-poke-red/15 text-white' : 'border-zinc-700 text-zinc-300 hover:border-zinc-500'}`}
-              >
-                {p.name}
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-3">
-            <button onClick={() => setPicking(false)} className="px-5 py-2 rounded-sm bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 font-semibold">
-              Back
-            </button>
-            <button
-              onClick={start}
-              className="px-6 py-2 rounded-sm bg-poke-red hover:bg-[#f4460f] text-white font-bold uppercase tracking-wide border-b-4 border-poke-red-dark shadow"
-            >
-              Start Match
-            </button>
           </div>
         </div>
       )}

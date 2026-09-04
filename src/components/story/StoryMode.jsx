@@ -35,7 +35,7 @@ export function StoryMode({ onExit }) {
 
   const [story, setStory] = useState(null)
   const [view, setView] = useState('select') // select | starter | hub | shop | editor | battle
-  const [dialogue, setDialogue] = useState(null) // { char, lines, onDone }
+  const [dialogue, setDialogue] = useState(null) // { char, lines } or { scene } plus onDone/onCancel
   const [battle, setBattle] = useState(null) // { node, config, key }
   const outcome = useRef(null) // set by onResult, consumed on battle exit
 
@@ -52,13 +52,14 @@ export function StoryMode({ onExit }) {
       format: story.formatId,
     })
     setProfile((p) => chooseStarter(p, story, starter, deck.id))
+    const scene = (story.intro ?? []).map((beat) => ({
+      ...beat,
+      text: String(beat.text).replaceAll('{starter}', starter.name),
+    }))
     setDialogue({
-      char: { name: 'Professor Oak', image: null },
-      lines: [
-        `${starter.name} — a fine choice!`,
-        'The cards are yours, and I threw in some coins for the Shop.',
-        'Now go challenge the trainers of ' + story.name + '. Good luck!',
-      ],
+      scene: scene.length
+        ? scene
+        : [{ name: 'Professor Oak', image: null, text: `${starter.name} — a fine choice! Now go challenge the trainers of ${story.name}.` }],
       onDone: () => setDialogue(null),
     })
     setView('hub')
@@ -100,11 +101,28 @@ export function StoryMode({ onExit }) {
     outcome.current = null
     if (!res) return // forfeited before the match ended — no rewards
     const { node, won, awards } = res
+    const area = story.areas.find((a) => a.nodes.some((n) => n.id === node.id))
+    const cutscene = won && (awards.badge || awards.trophy) && area?.cutscene?.length ? area.cutscene : null
     const lines = [...(won ? node.dialogue.win : node.dialogue.lose)]
     lines.push(`You earned ${awards.coins} coins!`)
-    if (awards.badge) lines.push(`You received the ${awards.badge.name ?? 'area badge'}!`)
-    if (awards.trophy) lines.push('You earned the Champion Trophy! You have conquered this story! 🏆')
-    setDialogue({ char: node.char, lines, onDone: () => setDialogue(null) })
+    if (!cutscene) {
+      if (awards.badge) lines.push(`You received the ${awards.badge.name ?? 'area badge'}!`)
+      if (awards.trophy) lines.push('You earned the Champion Trophy! You have conquered this story!')
+    }
+    setDialogue({
+      char: node.char,
+      lines,
+      onDone: () => {
+        if (!cutscene) {
+          setDialogue(null)
+          return
+        }
+        const extra = []
+        if (awards.badge) extra.push({ name: node.char.name, image: node.char.image, text: `You received the ${awards.badge.name ?? 'area badge'}!` })
+        if (awards.trophy) extra.push({ name: node.char.name, image: node.char.image, text: 'You earned the Champion Trophy! You have conquered this story!' })
+        setDialogue({ scene: [...cutscene, ...extra], onDone: () => setDialogue(null) })
+      },
+    })
   }
 
   let content = null
@@ -151,10 +169,11 @@ export function StoryMode({ onExit }) {
       {content}
       {dialogue && (
         <DialogueBox
-          key={dialogue.lines.join('|')}
-          name={dialogue.char.name}
-          image={dialogue.char.image}
+          key={(dialogue.scene ?? dialogue.lines ?? []).map((b) => b.text ?? b).join('|')}
+          name={dialogue.char?.name}
+          image={dialogue.char?.image}
           lines={dialogue.lines}
+          scene={dialogue.scene}
           doneLabel={dialogue.doneLabel}
           onDone={dialogue.onDone}
           onCancel={dialogue.onCancel}

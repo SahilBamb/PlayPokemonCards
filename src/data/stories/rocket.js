@@ -7,6 +7,17 @@ import GYM_LEADERS from '../gymLeaders.js'
 
 const leaderBadge = (id) => GYM_LEADERS.find((l) => l.id === id)?.badge ?? null
 const img = (file) => `/trainers/TeamRocket/${file}.png`
+const say = (who, text) => ({ name: who.name, image: who.image ?? null, text })
+const CLAIR = { name: 'Rebel Leader Clair', image: img('Anti-Team Rocket Claire') }
+const SURGE = { name: 'Rebel Lt. Surge', image: img('Anti-Team Rocket Lt. Surge') }
+const WANDA = { name: 'Deserter Wanda', image: img('Team Rocket Grunt Shopper') }
+const GRUNT = { name: 'Lost Rocket Grunt', image: img('Team Rocket Grunt Purple') }
+const MISTY = { name: 'Misty', image: img('Team Rocket Executive Misty') }
+const ERIKA = { name: 'Erika', image: img('Team Rocket Boss Erika') }
+const BLAINE = { name: 'Blaine', image: img('Team Rocket Blaine') }
+const NORMAN = { name: 'Norman', image: img('Team Rocket Boss Norman') }
+const SABRINA = { name: 'Sabrina', image: img('Team Rocket Champion Sabrina') }
+const GIOVANNI = { name: 'Giovanni', image: img('Anti-Team Rocket Giovanni') }
 
 // Regular trainer node with a generated deck (same shape as kanto.js).
 const trainer = (id, image, name, { types, tier, aiId = 'aggro', intro, win, lose }) => ({
@@ -98,11 +109,27 @@ export const ROCKET_STORY = {
       },
     },
   ],
+  intro: [
+    say(CLAIR, 'So. The new recruit. I am Clair — I came from Johto because Kanto fell, and dragons do not kneel.'),
+    say(SURGE, 'Lt. Surge. Ex-gym, full-time Rocket wrecker. We train you or we bury you. Prefer option one.'),
+    say(GRUNT, 'HEY! This hideout is— wait. This is the WRONG warehouse—'),
+    say(SURGE, 'ZAP! And stay down, rat!'),
+    say(CLAIR, "They are everywhere. Sabrina sits on the Champion throne, and several Gym Leaders wear her voice."),
+    say(WANDA, "Psst. I'm Wanda. I quit Rocket and kept the truck keys. Shop's in the back — boosters, dark cards, don't tell HQ."),
+    say(CLAIR, 'Take {starter}. Survive our exams. Then we send you into the field.'),
+    say(SURGE, 'Cerulean Harbor first, if you graduate. Move, soldier!'),
+  ],
   areas: [
     {
       id: 'hideout',
       name: 'Rebel Hideout',
       badge: leaderBadge('johto-clair'),
+      cutscene: [
+        say(CLAIR, 'Exam passed. The Rising Badge is yours — Kanto rises with you.'),
+        say(SURGE, "Harbor next. Misty's theirs now. Don't hesitate when her eyes go blank."),
+        say(WANDA, "I packed you a discount. Don't waste it dying."),
+        say(CLAIR, 'Free her if you can. The rebellion needs its Leaders back.'),
+      ],
       nodes: [
         trainer('hideout-1', img('Anti-Team Rocket Koga Son'), 'Rebel Kenji', {
           types: ['grass'], tier: 1, aiId: 'random',
@@ -150,6 +177,12 @@ export const ROCKET_STORY = {
       id: 'harbor',
       name: 'Cerulean Harbor',
       badge: leaderBadge('kanto-misty'),
+      cutscene: [
+        say(MISTY, 'The water... my gym... I remember you dragging me out.'),
+        say(CLAIR, 'Welcome back, Executive — no. Gym Leader.'),
+        say(MISTY, 'Sabrina was in my head. The Game Corner is next. Something rotten runs under Celadon.'),
+        say(WANDA, "I'll move the shop closer to the docks. You look like you need more packs."),
+      ],
       nodes: [
         trainer('harbor-1', img('Team Rocket Sailor Grunt'), 'Rocket Sailor Dorian', {
           types: ['water'], tier: 1,
@@ -191,6 +224,12 @@ export const ROCKET_STORY = {
       id: 'corner',
       name: 'Celadon Game Corner',
       badge: leaderBadge('kanto-erika'),
+      cutscene: [
+        say(ERIKA, 'The perfume fades. What a horrid dream I was living.'),
+        say(CLAIR, 'Flowers and a rebellion. Unexpected allies.'),
+        say(ERIKA, 'They took Cinnabar Lab next. Poor Blaine — he burns for them now.'),
+        say(SURGE, 'Then we cut the power. Lab first, feelings later.'),
+      ],
       nodes: [
         trainer('corner-1', img('Team Rocket Grunt Rich Boy'), 'Rocket Financier Silas', {
           types: ['colorless'], tier: 2, aiId: 'random',
@@ -231,6 +270,12 @@ export const ROCKET_STORY = {
       id: 'lab',
       name: 'Cinnabar Lab',
       badge: leaderBadge('kanto-blaine'),
+      cutscene: [
+        say(BLAINE, 'Correct answer! My head is my own again!'),
+        say(GIOVANNI, 'Magnificent. Sabrina stole what I built. Burn the rest.'),
+        say(BLAINE, 'Silph Co. is their fortress. The Manager and their "Boss" Norman hold it.'),
+        say(CLAIR, 'Careful of Giovanni\'s "help." Dragons trust few rats.'),
+      ],
       nodes: [
         trainer('lab-1', img('Team Rocket Grunt Mechanic'), 'Rocket Mechanic Bolt', {
           types: ['lightning'], tier: 2,
@@ -278,6 +323,12 @@ export const ROCKET_STORY = {
       id: 'silph',
       name: 'Silph Co.',
       badge: leaderBadge('hoenn-norman'),
+      cutscene: [
+        say(NORMAN, 'My family... I was supposed to go home months ago.'),
+        say(CLAIR, 'Then go. We will finish this.'),
+        say(NORMAN, 'She waits at the old Rocket HQ in Viridian, with the last of her enforcers.'),
+        say(SURGE, 'Finally. The front door. I have been waiting to kick it in.'),
+      ],
       nodes: [
         trainer('silph-1', img('Team Rocket Pyschic Grunt'), 'Rocket Psychic Ansel', {
           types: ['psychic'], tier: 3, aiId: 'stall',
@@ -319,6 +370,15 @@ export const ROCKET_STORY = {
       id: 'hq',
       name: 'Viridian Rocket HQ',
       badge: null, // clearing HQ awards the Liberation Trophy
+      cutscene: [
+        say(SABRINA, 'I... I can hear my own thoughts again.'),
+        say(CLAIR, 'Stay down, Champion. The throne is empty.'),
+        say(SABRINA, 'Someone taught me this hunger. A voice from Viridian...'),
+        say(GIOVANNI, 'A fine performance. Both of you.'),
+        say(CLAIR, 'Giovanni?'),
+        say(GIOVANNI, 'The region is "free." For now. Do enjoy it.'),
+        say(WANDA, "Shop's staying open. Liberated Kanto still needs cards — and I still have the keys."),
+      ],
       nodes: [
         named('hq-1', 'trainer', 'The Rocket Master', img('Team Rocket Master'), 'rocketMaster', {
           rewards: { win: 180, lose: 35 },

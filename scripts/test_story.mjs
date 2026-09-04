@@ -223,6 +223,28 @@ test('every story: node decks are 60 cards and legal in the story format', () =>
   }
 })
 
+test('every story has a multi-speaker intro and a cutscene on each area', () => {
+  for (const story of Object.values(STORIES)) {
+    assert.ok(Array.isArray(story.intro) && story.intro.length >= 4, `${story.id} intro is too short`)
+    const speakers = new Set(story.intro.map((b) => b.name))
+    assert.ok(speakers.size >= 2, `${story.id} intro needs more than one speaker`)
+    for (const [i, beat] of story.intro.entries()) {
+      assert.ok(beat.name && beat.text, `${story.id} intro beat ${i} needs name + text`)
+    }
+    for (const area of story.areas) {
+      assert.ok(Array.isArray(area.cutscene) && area.cutscene.length >= 3, `${story.id}/${area.id} cutscene missing`)
+      const who = new Set(area.cutscene.map((b) => b.name))
+      assert.ok(who.size >= 2, `${story.id}/${area.id} cutscene needs a back-and-forth`)
+      for (const [i, beat] of area.cutscene.entries()) {
+        assert.ok(beat.name && beat.text, `${story.id}/${area.id} beat ${i} needs name + text`)
+        if (beat.image?.startsWith('/')) {
+          assert.ok(fs.existsSync('public' + beat.image), `${story.id}/${area.id}: missing portrait ${beat.image}`)
+        }
+      }
+    }
+  }
+})
+
 test('every story: node ids are unique and local portraits exist on disk', () => {
   const seen = new Set()
   for (const story of Object.values(STORIES)) {

@@ -23,7 +23,26 @@ not part of this mainline.
 ```bash
 npm install
 npm run dev           # web client on http://localhost:5173
+npm run build && npm start   # production build, then serve dist/
 ```
+
+## Deploy (GitHub + Railway)
+
+The app is a static Vite build served by `scripts/serve-dist.mjs` (no database).
+
+```bash
+# GitHub (from the repo root, after committing)
+gh repo create PlayPokemonCards --public --source=. --remote=origin --push
+
+# Railway: one service hosts the built client
+railway init --name PlayPokemonCards
+railway up
+railway domain
+```
+
+Railway's Node builder runs `npm run build`, then `npm start`, which listens on `$PORT`.
+Open the printed `*.up.railway.app` URL to play. Later deploys: `git push` if the
+service is connected to GitHub, or `railway up` from this directory.
 
 Headless test suites:
 

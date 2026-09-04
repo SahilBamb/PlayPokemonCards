@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "start": "node scripts/serve-dist.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "test:engine": "node scripts/test_engine.mjs",

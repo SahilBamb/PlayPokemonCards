@@ -88,6 +88,7 @@ await page.screenshot({ path: `${shots}/d2_deck_saved.png` })
 // 8. Back to menu -> Quick Play: the saved deck appears under Use Own Deck
 await page.getByRole('button', { name: '← Menu' }).click()
 await page.getByRole('button', { name: 'Quick Play' }).click()
+await page.getByTestId('qp-group-custom').click()
 await page.waitForSelector('text=Use Own Deck')
 const tile = page.getByRole('button', { name: /Smoke Deck/ })
 if (!(await tile.isVisible())) errors.push('saved deck tile missing in Quick Play')

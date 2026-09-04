@@ -11,6 +11,8 @@ const tclassImg = (id) => TRAINER_CLASSES.find((t) => t.id === id)?.image ?? nul
 const e4 = (id) => ELITE_FOUR.find((e) => e.id === id)
 
 const RIVAL = { name: 'Rival Blue', image: leader('kanto-blue')?.image }
+const OAK = { name: 'Professor Oak', image: tclassImg('oras-gentleman') }
+const say = (who, text) => ({ name: who.name, image: who.image ?? null, text })
 
 // Regular trainer node. Deck is generated deterministically from the node id.
 const trainer = (id, classId, name, { types, tier, aiId = 'aggro', intro, win, lose }) => ({
@@ -116,11 +118,28 @@ export const KANTO_STORY = {
       },
     },
   ],
+  intro: [
+    say(OAK, "Ah! There you are. I've been waiting by the lab window all morning."),
+    say(OAK, 'The Pokémon League is calling for new challengers — eight Gyms, then the Elite Four at Indigo Plateau.'),
+    say(OAK, "I set aside a starter deck for you: {starter}. It's yours now, plus a few coins for the Shop."),
+    say(RIVAL, "HEY! Don't start the speech without me, Gramps!"),
+    say(RIVAL, "I already grabbed a deck. A BETTER one. Obviously."),
+    say(RIVAL, "{starter}? That's what you picked? Hah! Smell ya later — I'll be Champion before you leave Pallet!"),
+    say(OAK, 'That grandson of mine... always racing two towns ahead of his manners.'),
+    say(OAK, "Pewter City is first. Brock's Gym is the traditional first stop. Go on — and try to enjoy the road."),
+  ],
   areas: [
     {
       id: 'pewter',
       name: 'Pewter City',
       badge: leader('kanto-brock').badge,
+      cutscene: [
+        say(leader('kanto-brock'), 'Solid battle. The Boulder Badge is more than a rock — it is a promise you keep training.'),
+        say(RIVAL, 'Took you long enough. I already beat Brock this morning.'),
+        say(leader('kanto-brock'), 'He did. Barely. His defense was terrible.'),
+        say(RIVAL, 'Rude! Anyway — Cerulean next. Try not to drown.'),
+        say(leader('kanto-brock'), "Misty is faster than she looks. Bring Water answers... or a lot of patience."),
+      ],
       nodes: [
         trainer('pewter-1', 'oras-youngster', 'Youngster Joey', {
           types: ['colorless'], tier: 1, aiId: 'random',
@@ -145,6 +164,12 @@ export const KANTO_STORY = {
       id: 'cerulean',
       name: 'Cerulean City',
       badge: leader('kanto-misty').badge,
+      cutscene: [
+        say(leader('kanto-misty'), 'Not bad! Most kids splash around and sink.'),
+        say(RIVAL, "I already have TWO badges. You're still collecting souvenirs."),
+        say(leader('kanto-misty'), 'Your rival was here. He bragged for ten minutes and left a puddle.'),
+        say(leader('kanto-misty'), "Vermilion is next. Lt. Surge doesn't do gentle — or indoor voices."),
+      ],
       nodes: [
         trainer('cerulean-1', 'oras-lass', 'Lass Dana', {
           types: ['colorless'], tier: 1,
@@ -170,6 +195,12 @@ export const KANTO_STORY = {
       id: 'vermilion',
       name: 'Vermilion City',
       badge: leader('kanto-lt-surge').badge,
+      cutscene: [
+        say(leader('kanto-lt-surge'), "HAH! Kid's got voltage!"),
+        say(RIVAL, 'Whatever. I fried him first.'),
+        say(leader('kanto-lt-surge'), 'Your rival talks big. His deck almost shorted itself.'),
+        say(leader('kanto-lt-surge'), "Celadon's next. Pretty city, nasty trainers. Don't get sleepy in the garden."),
+      ],
       nodes: [
         trainer('vermilion-1', 'oras-sailor', 'Sailor Dwayne', {
           types: ['water'], tier: 2,
@@ -194,6 +225,12 @@ export const KANTO_STORY = {
       id: 'celadon',
       name: 'Celadon City',
       badge: leader('kanto-erika').badge,
+      cutscene: [
+        say(leader('kanto-erika'), 'What a lovely match. The garden feels lighter already.'),
+        say(RIVAL, 'Flowers? Please. I sneezed through that gym.'),
+        say(leader('kanto-erika'), 'He did sneeze. Quite a lot.'),
+        say(leader('kanto-erika'), "Fuchsia is quieter... until it isn't. Koga hides in the mist."),
+      ],
       nodes: [
         trainer('celadon-1', 'oras-aroma-lady', 'Aroma Lady Nikki', {
           types: ['grass'], tier: 2, aiId: 'stall',
@@ -219,6 +256,12 @@ export const KANTO_STORY = {
       id: 'fuchsia',
       name: 'Fuchsia City',
       badge: leader('kanto-koga').badge,
+      cutscene: [
+        say(leader('kanto-koga'), 'You walked out of my shadows. Few do.'),
+        say(RIVAL, 'Ninja stuff is cheap tricks. I saw through it instantly.'),
+        say(leader('kanto-koga'), 'He walked into three walls. Do not follow his example.'),
+        say(leader('kanto-koga'), 'Saffron waits. Sabrina already knows you are coming.'),
+      ],
       nodes: [
         trainer('fuchsia-1', 'oras-ninja-boy', 'Ninja Boy Hideo', {
           types: ['grass'], tier: 2,
@@ -244,6 +287,12 @@ export const KANTO_STORY = {
       id: 'saffron',
       name: 'Saffron City',
       badge: leader('kanto-sabrina').badge,
+      cutscene: [
+        say(leader('kanto-sabrina'), 'I foresaw this conversation. You still surprise me.'),
+        say(RIVAL, "Psychic types are cheating. I'm going to Cinnabar. Don't follow me."),
+        say(leader('kanto-sabrina'), 'He is afraid. You should not be. Blaine\'s quizzes burn.'),
+        say(leader('kanto-sabrina'), 'After the volcano... Viridian. Something there is watching.'),
+      ],
       nodes: [
         trainer('saffron-1', 'oras-schoolkid-m', 'Schoolkid Jem', {
           types: ['psychic'], tier: 2, aiId: 'stall',
@@ -268,6 +317,12 @@ export const KANTO_STORY = {
       id: 'cinnabar',
       name: 'Cinnabar Island',
       badge: leader('kanto-blaine').badge,
+      cutscene: [
+        say(leader('kanto-blaine'), 'Extra credit: you passed!'),
+        say(RIVAL, 'I already aced the quiz. Obviously.'),
+        say(leader('kanto-blaine'), 'He answered "fire" to every question. One of them was "what is two plus two."'),
+        say(leader('kanto-blaine'), 'Viridian Gym is last. The Earth itself answers to Giovanni. Bring everything.'),
+      ],
       nodes: [
         trainer('cinnabar-1', 'oras-kindler', 'Kindler Bernie', {
           types: ['fire'], tier: 2,
@@ -293,6 +348,12 @@ export const KANTO_STORY = {
       id: 'viridian',
       name: 'Viridian City',
       badge: leader('kanto-giovanni').badge,
+      cutscene: [
+        say(leader('kanto-giovanni'), 'So the eight badges gather in one hand.'),
+        say(RIVAL, "I beat him too! ...Eventually. After you. Don't look at me like that."),
+        say(leader('kanto-giovanni'), 'The Indigo Plateau does not care who arrived first. Only who remains.'),
+        say(leader('kanto-giovanni'), 'The Elite Four are waiting. And your rival is already on the road.'),
+      ],
       nodes: [
         trainer('viridian-1', 'oras-street-thug', 'Thug Marco', {
           types: ['grass'], tier: 3,
@@ -318,6 +379,13 @@ export const KANTO_STORY = {
       id: 'indigo',
       name: 'Indigo Plateau',
       badge: null, // completing this area awards the trophy instead
+      cutscene: [
+        say(e4('kanto-lance'), 'The League has a new Champion.'),
+        say(RIVAL, '...Fine. You win. This time.'),
+        say(RIVAL, "Don't get comfortable. I'll take that trophy back."),
+        say(e4('kanto-lorelei'), 'Then train. The title is not a souvenir.'),
+        say(OAK, "I always knew you had it in you. Pallet Town is proud — and so am I."),
+      ],
       nodes: [
         eliteNode('indigo-1', e4('kanto-lorelei'), 'lorelei', [
           'Welcome to the Pokémon League. I am Lorelei of the Elite Four.', 'My icy Water Pokémon will freeze you solid!',

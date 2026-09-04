@@ -12,6 +12,9 @@ const tclassImg = (id) => TRAINER_CLASSES.find((t) => t.id === id)?.image ?? nul
 const rocketImg = (file) => `/trainers/TeamRocket/${file}.png`
 
 const BLUE = { name: 'Blue', image: leader('kanto-blue')?.image }
+const say = (who, text) => ({ name: who.name, image: who.image ?? null, text })
+const REMNANT = { name: 'Rocket Remnant', image: rocketImg('Team Rocket Grunt Purple') }
+const QUARTERMASTER = { name: 'League Quartermaster', image: tclassImg('oras-lady') }
 
 // Regular gym-trainer node with a generated deck.
 const trainer = (id, classId, name, { types, tier, aiId = 'aggro', intro, win, lose }) => ({
@@ -107,11 +110,25 @@ export const LEAGUE_STORY = {
       },
     },
   ],
+  intro: [
+    say(leader('kanto-brock'), 'The gyms are open again. After Sabrina... we owe the region a real League.'),
+    say(leader('kanto-misty'), 'Badges given away are worthless. Re-earn them. Starting with us.'),
+    say(REMNANT, 'You heroes finished the occupation? Cute. The paychecks never stopped coming.'),
+    say(leader('kanto-brock'), 'Someone is still paying Team Rocket. Keep your eyes open.'),
+    say(QUARTERMASTER, 'Official supply post! Heroes and Challenge boosters — every purchase rebuilds a gym.'),
+    say(leader('kanto-brock'), 'I set aside {starter} from the trainee locker. Pewter first. Stone by stone.'),
+  ],
   areas: [
     {
       id: 'pewter',
       name: 'Pewter City',
       badge: leader('kanto-brock').badge,
+      cutscene: [
+        say(leader('kanto-brock'), 'Earned, this time. The Boulder Badge sits right.'),
+        say(REMNANT, 'We got paid yesterday. YESTERDAY. Chew on that.'),
+        say(leader('kanto-misty'), 'Cerulean is ready. Come make the harbor yours for real.'),
+        say(leader('kanto-brock'), 'Watch for the letter G. The remnants keep saying it like a password.'),
+      ],
       nodes: [
         trainer('lg-pewter-1', 'oras-camper', 'Camper Liam', {
           types: ['fighting'], tier: 1, aiId: 'random',
@@ -146,6 +163,12 @@ export const LEAGUE_STORY = {
       id: 'cerulean',
       name: 'Cerulean City',
       badge: leader('kanto-misty').badge,
+      cutscene: [
+        say(leader('kanto-misty'), 'Beautiful. Like watching the tide come in.'),
+        say(leader('kanto-misty'), "A sailor told me their orders arrive sealed with a single letter: G."),
+        say(leader('kanto-lt-surge'), "Vermilion's back online! Bring voltage, soldier!"),
+        say(leader('kanto-brock'), 'The trail is getting louder. Stay sharp.'),
+      ],
       nodes: [
         trainer('lg-cerulean-1', 'oras-swimmer-f', 'Swimmer Marina', {
           types: ['water'], tier: 1,
@@ -173,6 +196,12 @@ export const LEAGUE_STORY = {
       id: 'vermilion',
       name: 'Vermilion City',
       badge: leader('kanto-lt-surge').badge,
+      cutscene: [
+        say(leader('kanto-lt-surge'), "HAH! You've grown, soldier!"),
+        say(leader('kanto-lt-surge'), 'Steady pay. Old boss money, not new. Think about it.'),
+        say(leader('kanto-erika'), "Celadon's garden is awake. Come smell the truth."),
+        say(leader('kanto-misty'), 'G keeps showing up on the letterhead. I do not like it.'),
+      ],
       nodes: [
         trainer('lg-vermilion-1', 'oras-guitarist', 'Guitarist Jax', {
           types: ['lightning'], tier: 2,
@@ -210,6 +239,12 @@ export const LEAGUE_STORY = {
       id: 'celadon',
       name: 'Celadon City',
       badge: leader('kanto-erika').badge,
+      cutscene: [
+        say(leader('kanto-erika'), 'A guest ledger I never wrote. Someone used my gym as a bank.'),
+        say(leader('kanto-erika'), 'The handwriting was not mine. It was practiced. Old.'),
+        say(leader('kanto-koga'), 'Fuchsia hears whispers. Come, and listen in the dark.'),
+        say(leader('kanto-brock'), 'Banks, paydays, a letter. This is not leftover chaos. This is a company.'),
+      ],
       nodes: [
         trainer('lg-celadon-1', 'oras-aroma-lady', 'Aroma Lady Iris', {
           types: ['grass'], tier: 2, aiId: 'stall',
@@ -237,6 +272,12 @@ export const LEAGUE_STORY = {
       id: 'fuchsia',
       name: 'Fuchsia City',
       badge: leader('kanto-koga').badge,
+      cutscene: [
+        say(leader('kanto-koga'), 'Magnificent. Kenji chose his allies well.'),
+        say({ name: 'Remnant Officer', image: rocketImg('Team Rocket Manager') }, "The G seal was on the letterhead before Sabrina, during her, and after her."),
+        say(leader('kanto-koga'), 'Saffron experiments predate her entirely. Tread carefully.'),
+        say(leader('kanto-sabrina'), 'I am waiting. To atone — and to warn you.'),
+      ],
       nodes: [
         trainer('lg-fuchsia-1', 'oras-ninja-boy', 'Ninja Boy Kaito', {
           types: ['grass'], tier: 2,
@@ -273,6 +314,12 @@ export const LEAGUE_STORY = {
       id: 'saffron',
       name: 'Saffron City',
       badge: leader('kanto-sabrina').badge,
+      cutscene: [
+        say(leader('kanto-sabrina'), 'The voice that taught me came from Viridian. From the man who "helped" you defeat me.'),
+        say(leader('kanto-blaine'), 'Extra credit on Cinnabar! Come audit a lab!'),
+        say(BLUE, "...I'm looking into this. Don't go to Viridian yet."),
+        say(leader('kanto-sabrina'), 'Hurry. He has always been patient. He can afford to wait one more badge.'),
+      ],
       nodes: [
         trainer('lg-saffron-1', 'oras-schoolkid-f', 'Schoolkid Mina', {
           types: ['psychic'], tier: 2, aiId: 'stall',
@@ -312,6 +359,12 @@ export const LEAGUE_STORY = {
       id: 'cinnabar',
       name: 'Cinnabar Island',
       badge: leader('kanto-blaine').badge,
+      cutscene: [
+        say(leader('kanto-blaine'), 'The research was commissioned years ago. Silph shares. A Viridian gym.'),
+        say(BLUE, 'STOP. It was Giovanni. It was ALWAYS Giovanni.'),
+        say(BLUE, 'He built the lab, planted Sabrina, then used you to clear his throne.'),
+        say(BLUE, "I'll meet you at the gym door. Don't you dare go in underleveled."),
+      ],
       nodes: [
         trainer('lg-cinnabar-1', 'oras-kindler', 'Kindler Ash', {
           types: ['fire'], tier: 3,
@@ -339,6 +392,13 @@ export const LEAGUE_STORY = {
       id: 'viridian',
       name: 'Viridian City',
       badge: leader('kanto-giovanni').badge,
+      cutscene: [
+        say(leader('kanto-giovanni'), 'The design breaks. At my table. Ha... magnificent.'),
+        say(BLUE, 'You actually did it.'),
+        say(leader('kanto-giovanni'), 'No more proxies. The Earth Badge — and the region — are yours, Champion.'),
+        say(leader('kanto-brock'), 'Then the League is truly reborn. Guard it better than we did.'),
+        say(leader('kanto-misty'), "And if another G shows up... we'll be ready."),
+      ],
       nodes: [
         named('lg-viridian-1', 'trainer', 'Rocket Elite Guard', rocketImg('Team Rocket Master'), 'rocketElite', {
           rewards: { win: 180, lose: 35 },

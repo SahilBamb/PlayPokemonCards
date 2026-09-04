@@ -29,7 +29,7 @@ await page.goto('http://localhost:5199', { waitUntil: 'networkidle' })
 // click through a DialogueBox until its final button appears, then press it
 const finishDialogue = async () => {
   await page.waitForSelector('[data-testid="dialogue"]')
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 24; i++) {
     if (await page.getByTestId('dialogue-done').count()) break
     await page.getByTestId('dialogue-line').click()
     await page.waitForTimeout(80)
@@ -48,7 +48,11 @@ await page.getByTestId('story-kanto').click()
 await page.waitForSelector('[data-testid="starter-kanto-fire"]')
 await page.screenshot({ path: `${shots}/s2_starter_pick.png` })
 await page.getByTestId('starter-kanto-fire').click()
-await finishDialogue() // Professor Oak's welcome
+await page.waitForSelector('[data-testid="dialogue-line"]')
+const introLine = await page.getByTestId('dialogue-line').innerText()
+if (/fine choice/i.test(introLine)) errors.push('intro is still the old Oak-only welcome')
+if (!/waiting|lab|League|challenger/i.test(introLine)) errors.push(`unexpected intro opener: "${introLine}"`)
+await finishDialogue() // multi-speaker story intro
 
 // 3. Hub: coins granted, first node open, second locked, later area locked
 await page.waitForSelector('[data-testid="area-pewter"]')

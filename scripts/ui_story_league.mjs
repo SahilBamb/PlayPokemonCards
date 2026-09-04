@@ -26,7 +26,7 @@ await page.goto('http://localhost:5199', { waitUntil: 'networkidle' })
 
 const finishDialogue = async () => {
   await page.waitForSelector('[data-testid="dialogue"]')
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 24; i++) {
     if (await page.getByTestId('dialogue-done').count()) break
     await page.getByTestId('dialogue-line').click()
     await page.waitForTimeout(80)

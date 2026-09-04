@@ -17,13 +17,22 @@ await page.goto('http://localhost:5199', { waitUntil: 'networkidle' })
 await page.getByRole('button', { name: 'Quick Play' }).click()
 await page.waitForTimeout(400)
 
-for (const label of ['2000 Base–Rocket', '2000 Base–Gym', 'Prop 15/3 (2000)', 'Original Rules (Japan)']) {
-  const n = await page.locator(`text=${label}`).count()
-  console.log(`group "${label}":`, n ? 'visible' : 'MISSING')
-  if (!n) errors.push(`group ${label} missing`)
+for (const [id, label] of [
+  ['baserocket', '2000 Base–Rocket'],
+  ['basegym', '2000 Base–Gym'],
+  ['prop153', 'Prop 15/3 (2000)'],
+  ['originalrules', 'Original Rules (Japan)'],
+]) {
+  const tab = page.getByTestId(`qp-group-${id}`)
+  if (!(await tab.count())) errors.push(`group ${label} missing`)
+  else await tab.click()
+  const heading = await page.getByRole('heading', { name: label }).isVisible().catch(() => false)
+  console.log(`group "${label}":`, heading ? 'visible' : 'MISSING')
+  if (!heading) errors.push(`group ${label} content missing`)
 }
 
 // Pick a new deck and start a match
+await page.getByTestId('qp-group-basegym').click()
 await page.locator('text=Wigglytuff Trapper').scrollIntoViewIfNeeded()
 await page.locator('text=Wigglytuff Trapper').click()
 await page.screenshot({ path: `${shots}/qp_new_groups.png` })
