@@ -1,0 +1,10 @@
+# railway up has a short upload window — skip anything the build does not need.
+node_modules
+dist
+.git
+scripts/shots
+coverage
+.cache
+*.local
+.env
+.env.*
