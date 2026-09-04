@@ -61,6 +61,7 @@ export const ROCKET_STORY = {
   startingCoins: 250,
   badgeBonus: 100,
   cover: img('Team Rocket Master'),
+  bg: { tile: '/bg/rocket.svg', base: '#160c0e', wash: 'rgba(160, 20, 40, 0.10)' },
   shopkeeper: {
     name: 'Deserter Wanda',
     image: img('Team Rocket Grunt Shopper'),

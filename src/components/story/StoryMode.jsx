@@ -5,7 +5,8 @@ import { StorySelect, StarterPick } from './StorySelect.jsx'
 import { StoryScreen } from './StoryScreen.jsx'
 import { ShopScreen } from './ShopScreen.jsx'
 import { DialogueBox } from './DialogueBox.jsx'
-import { storyFormat } from '../../data/stories.js'
+import { DriftBackground } from '../Background.jsx'
+import { storyFormat, STORY_SELECT_BG, storyBackdrop } from '../../data/stories.js'
 import { BOSS_DECKS, generateTrainerDeck, countsToList } from '../../data/storyDecks.js'
 import { saveDeck, newDeckId, deckToList } from '../../lib/deckStore.js'
 import {
@@ -164,8 +165,11 @@ export function StoryMode({ onExit }) {
     )
   }
 
+  const backdrop = !story || view === 'select' ? STORY_SELECT_BG : storyBackdrop(story)
+
   return (
     <>
+      <DriftBackground src={backdrop.tile} base={backdrop.base} wash={backdrop.wash} strong />
       {content}
       {dialogue && (
         <DialogueBox

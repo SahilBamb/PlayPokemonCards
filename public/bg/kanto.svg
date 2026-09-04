@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Hex gym badge: Kanto tile -->
+  <polygon fill="#5C4310" points="64,4 118,34 118,94 64,124 10,94 10,34"/>
+  <polygon fill="#E8C547" points="64,14 108,40 108,88 64,114 20,88 20,40"/>
+  <polygon fill="#8B6914" points="64,36 88,50 88,78 64,92 40,78 40,50"/>
+  <circle fill="#F5E6A8" cx="64" cy="64" r="12"/>
+</svg>

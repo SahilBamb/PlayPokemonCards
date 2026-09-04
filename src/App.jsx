@@ -108,7 +108,7 @@ export default function App() {
   return (
     <SettingsProvider>
       <CardPreviewProvider>
-        <PokeballBackground />
+        {screen !== 'story' && <PokeballBackground />}
         {content}
       </CardPreviewProvider>
     </SettingsProvider>

@@ -78,6 +78,7 @@ export const KANTO_STORY = {
   startingCoins: 250,
   badgeBonus: 100,
   cover: leader('kanto-brock')?.badge?.image,
+  bg: { tile: '/bg/kanto.svg', base: '#16120e', wash: 'rgba(180, 120, 40, 0.08)' },
   trophy: {
     name: 'Kanto Champion Trophy',
     // the game log / badge case renders this emoji-style if no image

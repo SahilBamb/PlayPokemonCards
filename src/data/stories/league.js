@@ -62,6 +62,7 @@ export const LEAGUE_STORY = {
   startingCoins: 250,
   badgeBonus: 100,
   cover: leader('kanto-giovanni')?.badge?.image,
+  bg: { tile: '/bg/league.svg', base: '#0e1218', wash: 'rgba(40, 70, 140, 0.10)' },
   shopkeeper: {
     name: 'League Quartermaster',
     image: tclassImg('oras-lady'),

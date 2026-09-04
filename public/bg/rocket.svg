@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Circled R: Rocket Takeover tile -->
+  <circle fill="#C41E3A" cx="64" cy="64" r="56"/>
+  <circle fill="#1A1012" cx="64" cy="64" r="42"/>
+  <path fill="#F0EEEA" d="M44 32h30c15 0 24 9 24 22 0 9-5 16-14 19l18 27H82L66 74H58v26H44V32zm14 12v18h14c7 0 12-3.5 12-9s-5-9-12-9H58z"/>
+</svg>

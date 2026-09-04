@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- 8-point compass star: story-select tile (no center circle — reads as a star, not a ball) -->
+  <polygon fill="#C9B896" points="64,4 76,50 124,64 76,78 64,124 52,78 4,64 52,50"/>
+  <polygon fill="#6E6288" points="64,26 88,40 102,64 88,88 64,102 40,88 26,64 40,40"/>
+</svg>
