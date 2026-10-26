@@ -1,5 +1,9 @@
 # Pocket Grove experiment
 
+**Dropped at the user's request.** The online preview was deleted and the local
+server was stopped. This branch and its assets are retained as an archive.
+Do not restart or republish without a new user request.
+
 Branch: `experiment/pixel-grove`
 
 Separate checkout: `/Users/sahil/Projects/playpokemoncards-pixel-grove`.
@@ -69,12 +73,10 @@ CLOUDFLARE_ACCOUNT_ID=77965546ba0ef6c4f1741d7d8a04039e \
   --project-name playpokemoncards --branch pixel-grove
 ```
 
-Live preview: https://pixel-grove.playpokemoncards.pages.dev/
-
-Verified deployment: https://e37935cc.playpokemoncards.pages.dev/ (source commit
-`8f1637e`). The complete desktop/mobile browser flow passed on the deployed
-build, and all five main art files matched local bytes over HTTPS. Screenshots
-record the deployed build. The local Vite server runs at http://localhost:5187/.
+Former preview: `pixel-grove.playpokemoncards.pages.dev`, now removed. Deployment
+`e37935cc` was deleted; the alias and unique URL both return HTTP 404. The local
+server formerly running on port 5187 is stopped. Screenshots retain the previous
+release for archival reference.
 
 Do not deploy this experiment with `--branch main` or merge it into `master`
 without user direction.
