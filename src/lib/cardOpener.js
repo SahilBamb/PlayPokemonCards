@@ -2,6 +2,8 @@ import catalog from "../data/openerCards.json" with { type: "json" };
 import market from "../data/openerPrices.json" with { type: "json" };
 
 export const OPENER_STORAGE_KEY = "ppc-card-opener-session-v1";
+export const OPENER_WALLET_KEY = "ppc-card-opener-wallet-v1";
+export const OPENER_STARTING_BALANCE_CENTS = 100000;
 export const OPENER_CARDS = catalog;
 export const OPENER_BY_ID = Object.assign(
   Object.create(null),
@@ -60,6 +62,7 @@ export const OPENER_SETS = [
 ].map((set) => ({
   ...set,
   image: market.packs[set.id].image,
+  priceCents: Math.round(market.packs[set.id].usd * 100),
   count: catalog.filter((card) => card.set === set.id).length,
 }));
 
@@ -126,6 +129,8 @@ export const initialOpenerSession = () => ({
   mode: "row",
   showPrices: true,
   packsOpened: 0,
+  balanceCents: OPENER_STARTING_BALANCE_CENTS,
+  purchase: null,
   stage: "sealed",
   pack: null,
   history: [],
@@ -164,7 +169,22 @@ export function restoreOpenerSession(raw) {
           : 0,
       ),
       history,
+      balanceCents: Number.isSafeInteger(saved.balanceCents)
+        ? saved.balanceCents
+        : OPENER_STARTING_BALANCE_CENTS,
     };
+    if (
+      saved.purchase &&
+      OPENER_SETS.some((set) => set.id === saved.purchase.setId) &&
+      Number.isSafeInteger(saved.purchase.priceCents) &&
+      saved.purchase.priceCents > 0
+    ) {
+      restored.purchase = {
+        setId: saved.purchase.setId,
+        priceCents: saved.purchase.priceCents,
+      };
+      restored.setId = saved.purchase.setId;
+    }
     const pack = saved.pack;
     if (
       pack &&
@@ -186,7 +206,9 @@ export function restoreOpenerSession(raw) {
           10,
           Math.max(0, Number.isInteger(pack.index) ? pack.index : 0),
         ),
+        paidCents: Number.isSafeInteger(pack.paidCents) ? pack.paidCents : null,
       };
+      restored.purchase = null;
       restored.packsOpened = Math.max(restored.packsOpened, pack.number);
       // Refreshing never strands a half-finished animation.
       restored.stage = flipped.every(Boolean) ? "complete" : "revealing";
@@ -198,11 +220,20 @@ export function restoreOpenerSession(raw) {
 }
 
 export function loadOpenerSession() {
+  let session;
   try {
-    return restoreOpenerSession(sessionStorage.getItem(OPENER_STORAGE_KEY));
+    session = restoreOpenerSession(sessionStorage.getItem(OPENER_STORAGE_KEY));
   } catch {
-    return initialOpenerSession();
+    session = initialOpenerSession();
   }
+  try {
+    const wallet = JSON.parse(localStorage.getItem(OPENER_WALLET_KEY));
+    if (wallet?.version === 1 && Number.isSafeInteger(wallet.balanceCents))
+      session.balanceCents = wallet.balanceCents;
+  } catch {
+    /* The in-memory wallet remains available when storage is blocked. */
+  }
+  return session;
 }
 
 export function saveOpenerSession(session) {
@@ -211,20 +242,36 @@ export function saveOpenerSession(session) {
   } catch {
     /* The in-memory session stays usable if browser storage is full. */
   }
+  try {
+    localStorage.setItem(
+      OPENER_WALLET_KEY,
+      JSON.stringify({ version: 1, balanceCents: session.balanceCents }),
+    );
+  } catch {
+    /* Keep the simulated wallet usable in memory. */
+  }
 }
 
 export function openerReducer(state, action) {
-  if (action.type === "prepare") {
-    if (!["sealed", "complete"].includes(state.stage)) return state;
+  if (action.type === "purchase") {
+    if (!["sealed", "complete"].includes(state.stage) || state.purchase)
+      return state;
+    const set = OPENER_SETS.find((item) => item.id === action.id);
+    if (!set || !Number.isSafeInteger(set.priceCents) || set.priceCents <= 0)
+      return state;
     return {
       ...state,
-      setId: openerSet(action.id ?? state.setId).id,
+      setId: set.id,
+      balanceCents: state.balanceCents - set.priceCents,
+      purchase: { setId: set.id, priceCents: set.priceCents },
       stage: "sealed",
       pack: null,
     };
   }
   if (action.type === "set")
-    return { ...state, setId: openerSet(action.id).id };
+    return state.purchase
+      ? state
+      : { ...state, setId: openerSet(action.id).id };
   if (action.type === "prices")
     return { ...state, showPrices: !state.showPrices };
   if (action.type === "mode") {
@@ -243,7 +290,12 @@ export function openerReducer(state, action) {
     };
   }
   if (action.type === "open") {
-    if (!["sealed", "complete"].includes(state.stage)) return state;
+    if (
+      state.stage !== "sealed" ||
+      !state.purchase ||
+      state.purchase.setId !== state.setId
+    )
+      return state;
     if (
       !Array.isArray(action.ids) ||
       action.ids.length !== 11 ||
@@ -257,12 +309,14 @@ export function openerReducer(state, action) {
       ...state,
       packsOpened: number,
       stage: action.instant ? "revealing" : "tearing",
+      purchase: null,
       pack: {
         number,
         setId: state.setId,
         ids: action.ids,
         flipped: action.ids.map(() => false),
         index: 0,
+        paidCents: state.purchase.priceCents,
       },
     };
   }
@@ -313,6 +367,8 @@ export function openerReducer(state, action) {
       setId: state.setId,
       mode: state.mode,
       showPrices: state.showPrices,
+      balanceCents: state.balanceCents,
+      purchase: state.purchase,
     };
   return state;
 }

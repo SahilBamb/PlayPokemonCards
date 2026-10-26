@@ -438,101 +438,199 @@
 .co-shop-product-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 9px;
+  gap: 28px 18px;
+  padding: 12px 10px 25px;
 }
 .co-shop-product {
+  width: min(100%, 115px);
+  margin: 0 auto;
   min-width: 0;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #ffffff6b;
-  border-radius: 10px;
-  overflow: hidden;
-  padding: 0;
-  background: #dce8fac7;
+  isolation: isolate;
+}
+.co-pack-frame {
+  width: 100%;
+  aspect-ratio: 326 / 640;
+  border: 3px solid #fff;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 6px 14px #0c173b66;
   transition:
-    transform 0.18s,
-    box-shadow 0.18s;
-  color: #fff;
+    transform 0.2s,
+    box-shadow 0.2s;
+  overflow: hidden;
 }
-.co-shop-product:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px #101e5080;
-}
-.co-product-art {
-  width: 100%;
-  height: 119px;
-  position: relative;
-  display: grid;
-  place-items: center;
-  background: radial-gradient(
-    ellipse at 50% 90%,
-    var(--pack-accent),
-    transparent 80%
-  );
-}
-.co-product-art > span {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  font-size: 6px;
-  color: #223650;
-  background: #ffffffa6;
-  padding: 2px 4px;
-  border-radius: 3px;
-  font-weight: 800;
-}
-.co-product-art img {
-  width: 58px;
-  height: 107px;
-  object-fit: fill;
-  margin-top: 7px;
-  filter: drop-shadow(0 3px 3px #18294f50);
-  transition: transform 0.2s;
-}
-.co-shop-product:hover .co-product-art img {
-  transform: rotate(-5deg) translateY(-2px);
-}
-.co-product-description {
-  background: #26324bdc;
-  width: 100%;
-  padding: 8px 4px 7px;
-  min-height: 65px;
-}
-.co-product-description h3 {
-  font-size: 10px;
-  font-weight: 800;
-  margin: 0 0 4px;
-}
-.co-product-description > span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  color: #fff1c0;
-  font-size: 8px;
-  font-weight: 800;
-}
-.co-product-description > span svg {
-  color: #ffce63;
-}
-.co-product-description > small {
+.co-pack-frame img {
   display: block;
-  font-size: 6px;
-  color: #c7d1e7;
-  margin-top: 4px;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
 }
-.co-product-action {
-  display: flex;
+.co-shop-product:hover .co-pack-frame {
+  transform: translateY(-3px) rotate(-1deg);
+  box-shadow: 0 10px 22px #10214388;
+}
+.co-pack-price {
+  position: absolute;
+  z-index: 5;
+  bottom: -14px;
+  left: -9px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 7px;
+  min-width: 80px;
+  height: 38px;
+  padding: 7px 11px;
+  border: 2px solid #fff;
+  border-radius: 22px;
+  background: linear-gradient(#ffedaf, #f2c563);
+  color: #563b12;
+  box-shadow: 0 3px 10px #101a3c60;
+  white-space: nowrap;
+  font-size: 12px;
   font-weight: 900;
+  transition:
+    background 0.15s,
+    box-shadow 0.15s;
+}
+.co-pack-price > svg {
+  color: #b17919;
+  font-size: 13px;
+}
+.co-pack-price.confirming,
+.co-featured-copy .co-pack-price.confirming {
+  background: #f8fcff;
+  color: #245b91;
+  box-shadow:
+    0 0 0 3px #9dd8ff55,
+    0 4px 12px #10244d66;
+}
+.co-pack-price.confirming > svg {
+  color: #3583af;
+}
+.co-pack-price.purchased,
+.co-featured-copy .co-pack-price.purchased {
+  background: #d8f4d8;
+  color: #29503a;
+}
+.card-opener .co-pack-price:disabled {
+  opacity: 0.75;
+}
+.card-opener .co-pack-price.purchased:disabled {
+  opacity: 1;
+}
+.co-featured-copy .co-pack-price {
+  position: relative;
+  left: auto;
+  bottom: auto;
+  margin-top: 17px;
+  border: 2px solid white;
+  border-radius: 22px;
+  background: linear-gradient(#ffedaf, #f2c563);
+  color: #563b12;
+  font-size: 12px;
+  padding: 7px 11px;
+}
+.co-shop-product.taking {
+  z-index: 10;
+}
+.co-shop-product.taking .co-pack-frame,
+.co-featured-poster.taking .co-featured-pack.main {
+  animation: coPackPurchased 0.65s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+.co-pack-price.purchased {
+  animation: coBadgePurchased 0.55s ease-out both;
+}
+.co-shop-preferences {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 13px 16px;
+  align-items: center;
+  padding: 16px 18px;
+}
+.co-shop-preferences .co-control-label {
+  color: #d4dff0;
   font-size: 7px;
-  padding: 6px;
-  background: #fff4d4;
-  color: #695229;
-  width: 100%;
+  margin-bottom: 6px;
+}
+.co-shop-preferences .co-mode-picker > div {
+  background: #132440a3;
+  border-color: #ffffff25;
+  width: fit-content;
+}
+.co-shop-preferences .co-mode-picker button {
+  color: #e3eaf6;
+  min-width: 71px;
+  padding: 7px 11px;
+  font-size: 10px;
+}
+.co-shop-preferences .co-mode-picker button[aria-pressed="true"] {
+  color: #342916;
+}
+.co-shop-preferences .co-price-toggle {
+  color: #f2f5fc;
+  font-size: 10px;
+  padding-top: 23px;
+  white-space: nowrap;
+  gap: 7px;
+}
+.co-shop-wallet {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #ffffff25;
+  padding-bottom: 12px;
+}
+.co-shop-wallet span {
+  display: block;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+  color: #dbe6f7;
+}
+.co-shop-wallet small {
+  display: block;
+  font-size: 7px;
+  color: #c2cee1;
+  margin-top: 5px;
+}
+.co-shop-wallet strong {
+  font-size: 23px;
+  color: #ffe09a;
+  letter-spacing: -0.7px;
+}
+.co-shop-wallet.negative strong {
+  color: #ffc9c0;
+}
+@keyframes coPackPurchased {
+  0% {
+    transform: translateY(0) rotate(0);
+    filter: brightness(1);
+  }
+  40% {
+    transform: translateY(-26px) rotate(-6deg) scale(1.09);
+    filter: brightness(1.3) drop-shadow(0 0 20px #ffedb888);
+  }
+  72% {
+    transform: translateY(-34px) rotate(5deg) scale(1.04);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-70px) rotate(0) scale(0.95);
+    opacity: 0;
+  }
+}
+@keyframes coBadgePurchased {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.13);
+  }
 }
 .co-shop-simulation {
   font-size: 7px;
@@ -1207,5 +1305,370 @@
   }
   .co-tear-direction {
     font-size: 15px;
+  }
+}
+
+/* Keep the opening view focused on the physical pack and its cards. */
+.co-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.co-popup {
+  --co-bg: transparent;
+  --co-panel: #152035;
+  --co-panel-soft: #1b2a43;
+  --co-text: #f1f5fc;
+  --co-muted: #b9c6db;
+  position: relative;
+  width: min(1360px, 100%);
+  max-height: calc(100dvh - 32px);
+  color: var(--co-text);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  animation: coOpeningFade 0.35s ease-out both;
+}
+.co-popup-header {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+}
+.co-popup-close {
+  position: fixed;
+  top: 22px;
+  right: 24px;
+  width: 38px;
+  height: 38px;
+  color: #eef5ff;
+  background: #1a28448c;
+  border: 1px solid #ffffff40;
+}
+.co-popup .co-opening-room,
+.co-popup .co-stage {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.co-popup .co-stage.sealed,
+.co-popup .co-stage.tearing {
+  min-height: 600px;
+}
+.co-popup .co-sealed-stage {
+  min-height: 600px;
+  padding: 65px 20px 60px;
+  gap: 0;
+}
+.co-popup .co-pack {
+  width: 225px;
+}
+.co-popup .co-table-light {
+  left: 50%;
+  bottom: 25px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse, #e8c37a15, transparent 70%);
+}
+.co-popup .co-pack-drag-label {
+  top: calc(100% + 22px);
+  bottom: auto;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: #e4edf9;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+.co-pack.tear-started .co-tear-target:focus-visible {
+  outline: none;
+  background: transparent;
+}
+.co-pack:has(.co-tear-target:focus-visible) {
+  filter: drop-shadow(0 0 12px #fff7);
+}
+.co-popup .co-stage-footer {
+  border: 0;
+  background: transparent;
+  padding: 18px 25px;
+}
+.co-popup .co-row-area {
+  padding-top: 50px;
+  animation: coOpeningFade 0.25s ease-out both;
+}
+.co-popup .co-stack-area {
+  flex-direction: column;
+  min-height: 0;
+  gap: 24px;
+  padding: 24px 20px 15px;
+  animation: coStackSettle 0.35s ease-out both;
+}
+.co-popup .co-stack-scene {
+  width: 225px;
+}
+.co-popup .co-stack-info {
+  text-align: center;
+  max-width: 450px;
+}
+.co-popup .co-stack-info h3 {
+  font-size: 27px;
+  margin: 9px 0;
+}
+.co-popup .co-stack-info p {
+  font-size: 10px;
+}
+.co-popup .co-stack-actions {
+  justify-content: center;
+  margin-top: 15px;
+}
+.co-popup .co-stack-info > small {
+  display: none;
+}
+.card-opener
+  .co-popup
+  :is(
+    .co-value:not(.large),
+    .co-holo-label,
+    .co-pack-total strong,
+    .co-rarity-badge.rare
+  ) {
+  color: #ffe09a;
+}
+.co-popup-notice {
+  max-width: 600px;
+  margin: 25px auto 5px;
+  border: 1px solid #ffffff30;
+  border-radius: 12px;
+  background: #1c2942b8;
+}
+.co-pack-emergence {
+  --co-eject-gap: min(7.2vw, 105px);
+  --co-eject-width: clamp(75px, 8vw, 115px);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 620px;
+  width: 100%;
+}
+.co-empty-wrapper {
+  position: absolute;
+  left: 50%;
+  top: calc(34% + 70px);
+  width: 180px;
+  aspect-ratio: 326 / 640;
+  z-index: 30;
+  transform: translateX(-50%);
+  clip-path: polygon(
+    2% 14%,
+    13% 14.8%,
+    25% 14%,
+    37% 15%,
+    51% 14%,
+    62% 14.8%,
+    76% 14%,
+    87% 15%,
+    98% 14%,
+    98% 99%,
+    2% 99%
+  );
+  filter: drop-shadow(0 20px 20px #0007);
+  animation: coWrapperFalls 1.65s 0.4s ease-in both;
+}
+.co-empty-wrapper img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+.co-eject-card {
+  position: absolute;
+  top: 34%;
+  left: 50%;
+  width: var(--co-eject-width);
+  aspect-ratio: 245 / 342;
+  z-index: calc(20 - var(--co-i));
+  border-radius: 8px;
+  box-shadow: 0 8px 25px #0008;
+  animation: coCardsEmerge 1.55s calc(var(--co-i) * 0.045s)
+    cubic-bezier(0.25, 0.7, 0.3, 1) both;
+}
+.co-pack-emergence.stack .co-eject-card {
+  animation-name: coCardsEmergeStack;
+}
+@keyframes coCardsEmerge {
+  0% {
+    transform: translate(-50%, 190px) scale(0.85);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  42% {
+    transform: translate(-50%, -50px) scale(1);
+  }
+  100% {
+    transform: translate(
+        calc(-50% + (var(--co-i) - 5) * var(--co-eject-gap)),
+        -20px
+      )
+      rotate(calc((var(--co-i) - 5) * 1.8deg));
+    opacity: 1;
+  }
+}
+@keyframes coCardsEmergeStack {
+  0% {
+    transform: translate(-50%, 190px) scale(0.85);
+    opacity: 0;
+    width: var(--co-eject-width);
+  }
+  12% {
+    opacity: 1;
+  }
+  38% {
+    transform: translate(-50%, -50px);
+  }
+  64% {
+    transform: translate(
+        calc(-50% + (var(--co-i) - 5) * var(--co-eject-gap)),
+        -35px
+      )
+      rotate(calc((var(--co-i) - 5) * 2deg));
+    width: var(--co-eject-width);
+  }
+  100% {
+    transform: translate(calc(-50% + var(--co-i) * 1px), -90px)
+      rotate(calc(var(--co-i) * 0.2deg));
+    width: 225px;
+    opacity: 1;
+  }
+}
+@keyframes coWrapperFalls {
+  0%,
+  12% {
+    transform: translateX(-50%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-40%, 340px) rotate(17deg);
+    opacity: 0;
+  }
+}
+@keyframes coOpeningFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes coStackSettle {
+  from {
+    opacity: 0;
+    transform: translateY(65px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 600px) {
+  .co-shop-product-grid {
+    gap: 30px 14px;
+    padding: 12px 7px 25px;
+  }
+  .co-pack-price {
+    left: -6px;
+    min-width: 0;
+    height: 39px;
+    padding: 6px 8px;
+    gap: 5px;
+    font-size: 11px;
+  }
+  .co-pack-price > svg {
+    font-size: 11px;
+  }
+  .co-shop-preferences {
+    padding: 13px 14px;
+    gap: 12px 8px;
+  }
+  .co-shop-preferences .co-mode-picker button {
+    min-width: 63px;
+    padding: 7px 9px;
+    gap: 6px;
+    font-size: 9px;
+  }
+  .co-shop-preferences .co-price-toggle {
+    font-size: 9px;
+    gap: 6px;
+  }
+  .co-shop-preferences .co-price-toggle > svg {
+    display: none;
+  }
+  .co-shop-wallet strong {
+    font-size: 21px;
+  }
+  .co-shop-wallet small {
+    font-size: 6px;
+  }
+  .co-popup-close {
+    top: 15px;
+    right: 15px;
+  }
+  .co-popup .co-stage.sealed,
+  .co-popup .co-stage.tearing,
+  .co-popup .co-sealed-stage {
+    min-height: 560px;
+  }
+  .co-popup .co-sealed-stage {
+    padding: 60px 20px;
+  }
+  .co-popup .co-pack {
+    width: 175px;
+  }
+  .co-popup .co-row-guide > span {
+    font-size: 17px;
+  }
+  .co-popup .co-stage-footer {
+    padding: 16px 10px;
+  }
+  .co-pack-emergence {
+    min-height: 560px;
+  }
+  .co-empty-wrapper {
+    width: 155px;
+  }
+}
+@media (min-width: 851px) {
+  .co-shopkeeper {
+    height: calc(100% + 70px);
+    max-height: 1250px;
+    bottom: -70px;
+    left: calc(50% - 590px);
+  }
+}
+@media (min-width: 601px) and (max-width: 850px) {
+  .co-shopkeeper {
+    height: calc(100% + 70px);
+    bottom: -70px;
+    left: -25%;
+  }
+}
+.card-opener .co-pack-price {
+  font-size: 13px;
+  font-weight: 800;
+}
+@media (max-width: 600px) {
+  .card-opener .co-pack-price {
+    font-size: 12px;
   }
 }

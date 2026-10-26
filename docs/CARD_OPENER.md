@@ -12,14 +12,24 @@ session. Clear session has a confirmation dialog.
 
 The entry screen is an illustrated card shop with an independent shopkeeper
 layer, a featured pack carousel, and six working product listings. Base Set,
-Jungle, Fossil, Team Rocket, Gym Heroes, and Gym Challenge are available. Taking
-a pack is free and brings a sealed pack to a popup over the dimmed shop.
+Jungle, Fossil, Team Rocket, Gym Heroes, and Gym Challenge are available. The
+Booster Packs section shows only pack photographs in white borders with price
+badges overlapping the lower left edge. Clicking a badge changes it to Confirm?,
+and confirming buys the pack with simulated money. The purchase animates in the
+shop before the pack appears on its own over the dimmed shop.
+
+Row, Stack, and Card values preferences are on the shop screen. The opening
+popup has just the pack, tear guide, and close control, with no settings toolbar
+or surrounding panel border. Completing a pack returns players to the shop to
+choose and confirm another one.
 
 Drag a mouse or finger across the dotted guide from left to right. The glowing
 tear follows the gesture, and releasing early retains the current progress.
-Once the tear reaches the far edge, its top strip detaches and the hidden cards
-emerge. The guide also accepts the right arrow key, Enter, or Space; Open pack
-provides a button alternative. Pointer capture and touch action handling keep
+The dotted guide, arrow animation, and prompt disappear as soon as a valid tear
+starts. Once the tear reaches the far edge, its top strip detaches and all eleven
+hidden cards visibly emerge from the wrapper before fanning into a row or
+settling into a stack. The guide also accepts the right arrow key, Enter, or
+Space. Pointer capture and touch action handling keep
 the tear working when the pointer leaves the line, without scrolling the page.
 
 The popup traps focus, makes the shop inert, and restores focus and scrolling
@@ -64,6 +74,43 @@ substituted. The source date is visible. Missing quotes say Price unavailable,
 and partial totals are labeled Known value. Condition and edition affect actual
 market value.
 
+## Simulated money and pack prices
+
+New players receive $1,000 in simulated USD. The balance is stored separately
+from Story Mode in `localStorage` under `ppc-card-opener-wallet-v1`; refreshing,
+returning from the menu, opening another tab, and clearing the Cards Opened
+gallery do not grant more starting money. Balances and charges use integer
+cents, and purchases are allowed when they would make the balance negative or
+when it is already negative. This is a free simulation with no real payments.
+
+The first badge click does not spend anything. Confirmation reserves the sealed
+pack and deducts the cached source price exactly once. Interrupted purchase
+animations and page refreshes recover the sealed pack from the current tab's
+session. Resuming or ripping it never charges again. Clearing the gallery keeps
+an unopened paid pack and the wallet balance. Revealed card values are estimates
+for viewing, not credits to the wallet or ownership in the game collection.
+
+Pack prices use TCGplayer market quotes for the exact unlimited edition booster
+products already used for the pack photographs, supplied by the same TCGCSV
+snapshot as the card prices. Source date and USD units are visible. The price
+refresh script also checks that all six selected packs have positive source
+quotes and refuses to replace the snapshot if a quote is missing. The Card
+values switch affects revealed card estimates, not purchase prices or money.
+
+| Pack | TCGplayer product | Initial market estimate, October 25, 2026 |
+| --- | --- | --- |
+| Base Set, revised unlimited | 138130 | $916.46 |
+| Jungle, unlimited | 138129 | $330.45 |
+| Fossil, unlimited | 138134 | $340.31 |
+| Team Rocket, unlimited | 138135 | $328.26 |
+| Gym Heroes, unlimited | 138138 | $269.72 |
+| Gym Challenge, unlimited | 138139 | $419.99 |
+
+These are cached market estimates for vintage sealed packs, not the original
+retail price, a certified weight, a first edition price, or a live seller offer.
+
+## Artwork and source refresh
+
 The initial snapshot has 574 quotes for 575 cards. No browser requests are made
 to TCGCSV. The maintenance script follows its documented daily cache pattern:
 
@@ -103,10 +150,12 @@ The UI check uses installed Chrome through Playwright. Run Vite on port 5199
 first, or set `OPENER_URL` to a local or deployed URL. Screenshots are saved to
 `.cache/card-opener-ui/`; `OPENER_SHOTS` can override the folder.
 
-Coverage includes the storefront and carousel, popup focus and background
-isolation, mouse and touch dragging, reverse and partial gestures, keyboard
-opening, independent row flips, sequential stack reveals, inspection, value
-visibility, set selection, session recovery, gallery search and filtering, clear
+Coverage includes the image frames and overlapping badges, confirmation and
+delivery animation, sourced prices, persistent balances, purchases below zero,
+single charges, recovery of paid packs, shop preferences, minimal popup focus
+and background isolation, mouse and touch tearing, disappearing guides, all
+eleven cards emerging in both modes, keyboard opening, independent flips,
+sequential stack reveals, inspection, gallery search/filtering/sorting, clear
 confirmation, and proof that the Story Mode profile is unchanged.
 
 ## Production release

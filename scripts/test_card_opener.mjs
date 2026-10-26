@@ -5,6 +5,9 @@ import {
   OPENER_CARDS,
   OPENER_MARKET,
   OPENER_SETS,
+  OPENER_STORAGE_KEY,
+  OPENER_WALLET_KEY,
+  OPENER_STARTING_BALANCE_CENTS,
   initialOpenerSession,
   isShinyPull,
   loadOpenerSession,
@@ -22,12 +25,17 @@ function rng(seed) {
     return seed / 4294967296;
   };
 }
-const open = (state = initialOpenerSession(), instant = true) =>
-  openerReducer(state, {
+const open = (state = initialOpenerSession(), instant = true) => {
+  const paid =
+    state.purchase || !["sealed", "complete"].includes(state.stage)
+      ? state
+      : openerReducer(state, { type: "purchase", id: state.setId });
+  return openerReducer(paid, {
     type: "open",
-    ids: rollOpenerPack(state.setId, rng(9)),
+    ids: rollOpenerPack(paid.setId, rng(9)),
     instant,
   });
+};
 
 test("all six sets produce eleven cards with the expected mix and rare last", () => {
   for (const set of OPENER_SETS) {
@@ -147,19 +155,19 @@ test("set selection changes the next pack without destroying the current pack", 
   assert.deepEqual(state.pack.ids, ids);
 });
 
-test("taking a shop pack prepares a sealed wrapper and cannot replace an unfinished pack", () => {
+test("buying a shop pack reserves a sealed wrapper and cannot replace an unfinished pack", () => {
   let state = openerReducer(initialOpenerSession(), {
-    type: "prepare",
+    type: "purchase",
     id: "jungle",
   });
   assert.equal(state.setId, "jungle");
   assert.equal(state.stage, "sealed");
   assert.equal(state.packsOpened, 0);
   state = open(state);
-  assert.equal(openerReducer(state, { type: "prepare", id: "fossil" }), state);
+  assert.equal(openerReducer(state, { type: "purchase", id: "fossil" }), state);
   for (let index = 0; index < 11; index += 1)
     state = openerReducer(state, { type: "reveal", index });
-  state = openerReducer(state, { type: "prepare", id: "fossil" });
+  state = openerReducer(state, { type: "purchase", id: "fossil" });
   assert.equal(state.pack, null);
   assert.equal(state.stage, "sealed");
   assert.equal(state.setId, "fossil");
@@ -238,4 +246,123 @@ test("clear resets the simulated session while retaining the selected controls",
   assert.equal(cleared.setId, "gym2");
   assert.equal(cleared.mode, "stack");
   assert.equal(cleared.showPrices, false);
+});
+
+test("pack prices match sourced unlimited products and include no invented quotes", () => {
+  for (const set of OPENER_SETS) {
+    const quote = OPENER_MARKET.packs[set.id];
+    assert.ok(set.priceCents > 0 && Number.isSafeInteger(set.priceCents));
+    assert.equal(set.priceCents, Math.round(quote.usd * 100));
+    assert.match(quote.name, /Unlimited/);
+    assert.match(quote.source, new RegExp(`/product/${quote.productId}/`));
+    assert.equal(quote.variant, "Normal");
+  }
+});
+
+test("new players start with simulated money and confirmed purchases can take it negative", () => {
+  const base = OPENER_SETS.find((set) => set.id === "base1");
+  const jungle = OPENER_SETS.find((set) => set.id === "jungle");
+  let state = initialOpenerSession();
+  assert.equal(state.balanceCents, OPENER_STARTING_BALANCE_CENTS);
+  assert.equal(state.balanceCents, 100000);
+  const unpurchased = openerReducer(state, {
+    type: "open",
+    ids: rollOpenerPack("base1"),
+    instant: true,
+  });
+  assert.equal(unpurchased, state, "opening cannot bypass the purchase");
+  state = openerReducer(state, {
+    type: "purchase",
+    id: "base1",
+    priceCents: 1,
+  });
+  assert.equal(
+    state.balanceCents,
+    100000 - base.priceCents,
+    "the cached price controls the charge",
+  );
+  assert.equal(
+    openerReducer(state, { type: "purchase", id: "base1" }),
+    state,
+    "duplicate confirms cannot charge twice",
+  );
+  state = open(state);
+  for (let i = 0; i < 11; i++)
+    state = openerReducer(state, { type: "reveal", index: i });
+  const balance = state.balanceCents;
+  state = openerReducer(state, { type: "purchase", id: "jungle" });
+  assert.equal(state.balanceCents, balance - jungle.priceCents);
+  assert.ok(state.balanceCents < 0, "a purchase is allowed below zero");
+  state = open(state);
+  for (let i = 0; i < 11; i++)
+    state = openerReducer(state, { type: "reveal", index: i });
+  const debt = state.balanceCents;
+  state = openerReducer(state, { type: "purchase", id: "jungle" });
+  assert.equal(
+    state.balanceCents,
+    debt - jungle.priceCents,
+    "existing debt does not block another purchase",
+  );
+});
+
+test("closing or clearing a session cannot refill the wallet or charge a reserved pack twice", () => {
+  const storage = new Map();
+  const session = new Map();
+  const oldLocal = globalThis.localStorage;
+  const oldSession = globalThis.sessionStorage;
+  globalThis.localStorage = {
+    getItem: (key) => storage.get(key) ?? null,
+    setItem: (key, value) => storage.set(key, value),
+  };
+  globalThis.sessionStorage = {
+    getItem: (key) => session.get(key) ?? null,
+    setItem: (key, value) => session.set(key, value),
+  };
+  try {
+    let state = openerReducer(initialOpenerSession(), {
+      type: "purchase",
+      id: "gym2",
+    });
+    const balance = state.balanceCents;
+    saveOpenerSession(state);
+    state = loadOpenerSession();
+    assert.equal(state.stage, "sealed");
+    assert.equal(state.purchase.setId, "gym2");
+    assert.equal(state.balanceCents, balance);
+    state = openerReducer(state, { type: "clear" });
+    assert.equal(state.balanceCents, balance);
+    assert.equal(
+      state.purchase.setId,
+      "gym2",
+      "clearing the gallery keeps an unopened paid pack",
+    );
+    state = open(state);
+    assert.equal(state.balanceCents, balance, "ripping does not charge again");
+    state = openerReducer(state, { type: "reveal", index: 0 });
+    assert.equal(
+      state.balanceCents,
+      balance,
+      "revealed card values are not wallet credits",
+    );
+    saveOpenerSession(state);
+    assert.ok(storage.has(OPENER_WALLET_KEY));
+    session.delete(OPENER_STORAGE_KEY);
+    assert.equal(
+      loadOpenerSession().balanceCents,
+      balance,
+      "a new tab retains the wallet",
+    );
+    storage.set(
+      OPENER_WALLET_KEY,
+      JSON.stringify({ version: 1, balanceCents: -12345 }),
+    );
+    assert.equal(loadOpenerSession().balanceCents, -12345);
+    storage.set(OPENER_WALLET_KEY, "broken");
+    assert.equal(loadOpenerSession().balanceCents, 100000);
+  } finally {
+    if (oldLocal === undefined) delete globalThis.localStorage;
+    else globalThis.localStorage = oldLocal;
+    if (oldSession === undefined) delete globalThis.sessionStorage;
+    else globalThis.sessionStorage = oldSession;
+  }
 });

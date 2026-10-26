@@ -82,9 +82,18 @@ for set_id, group in SETS.items():
     photo = PACKS / f'{set_id}.jpg'
     if not photo.exists():
         photo.write_bytes(download(product['imageUrl'].replace('_200w', '_in_1000x1000')))
-    packs[set_id] = {'name': product['name'], 'image': f'/boosterpacks/{set_id}.jpg', 'source': product['url']}
+    pack_variants = price_by_product.get(product['productId'], {})
+    pack_variant = next((v for v in ['Normal', 'Unlimited'] if isinstance(pack_variants.get(v, {}).get('marketPrice'), (int, float))), None)
+    pack_amount = pack_variants.get(pack_variant, {}).get('marketPrice')
+    if not isinstance(pack_amount, (int, float)) or pack_amount <= 0:
+        raise RuntimeError(f'No market quote for the selected {set_id} booster pack; previous output was not replaced')
+    packs[set_id] = {
+        'name': product['name'], 'image': f'/boosterpacks/{set_id}.jpg',
+        'source': product['url'], 'productId': product['productId'],
+        'usd': pack_amount, 'variant': pack_variant,
+    }
     matched = sum(c['id'] in values for c in catalog if c['set'] == set_id)
-    print(f'{NAMES[set_id]}: {len(raw_cards)} cards, {matched} market values, {product["name"]}')
+    print(f'{NAMES[set_id]}: {len(raw_cards)} cards, {matched} market values, pack ${pack_amount:.2f}, {product["name"]}')
 
 if not catalog or len(values) < len(catalog) * .85:
     raise RuntimeError('Insufficient price coverage; previous output was not replaced')

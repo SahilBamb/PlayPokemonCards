@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FaArrowLeft,
   FaArrowRight,
@@ -6,26 +6,104 @@ import {
   FaChevronLeft,
   FaChevronRight,
   FaCoins,
+  FaCheck,
+  FaGripHorizontal,
   FaLayerGroup,
   FaQuestionCircle,
   FaRegClone,
   FaStar,
 } from "react-icons/fa";
 import { SettingsButton } from "../Settings.jsx";
-import { OPENER_SETS, formatValue } from "../../lib/cardOpener.js";
+import { playSfx } from "../../lib/sfx.js";
+import {
+  OPENER_MARKET,
+  OPENER_SETS,
+  formatValue,
+} from "../../lib/cardOpener.js";
 
 export function Shopfront({
   state,
   sessionValue,
-  onChoose,
+  onPurchase,
+  onOpen,
   onResume,
   onGallery,
   onExit,
   instant,
+  dispatch,
+  busy,
 }) {
   const [featured, setFeatured] = useState(0);
+  const [pending, setPending] = useState(null);
+  const [taking, setTaking] = useState(null);
+  const timer = useRef(null);
+  useEffect(() => () => clearTimeout(timer.current), []);
+  useEffect(() => {
+    const cancel = (event) => {
+      if (event.key === "Escape") setPending(null);
+    };
+    document.addEventListener("keydown", cancel);
+    return () => document.removeEventListener("keydown", cancel);
+  }, []);
+  const select = (id, origin) => {
+    if (taking || busy) return;
+    if (pending?.id !== id || pending?.origin !== origin) {
+      setPending({ id, origin });
+      return;
+    }
+    setPending(null);
+    if (!onPurchase(id)) return;
+    setTaking({ id, origin });
+    playSfx("coin");
+    timer.current = setTimeout(
+      () => {
+        setTaking(null);
+        onOpen();
+      },
+      instant ? 0 : 650,
+    );
+  };
+  const resume = () => {
+    clearTimeout(timer.current);
+    setPending(null);
+    setTaking(null);
+    onResume();
+  };
+  const priceBadge = (item, origin) => {
+    const confirmed = pending?.id === item.id && pending.origin === origin;
+    const purchased = taking?.id === item.id && taking.origin === origin;
+    return (
+      <button
+        className={`co-pack-price ${confirmed ? "confirming" : ""} ${purchased ? "purchased" : ""}`}
+        onClick={() => select(item.id, origin)}
+        disabled={Boolean(taking) || busy}
+        aria-label={
+          confirmed ? `Confirm ${item.name} pack` : `Choose ${item.name} pack`
+        }
+        data-testid={`${origin}-price-${item.id}`}
+        aria-describedby="shop-price-description"
+        title={`${OPENER_MARKET.packs[item.id].name} · TCGplayer market estimate in USD`}
+      >
+        {purchased || confirmed ? <FaCheck /> : <FaCoins />}
+        <span>
+          {purchased
+            ? "Ready!"
+            : confirmed
+              ? "Confirm?"
+              : formatValue(item.priceCents / 100)}
+        </span>
+      </button>
+    );
+  };
+
   const set = OPENER_SETS[featured];
-  const inProgress = state.pack && state.stage !== "complete";
+  const inProgress = Boolean(
+    state.purchase || (state.pack && state.stage !== "complete"),
+  );
+  const sourceDate = new Date(OPENER_MARKET.updatedAt).toLocaleDateString(
+    "en-US",
+    { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" },
+  );
   const behavior = instant ? "auto" : "smooth";
   const browse = () =>
     document
@@ -132,8 +210,8 @@ export function Shopfront({
             )}
             <small>Cards are kept for this browser tab.</small>
           </div>
-          {state.pack && (
-            <button className="co-shop-resume" onClick={onResume}>
+          {(state.pack || state.purchase) && (
+            <button className="co-shop-resume" onClick={resume}>
               <FaBoxOpen />
               {inProgress ? "Continue your pack" : "View your last pack"}
               <FaArrowRight />
@@ -148,11 +226,11 @@ export function Shopfront({
             <br /> A fresh surprise.
           </h2>
           <p>
-            Take your time. Pick a pack.
-            <br /> This one’s on the house.
+            Pick a pack. Make it a moment.
+            <br /> Your next favorite might be inside.
           </p>
           {inProgress && (
-            <button onClick={onResume}>
+            <button onClick={resume}>
               Your pack is waiting <FaArrowRight />
             </button>
           )}
@@ -170,7 +248,7 @@ export function Shopfront({
               <span>THE CLASSICS</span>
             </div>
             <div
-              className="co-featured-poster"
+              className={`co-featured-poster ${taking?.origin === "featured" ? "taking" : ""}`}
               style={{ "--pack-accent": set.accent }}
             >
               <div className="co-featured-sparkles" aria-hidden="true">
@@ -182,9 +260,7 @@ export function Shopfront({
                 </span>
                 <h3>{set.name}</h3>
                 <p>One pack. Eleven possibilities.</p>
-                <button onClick={() => onChoose(set.id)}>
-                  Take a pack <FaArrowRight />
-                </button>
+                {priceBadge(set, "featured")}
               </div>
               <img
                 className="co-featured-pack behind"
@@ -199,6 +275,7 @@ export function Shopfront({
               <button
                 className="co-featured-arrow prev"
                 aria-label="Previous featured pack"
+                disabled={Boolean(taking)}
                 onClick={() =>
                   setFeatured(
                     (featured + OPENER_SETS.length - 1) % OPENER_SETS.length,
@@ -210,6 +287,7 @@ export function Shopfront({
               <button
                 className="co-featured-arrow next"
                 aria-label="Next featured pack"
+                disabled={Boolean(taking)}
                 onClick={() => setFeatured((featured + 1) % OPENER_SETS.length)}
               >
                 <FaChevronRight />
@@ -224,10 +302,65 @@ export function Shopfront({
                   key={item.id}
                   onClick={() => setFeatured(index)}
                   aria-label={`Feature ${item.name}`}
+                  disabled={Boolean(taking)}
                   aria-pressed={index === featured}
                 />
               ))}
             </div>
+          </section>
+
+          <section
+            className="co-shop-glass co-shop-preferences"
+            aria-label="Opening preferences"
+          >
+            <div
+              className={`co-shop-wallet ${state.balanceCents < 0 ? "negative" : ""}`}
+            >
+              <div>
+                <span>SIMULATED BALANCE</span>
+                <small>$1,000 to start. Going below zero is okay.</small>
+              </div>
+              <strong
+                data-testid="opener-balance"
+                data-cents={state.balanceCents}
+                role="status"
+                aria-label={`Simulated balance ${formatValue(state.balanceCents / 100)}`}
+              >
+                {formatValue(state.balanceCents / 100)}
+              </strong>
+            </div>
+            <div className="co-mode-picker">
+              <span className="co-control-label">REVEAL STYLE</span>
+              <div role="group" aria-label="Card reveal style">
+                <button
+                  disabled={busy}
+                  aria-pressed={state.mode === "row"}
+                  onClick={() => dispatch({ type: "mode", mode: "row" })}
+                >
+                  <FaGripHorizontal /> Row
+                </button>
+                <button
+                  disabled={busy}
+                  aria-pressed={state.mode === "stack"}
+                  onClick={() => dispatch({ type: "mode", mode: "stack" })}
+                >
+                  <FaLayerGroup /> Stack
+                </button>
+              </div>
+            </div>
+            <button
+              className="co-price-toggle"
+              role="switch"
+              aria-checked={state.showPrices}
+              aria-label="Show card values"
+              onClick={() => dispatch({ type: "prices" })}
+            >
+              <FaCoins />
+              <span>Card values</span>
+              <i>
+                <b />
+              </i>
+            </button>
           </section>
 
           <section
@@ -243,33 +376,32 @@ export function Shopfront({
             </div>
             <div className="co-shop-product-grid">
               {OPENER_SETS.map((item) => (
-                <button
-                  className="co-shop-product"
+                <article
+                  className={`co-shop-product ${taking?.id === item.id && taking.origin === "shelf" ? "taking" : ""}`}
                   key={item.id}
-                  onClick={() => onChoose(item.id)}
-                  aria-label={`Choose ${item.name} pack`}
                   style={{ "--pack-accent": item.accent }}
                 >
-                  <div className="co-product-art">
-                    <span>{item.year}</span>
-                    <img src={item.image} alt={`${item.name} booster pack`} />
+                  <div className="co-pack-frame" title={item.name}>
+                    <img
+                      src={item.image}
+                      alt={`${item.name} booster pack`}
+                      draggable={false}
+                    />
                   </div>
-                  <div className="co-product-description">
-                    <h3>{item.name}</h3>
-                    <span>
-                      <FaCoins /> On the house
-                    </span>
-                    <small>{item.count} cards to discover</small>
-                  </div>
-                  <span className="co-product-action">
-                    Take a pack <FaArrowRight />
-                  </span>
-                </button>
+                  {priceBadge(item, "shelf")}
+                </article>
               ))}
             </div>
-            <p className="co-shop-simulation">
+            <p className="co-shop-simulation" id="shop-price-description">
               <span />
-              Free pack simulation. Just for the joy of the reveal.
+              Unlimited packs · USD estimates · {sourceDate} ·{" "}
+              <a
+                href={OPENER_MARKET.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                TCGplayer via TCGCSV ↗
+              </a>
             </p>
           </section>
         </div>
