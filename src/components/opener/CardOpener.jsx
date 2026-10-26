@@ -19,10 +19,12 @@ import {
   OPENER_SETS,
   formatValue,
   isShinyPull,
+  isBigHit,
   openedValue,
   openerSet,
   quoteFor,
   rollOpenerPack,
+  saleValueCents,
 } from "../../lib/cardOpener.js";
 import { Shopfront } from "./Shopfront.jsx";
 import "./card-opener.css";
@@ -102,6 +104,44 @@ function CardValue({ card, large = false }) {
   );
 }
 
+function HitEffects() {
+  const stars = [
+    [7, 12],
+    [89, 17],
+    [16, 47],
+    [83, 55],
+    [10, 83],
+    [92, 90],
+    [43, 8],
+    [57, 33],
+    [33, 73],
+    [70, 78],
+    [51, 94],
+    [73, 9],
+  ];
+  return (
+    <span className="co-hit-effects" aria-hidden="true">
+      <span className="co-hit-rainbow" />
+      <span className="co-hit-sweep" />
+      {stars.map(([x, y], index) => (
+        <i
+          className="co-hit-star"
+          key={index}
+          style={{
+            left: `${x}%`,
+            top: `${y}%`,
+            "--star-i": index,
+            "--star-size": `${8 + (index % 4) * 2}px`,
+            "--star-large": `${12 + (index % 4) * 3}px`,
+          }}
+        >
+          ✦
+        </i>
+      ))}
+    </span>
+  );
+}
+
 function FlipCard({
   card,
   revealed,
@@ -114,11 +154,12 @@ function FlipCard({
   return (
     <button
       type="button"
-      className={`co-flip-card ${revealed ? "revealed" : ""} ${isShinyPull(card) && revealed ? "shiny" : ""} ${stack ? "in-stack" : ""}`}
+      className={`co-flip-card ${revealed ? "revealed" : ""} ${isShinyPull(card) && revealed ? "shiny" : ""} ${stack ? "in-stack" : ""} ${revealed && isBigHit(card) ? "big-hit" : ""}`}
       onClick={onClick}
       disabled={disabled}
       data-testid="opener-card"
       data-revealed={revealed ? "true" : "false"}
+      data-big-hit={revealed && isBigHit(card) ? "true" : "false"}
       aria-label={
         !revealed
           ? `Reveal card ${index + 1}`
@@ -127,15 +168,26 @@ function FlipCard({
             : `Inspect ${card.name}`
       }
     >
+      {revealed && isBigHit(card) && (
+        <>
+          <span className="co-hit-aura" aria-hidden="true" />
+          <span className="co-hit-rays" aria-hidden="true" />
+          <span className="co-hit-badge">
+            <FaStar /> BIG HIT
+          </span>
+        </>
+      )}
       <span className="co-flip-inner">
         <span className="co-card-face back">
           <CardBack />
         </span>
         <span className="co-card-face front" aria-hidden={!revealed}>
           {revealed && <CardArt card={card} large={stack} />}
-          {revealed && isShinyPull(card) && (
+          {revealed && isBigHit(card) ? (
+            <HitEffects />
+          ) : revealed && isShinyPull(card) ? (
             <span className="co-reveal-shine" />
-          )}
+          ) : null}
         </span>
       </span>
     </button>
@@ -286,7 +338,7 @@ function PackEmergence({ set, count, mode }) {
   );
 }
 
-function OpeningPopup({ children, onClose, title }) {
+function OpeningPopup({ children, onClose, title, kind = "opening" }) {
   const ref = useRef(null);
   useEffect(() => {
     const previous = document.activeElement;
@@ -296,7 +348,7 @@ function OpeningPopup({ children, onClose, title }) {
     const onKey = (event) => {
       if (
         document.querySelector(
-          '[data-testid="card-preview"], [data-testid="settings-modal"]',
+          '[data-testid="card-preview"], [data-testid="settings-modal"], .co-clear-dialog[open]',
         )
       )
         return;
@@ -348,17 +400,20 @@ function OpeningPopup({ children, onClose, title }) {
       }}
     >
       <section
-        className="co-popup"
+        className={`co-popup ${kind === "inventory" ? "co-inventory-popup" : ""}`}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="opener-popup-heading"
+        aria-labelledby={`${kind}-popup-heading`}
         ref={ref}
         tabIndex={-1}
-        data-testid="opener-modal"
+        data-testid={kind === "inventory" ? "inventory-modal" : "opener-modal"}
       >
         <header className="co-popup-header">
-          <h2 className="co-sr-only" id="opener-popup-heading">
-            Open {title} pack
+          <h2
+            className={kind === "inventory" ? "" : "co-sr-only"}
+            id={`${kind}-popup-heading`}
+          >
+            {title}
           </h2>
           <button
             className="co-popup-close"
@@ -402,17 +457,21 @@ function ClearDialog({ onCancel, onClear }) {
   );
 }
 
-function Gallery({ state, onClear }) {
+function Gallery({ state, dispatch, onClear }) {
   const preview = useCardPreview();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
+  const [status, setStatus] = useState("all");
   const [sort, setSort] = useState("recent");
   const [limit, setLimit] = useState(30);
+  const [confirmBulk, setConfirmBulk] = useState(false);
   const entries = useMemo(() => {
     const result = [...state.history].reverse().filter((entry) => {
       const card = OPENER_BY_ID[entry.cardId];
+      const sold = entry.soldForCents !== undefined;
       return (
         (filter === "all" || card.set === filter) &&
+        (status === "all" || (status === "sold" ? sold : !sold)) &&
         `${card.name} ${card.rarity}`
           .toLowerCase()
           .includes(query.toLowerCase())
@@ -421,29 +480,48 @@ function Gallery({ state, onClear }) {
     if (sort === "value")
       result.sort(
         (a, b) =>
-          (quoteFor(b.cardId)?.usd ?? -1) - (quoteFor(a.cardId)?.usd ?? -1),
+          (saleValueCents(b.cardId) ?? -1) - (saleValueCents(a.cardId) ?? -1),
       );
     if (sort === "name")
       result.sort((a, b) =>
         OPENER_BY_ID[a.cardId].name.localeCompare(OPENER_BY_ID[b.cardId].name),
       );
     return result;
-  }, [state.history, query, filter, sort]);
+  }, [state.history, query, filter, status, sort]);
+  const sellable = entries.filter(
+    (entry) =>
+      entry.soldForCents === undefined && saleValueCents(entry.cardId) !== null,
+  );
+  const total = sellable.reduce(
+    (sum, entry) => sum + saleValueCents(entry.cardId),
+    0,
+  );
+  const available = state.history.filter(
+    (entry) => entry.soldForCents === undefined,
+  ).length;
+  const sourceDate = new Date(OPENER_MARKET.updatedAt).toLocaleDateString(
+    "en-US",
+    { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" },
+  );
+  const changed = () => {
+    setLimit(30);
+    setConfirmBulk(false);
+  };
   return (
-    <section className="co-gallery" aria-labelledby="opened-heading">
-      <div className="co-gallery-heading">
+    <section
+      className="co-gallery"
+      aria-label="Opened cards for viewing and sale"
+    >
+      <div className="co-inventory-summary">
+        <span>
+          {available} available · {state.history.length} opened
+        </span>
         <div>
-          <span className="co-eyebrow">THE MOMENTS WORTH KEEPING</span>
-          <h2 id="opened-heading">
-            Cards Opened <span>{state.history.length}</span>
-          </h2>
-          <p>Your pulls, kept together for this browser tab.</p>
+          <span>Balance</span>
+          <strong data-testid="inventory-balance">
+            {formatValue(state.balanceCents / 100)}
+          </strong>
         </div>
-        {state.history.length > 0 && (
-          <button className="co-text-button" onClick={onClear}>
-            Clear session
-          </button>
-        )}
       </div>
       {state.history.length > 0 ? (
         <>
@@ -456,7 +534,7 @@ function Gallery({ state, onClear }) {
                 value={query}
                 onChange={(event) => {
                   setQuery(event.target.value);
-                  setLimit(30);
+                  changed();
                 }}
               />
             </label>
@@ -465,7 +543,7 @@ function Gallery({ state, onClear }) {
               value={filter}
               onChange={(event) => {
                 setFilter(event.target.value);
-                setLimit(30);
+                changed();
               }}
             >
               <option value="all">All sets</option>
@@ -476,24 +554,70 @@ function Gallery({ state, onClear }) {
               ))}
             </select>
             <select
+              aria-label="Filter cards by sale status"
+              value={status}
+              onChange={(event) => {
+                setStatus(event.target.value);
+                changed();
+              }}
+            >
+              <option value="all">All cards</option>
+              <option value="available">Available</option>
+              <option value="sold">Sold</option>
+            </select>
+            <select
               aria-label="Sort opened cards"
               value={sort}
-              onChange={(event) => setSort(event.target.value)}
+              onChange={(event) => {
+                setSort(event.target.value);
+                setConfirmBulk(false);
+              }}
             >
               <option value="recent">Latest pulls</option>
               <option value="name">Card name</option>
               <option value="value">Highest value</option>
             </select>
           </div>
+          <div className="co-inventory-actions">
+            <span>
+              {entries.length} {entries.length === 1 ? "card" : "cards"}
+            </span>
+            <button
+              className={`co-sell-all ${confirmBulk ? "confirming" : ""}`}
+              data-testid="sell-all"
+              disabled={!sellable.length}
+              onClick={() => {
+                if (!confirmBulk) {
+                  setConfirmBulk(true);
+                  return;
+                }
+                dispatch({
+                  type: "sell_all",
+                  keys: sellable.map((entry) => entry.key),
+                });
+                playSfx("coin");
+                setConfirmBulk(false);
+              }}
+            >
+              {confirmBulk
+                ? "Confirm sale"
+                : `${query.trim() || filter !== "all" || status !== "all" ? "Sell matching" : "Sell all"} (${sellable.length})`}{" "}
+              · {formatValue(total / 100)}
+            </button>
+          </div>
           {entries.length ? (
             <div className="co-gallery-grid">
               {entries.slice(0, limit).map((entry) => {
                 const card = OPENER_BY_ID[entry.cardId];
+                const sold = entry.soldForCents !== undefined;
+                const value = saleValueCents(entry.cardId);
                 return (
                   <article
-                    className={`co-gallery-card ${isShinyPull(card) ? "shiny" : ""}`}
+                    className={`co-gallery-card ${isShinyPull(card) ? "shiny" : ""} ${sold ? "sold" : ""}`}
                     key={entry.key}
                     data-testid="opened-card"
+                    data-entry-key={entry.key}
+                    data-sold={sold ? "true" : "false"}
                   >
                     <button
                       onClick={() => preview(card)}
@@ -516,9 +640,35 @@ function Gallery({ state, onClear }) {
                           {isShinyPull(card) && <FaStar />}
                           {card.rarity}
                         </small>
-                        {state.showPrices && <CardValue card={card} />}
                       </div>
                     </div>
+                    <button
+                      className="co-sell-card"
+                      disabled={sold || value === null}
+                      data-testid="sell-card"
+                      aria-label={
+                        sold
+                          ? `${card.name} sold`
+                          : `Sell ${card.name} for ${value === null ? "unavailable price" : formatValue(value / 100)}`
+                      }
+                      onClick={() => {
+                        dispatch({ type: "sell", key: entry.key });
+                        playSfx("coin");
+                      }}
+                    >
+                      {sold ? (
+                        <>
+                          <FaCheck /> Sold ·{" "}
+                          {formatValue(entry.soldForCents / 100)}
+                        </>
+                      ) : value === null ? (
+                        "Price unavailable"
+                      ) : (
+                        <>
+                          Sell <strong>{formatValue(value / 100)}</strong>
+                        </>
+                      )}
+                    </button>
                   </article>
                 );
               })}
@@ -532,6 +682,8 @@ function Gallery({ state, onClear }) {
                 onClick={() => {
                   setQuery("");
                   setFilter("all");
+                  setStatus("all");
+                  changed();
                 }}
               >
                 Show all opened cards
@@ -550,10 +702,18 @@ function Gallery({ state, onClear }) {
       ) : (
         <div className="co-gallery-empty">
           <FaBoxOpen />
-          <h3>Your next favorite card is in there.</h3>
-          <p>Open a pack and every card you reveal will appear here.</p>
+          <h3>Your next favorite is waiting.</h3>
+          <p>The cards you reveal will be here to view or sell.</p>
         </div>
       )}
+      <footer className="co-inventory-footer">
+        <span>Simulated USD · Market estimates · {sourceDate}</span>
+        {state.history.length > 0 && (
+          <button className="co-text-button" onClick={onClear}>
+            Clear history
+          </button>
+        )}
+      </footer>
     </section>
   );
 }
@@ -565,9 +725,15 @@ export function CardOpener({ state, dispatch, onExit }) {
     () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
   const [confirmClear, setConfirmClear] = useState(false);
+  const [inventoryOpen, setInventoryOpen] = useState(false);
+  const closeInventory = useCallback(() => setInventoryOpen(false), []);
   const [popupOpen, setPopupOpen] = useState(() =>
     Boolean(state.purchase || (state.pack && state.stage !== "complete")),
   );
+  const openInventory = useCallback(() => {
+    setPopupOpen(false);
+    setInventoryOpen(true);
+  }, []);
   const [packNotice, setPackNotice] = useState("");
   const closePopup = useCallback(() => setPopupOpen(false), []);
   const selectedSet = openerSet(state.setId);
@@ -576,16 +742,11 @@ export function CardOpener({ state, dispatch, onExit }) {
   const busy = state.stage === "tearing" || state.stage === "dealing";
   const instant = reducedMotion || !settings.animations;
   const revealedCount = pack?.flipped.filter(Boolean).length || 0;
-  const sessionValue = openedValue(state.history);
   const packValue = openedValue(
     state.history.filter((entry) => entry.packNumber === pack?.number),
   );
   const currentCard = pack ? OPENER_BY_ID[pack.ids[pack.index]] : null;
   const currentRevealed = pack?.flipped[pack.index] || false;
-  const sourceDate = new Date(OPENER_MARKET.updatedAt).toLocaleDateString(
-    "en-US",
-    { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" },
-  );
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -617,9 +778,7 @@ export function CardOpener({ state, dispatch, onExit }) {
   };
   const reveal = (index) => {
     if (busy || !pack || pack.flipped[index]) return;
-    playSfx(
-      isShinyPull(OPENER_BY_ID[pack.ids[index]]) ? "cardRare" : "cardFlip",
-    );
+    playSfx(isBigHit(OPENER_BY_ID[pack.ids[index]]) ? "cardRare" : "cardFlip");
     dispatch({ type: "reveal", index });
   };
   const next = () => {
@@ -634,7 +793,10 @@ export function CardOpener({ state, dispatch, onExit }) {
       data-motion={instant ? "reduced" : "full"}
       style={{ "--co-accent": packSet.accent }}
     >
-      <div className="co-shop-shell" inert={popupOpen ? true : undefined}>
+      <div
+        className="co-shop-shell"
+        inert={popupOpen || inventoryOpen ? true : undefined}
+      >
         <Shopfront
           state={state}
           instant={instant}
@@ -663,58 +825,26 @@ export function CardOpener({ state, dispatch, onExit }) {
             setPackNotice("");
             setPopupOpen(true);
           }}
-          onGallery={() =>
-            document.getElementById("opened-heading")?.scrollIntoView({
-              behavior: instant ? "auto" : "smooth",
-              block: "start",
-            })
-          }
-          sessionValue={sessionValue}
+          onGallery={openInventory}
         />
-        <div className="co-shop-collection co-shell">
-          <Gallery state={state} onClear={() => setConfirmClear(true)} />
-          <div className="co-below-stage">
-            <p>
-              <FaBoxOpen /> Free simulation. Your reveals stay in this session.
-            </p>
-            {state.showPrices && (
-              <p className="co-market-note">
-                USD market estimates · {sourceDate} ·{" "}
-                <a
-                  href={OPENER_MARKET.sourceUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  TCGplayer via TCGCSV ↗
-                </a>
-              </p>
-            )}
-          </div>
-          <details className="co-about" id="shop-how-it-works">
-            <summary>
-              About these simulated packs <FaChevronDown />
-            </summary>
-            <p>
-              Choose any of six classic sets. Click a price badge, then confirm
-              to buy with simulated money. New players start with $1,000 and can
-              keep buying below zero. Drag along the dotted line from left to
-              right, or press the right arrow or Enter on the tear guide. Your
-              cards emerge before you reveal them in a row or a stack.
-            </p>
-            <p>
-              Each pack has 11 cards with an approximate common, uncommon, and
-              rare mix. The rare slot has a simulated one in three chance of a
-              holo. Displayed values are cached USD market estimates for
-              standard or unlimited printings. Your Cards Opened gallery stays
-              in this browser tab, including refreshes. Story Mode collections
-              and coins are separate.
-            </p>
-          </details>
-        </div>
       </div>
+      {inventoryOpen && (
+        <OpeningPopup
+          title="View/Sell cards"
+          kind="inventory"
+          onClose={closeInventory}
+        >
+          <Gallery
+            state={state}
+            dispatch={dispatch}
+            onClear={() => setConfirmClear(true)}
+          />
+        </OpeningPopup>
+      )}
+
       {popupOpen && (
         <OpeningPopup
-          title={state.stage === "sealed" ? selectedSet.name : packSet.name}
+          title={`Open ${state.stage === "sealed" ? selectedSet.name : packSet.name} pack`}
           onClose={closePopup}
         >
           {packNotice && state.stage !== "complete" && (
@@ -855,7 +985,7 @@ export function CardOpener({ state, dispatch, onExit }) {
                     </div>
                     {currentRevealed && state.showPrices && (
                       <div
-                        className={`co-stack-value ${isShinyPull(currentCard) ? "rare" : ""}`}
+                        className={`co-stack-value ${isBigHit(currentCard) ? "rare" : ""}`}
                         key={`value:${pack.number}:${pack.index}`}
                       >
                         <CardValue card={currentCard} large />
@@ -956,6 +1086,11 @@ export function CardOpener({ state, dispatch, onExit }) {
                         : "Estimated pack value"}{" "}
                       <strong>{formatValue(packValue.amount)}</strong>
                     </span>
+                  )}
+                  {state.stage === "complete" && (
+                    <button className="co-text-button" onClick={openInventory}>
+                      View/Sell cards
+                    </button>
                   )}
                   {state.stage === "complete" && (
                     <button className="co-primary" onClick={closePopup}>

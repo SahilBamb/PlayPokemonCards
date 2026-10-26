@@ -3,7 +3,8 @@ import market from "../data/openerPrices.json" with { type: "json" };
 
 export const OPENER_STORAGE_KEY = "ppc-card-opener-session-v1";
 export const OPENER_WALLET_KEY = "ppc-card-opener-wallet-v1";
-export const OPENER_STARTING_BALANCE_CENTS = 100000;
+export const OPENER_STARTING_BALANCE_CENTS = 1000000;
+const LEGACY_STARTING_BALANCE_CENTS = 100000;
 export const OPENER_CARDS = catalog;
 export const OPENER_BY_ID = Object.assign(
   Object.create(null),
@@ -71,6 +72,17 @@ export const openerSet = (id) =>
 export const isShinyPull = (card) => /Holo|Secret/.test(card.rarity);
 export const quoteFor = (id) =>
   Object.hasOwn(market.cards, id) ? market.cards[id] : null;
+export const saleValueCents = (id) => {
+  const quote = quoteFor(id);
+  return quote ? Math.round(quote.usd * 100) : null;
+};
+export const isBigHit = (card) =>
+  isShinyPull(card) || (saleValueCents(card.id) ?? 0) >= 5000;
+const upgradeBalance = (balance, grant) => {
+  if (!Number.isSafeInteger(balance)) return OPENER_STARTING_BALANCE_CENTS;
+  const result = balance + OPENER_STARTING_BALANCE_CENTS - grant;
+  return Number.isSafeInteger(result) ? result : OPENER_STARTING_BALANCE_CENTS;
+};
 export const formatValue = (value) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
     value,
@@ -130,6 +142,7 @@ export const initialOpenerSession = () => ({
   showPrices: true,
   packsOpened: 0,
   balanceCents: OPENER_STARTING_BALANCE_CENTS,
+  startingBalanceCents: OPENER_STARTING_BALANCE_CENTS,
   purchase: null,
   stage: "sealed",
   pack: null,
@@ -144,19 +157,30 @@ export function restoreOpenerSession(raw) {
     if (!saved || saved.version !== 1 || !Array.isArray(saved.history))
       return empty;
     const keys = new Set();
-    const history = saved.history.filter((entry) => {
-      if (
-        !entry ||
-        !OPENER_BY_ID[entry.cardId] ||
-        typeof entry.key !== "string" ||
-        !Number.isInteger(entry.packNumber) ||
-        entry.packNumber < 1 ||
-        keys.has(entry.key)
-      )
-        return false;
-      keys.add(entry.key);
-      return true;
-    });
+    const history = saved.history
+      .filter((entry) => {
+        if (
+          !entry ||
+          !OPENER_BY_ID[entry.cardId] ||
+          typeof entry.key !== "string" ||
+          !Number.isInteger(entry.packNumber) ||
+          entry.packNumber < 1 ||
+          keys.has(entry.key)
+        )
+          return false;
+        keys.add(entry.key);
+        return true;
+      })
+      .map((entry) => {
+        const clean = {
+          key: entry.key,
+          cardId: entry.cardId,
+          packNumber: entry.packNumber,
+        };
+        if (Number.isSafeInteger(entry.soldForCents) && entry.soldForCents >= 0)
+          clean.soldForCents = entry.soldForCents;
+        return clean;
+      });
     const restored = {
       ...empty,
       setId: openerSet(saved.setId).id,
@@ -169,9 +193,12 @@ export function restoreOpenerSession(raw) {
           : 0,
       ),
       history,
-      balanceCents: Number.isSafeInteger(saved.balanceCents)
-        ? saved.balanceCents
-        : OPENER_STARTING_BALANCE_CENTS,
+      balanceCents: upgradeBalance(
+        saved.balanceCents,
+        Number.isSafeInteger(saved.startingBalanceCents)
+          ? saved.startingBalanceCents
+          : LEGACY_STARTING_BALANCE_CENTS,
+      ),
     };
     if (
       saved.purchase &&
@@ -228,8 +255,18 @@ export function loadOpenerSession() {
   }
   try {
     const wallet = JSON.parse(localStorage.getItem(OPENER_WALLET_KEY));
-    if (wallet?.version === 1 && Number.isSafeInteger(wallet.balanceCents))
-      session.balanceCents = wallet.balanceCents;
+    if (
+      [1, 2].includes(wallet?.version) &&
+      Number.isSafeInteger(wallet.balanceCents)
+    )
+      session.balanceCents = upgradeBalance(
+        wallet.balanceCents,
+        wallet.version === 1
+          ? LEGACY_STARTING_BALANCE_CENTS
+          : Number.isSafeInteger(wallet.startingBalanceCents)
+            ? wallet.startingBalanceCents
+            : OPENER_STARTING_BALANCE_CENTS,
+      );
   } catch {
     /* The in-memory wallet remains available when storage is blocked. */
   }
@@ -245,7 +282,11 @@ export function saveOpenerSession(session) {
   try {
     localStorage.setItem(
       OPENER_WALLET_KEY,
-      JSON.stringify({ version: 1, balanceCents: session.balanceCents }),
+      JSON.stringify({
+        version: 2,
+        balanceCents: session.balanceCents,
+        startingBalanceCents: OPENER_STARTING_BALANCE_CENTS,
+      }),
     );
   } catch {
     /* Keep the simulated wallet usable in memory. */
@@ -253,6 +294,31 @@ export function saveOpenerSession(session) {
 }
 
 export function openerReducer(state, action) {
+  if (action.type === "sell" || action.type === "sell_all") {
+    const keys =
+      action.type === "sell"
+        ? new Set([action.key])
+        : Array.isArray(action.keys)
+          ? new Set(action.keys)
+          : null;
+    let credit = 0;
+    let sold = 0;
+    const history = state.history.map((entry) => {
+      const value = saleValueCents(entry.cardId);
+      if (
+        entry.soldForCents !== undefined ||
+        value === null ||
+        (keys && !keys.has(entry.key))
+      )
+        return entry;
+      credit += value;
+      sold += 1;
+      return { ...entry, soldForCents: value };
+    });
+    if (!sold || !Number.isSafeInteger(state.balanceCents + credit))
+      return state;
+    return { ...state, history, balanceCents: state.balanceCents + credit };
+  }
   if (action.type === "purchase") {
     if (!["sealed", "complete"].includes(state.stage) || state.purchase)
       return state;

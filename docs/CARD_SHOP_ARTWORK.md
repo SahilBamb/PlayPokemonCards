@@ -15,8 +15,14 @@ composition or dimensions. The shopkeeper retains its alpha channel.
 | Shopkeeper | `public/card-opener/shop/shopkeeper.webp` | 1024 × 1536, transparent |
 
 The existing pack photographs, card scans, and user supplied card back are
-unchanged. The menu's previous no AI art pledge badge was removed because this
-release uses generated shop illustrations.
+unchanged. The owner chose to retain all six original pack photographs after
+considering replacement artwork; no generated pack designs are used.
+
+The owner explicitly requested restoration of the hosted Art pledge badge at
+the upper left of the Card Opener, alongside the generated prototype shop art.
+Its source is the centrally hosted `badge/art.svg` with the exact production
+hostname and light theme, linked to the Art pledge. Preserve that owner request.
+The badge does not change the generated provenance of the two shop illustrations.
 
 ## Interior prompt
 

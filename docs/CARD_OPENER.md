@@ -2,140 +2,126 @@
 
 Entry point: the Card Opener button on the main menu, or `/card-opener`.
 
-This is a standalone free simulation. It never imports or writes the Story Mode
-profile, collection, coin wallet, or owned packs. Revealed cards are saved in
-`sessionStorage` under `ppc-card-opener-session-v1`, so players can return from
-the menu or refresh the tab and continue viewing them. Closing the tab ends the
-session. Clear session has a confirmation dialog.
+The page is a shop illustration, its shopkeeper, and a single glass and wood
+cabinet with six packs on two shelves. A compact top bar shows the balance,
+View/Sell, and settings. The owner's requested hosted Art pledge badge is at
+the upper left. The former sidebar cards, visit statistics, featured carousel,
+welcome card, last pack button, How it works section, and inline card gallery
+have been removed.
 
-## Opening and viewing
+All six existing pack photographs remain in use. No generated pack replacement
+was adopted. The shop interior and transparent shopkeeper remain the existing
+generated artwork documented in [CARD_SHOP_ARTWORK.md](CARD_SHOP_ARTWORK.md).
 
-The entry screen is an illustrated card shop with an independent shopkeeper
-layer, a featured pack carousel, and six working product listings. Base Set,
-Jungle, Fossil, Team Rocket, Gym Heroes, and Gym Challenge are available. The
-Booster Packs section shows only pack photographs in white borders with price
-badges overlapping the lower left edge. Clicking a badge changes it to Confirm?,
-and confirming buys the pack with simulated money. The purchase animates in the
-shop before the pack appears on its own over the dimmed shop.
+## Buying and opening
 
-Row, Stack, and Card values preferences are on the shop screen. The opening
-popup has just the pack, tear guide, and close control, with no settings toolbar
-or surrounding panel border. Completing a pack returns players to the shop to
-choose and confirm another one.
+Price badges overlap the packs' lower left edges. The first click changes the
+badge to Confirm? without spending money. The second reserves the sealed pack,
+deducts its cached market price once, and animates it to the opening popup.
+An unfinished pack's badge changes to Continue, allowing the pack to be resumed
+without another purchase. Completed packs are viewed through View/Sell.
 
-Drag a mouse or finger across the dotted guide from left to right. The glowing
-tear follows the gesture, and releasing early retains the current progress.
-The dotted guide, arrow animation, and prompt disappear as soon as a valid tear
-starts. Once the tear reaches the far edge, its top strip detaches and all eleven
-hidden cards visibly emerge from the wrapper before fanning into a row or
-settling into a stack. The guide also accepts the right arrow key, Enter, or
-Space. Pointer capture and touch action handling keep
-the tear working when the pointer leaves the line, without scrolling the page.
+Row, Stack, and Card values preferences live in the cabinet footer. The opening
+popup shows the pack, tear guide, and close control. Drag a mouse or finger from
+left to right across the top. The dotted guide, direction animation, and prompt
+disappear when a valid tear starts. The glowing cut follows the gesture, and a
+partial tear can be resumed. The right arrow, Enter, and Space provide keyboard
+controls. Pointer capture and touch action handling prevent accidental page
+scrolling while tearing.
 
-The popup traps focus, makes the shop inert, and restores focus and scrolling
-when closed. Escape or Back to card shop closes it. Card inspection remains
-above the popup, and Escape dismisses inspection first. An unfinished opened
-pack can be resumed and cannot be replaced by another product. Choosing another
-pack after completion prepares a fresh sealed wrapper without clearing history.
+The top strip detaches and all eleven hidden cards visibly emerge from the
+wrapper. They fan into a row or settle into a stack. Row cards flip independently.
+Stack cards remain visible until the player chooses Next card or clicks again.
+Inspection opens the full size card viewer above either popup. Both popups trap
+focus, make the shop inert, and restore focus and scrolling when closed. Escape
+closes inspection first, then the popup. Reduced motion and the existing animation
+and sound preferences apply.
 
-Row mode allows any card to be flipped independently. Clicking a revealed card
-opens the existing full size card viewer with its foil effects. Stack mode
-reveals one card at a time and keeps it visible until the player chooses Next
-card or clicks it again. Inspect card opens the full size viewer without moving
-to the next card. Switching modes retains all revealed cards.
+## Big hits
 
-Cards Opened is below the opening table, with set filtering, name and rarity
-search, sorting, and individual card inspection. It includes every revealed
-copy. The first 30 matching cards are shown, with Show more for larger sessions.
-The existing animation and sound settings apply, and reduced motion preferences
-skip the tear and deal animation without interrupting the reveal flow.
+Holo and secret pulls, plus cards with a cached value of at least $50, receive an
+exaggerated foil celebration: a gold outline, colored glow, radial burst,
+rainbow foil, sweeping shine, twelve twinkling sparkles, and a Big Hit label.
+The rare pull melody follows the sound setting. Reduced motion keeps a static
+highlight and disables moving foil, rays, and sparkles. This changes presentation,
+not draw odds or sale values.
 
-## Cards and simulated collation
+## View/Sell
 
-The opener uses the original set data in `scripts/*_raw.json`, preserving holo
-and ordinary printings that the battle card catalog combines. It contains 575
-printings across the six sets, each identified by its original card ID.
+The View/Sell button opens the inventory in a popup rather than below the shop.
+It includes every revealed copy, full size inspection, set and sale status
+filters, name/rarity search, sorting, and pagination after the first 30 matches.
+Sold artwork remains inspectable, with a Sold label and its credited value.
 
-Each simulated pack contains 11 cards. Base Set has 5 common cards, 3 uncommons,
+Each copy has a stable pack/index key. Sell credits the cached quote, rounded
+to integer cents, once. The entry records `soldForCents`; repeated actions and
+reloads cannot credit the same copy again. Cards without a source quote cannot
+be sold. Selling changes the simulated wallet only and never writes the Story
+Mode profile.
+
+Sell all sells eligible copies matching the current filters and search, including
+matches past the first 30 displayed cards. Its label shows the count and exact
+total. The first click asks for inline confirmation; the second performs the sale.
+Sold copies and missing quotes are skipped. All, Available, and Sold filters
+keep the sales view useful after a bulk sale.
+
+Card values hides estimates during opening. Sale prices remain visible in the
+inventory so players can decide what to sell. Revealed card history is stored
+in `sessionStorage` under `ppc-card-opener-session-v1`: it survives refreshes and
+menu navigation, and ends when the browser tab closes. Clear history has a
+confirmation dialog and preserves the wallet and any unopened paid pack.
+
+## Simulated money
+
+New players receive $10,000 in simulated USD. Money is separate from Story Mode
+and stored in `localStorage` under `ppc-card-opener-wallet-v1`. Wallet payload
+version 2 records the starting grant. Previous $1,000 wallets receive the $9,000
+difference once, preserving prior spending and sale proceeds; reloads and new
+tabs do not repeat the increase. Session snapshots also record the grant so
+legacy snapshots recover correctly.
+
+Balances, purchases, and sale credits use integer cents. Purchases are allowed
+when they make the balance negative or when it is already negative. Revealing,
+resuming, or ripping a pack never charges again. Clearing history does not grant
+starting money, refund purchases, or reverse sales. This is a free simulation;
+there are no real payments or ownership changes in the game collection.
+
+## Cards, prices, and artwork
+
+The opener preserves all 575 printings across Base Set, Jungle, Fossil, Team
+Rocket, Gym Heroes, and Gym Challenge. The battle catalog combines some prints;
+the separate five card Story Mode pack generator is unchanged.
+
+Each simulated pack contains 11 cards. Base Set has 5 commons, 3 uncommons,
 2 basic Energy cards, and 1 rare. The Gym sets have 6 commons, 3 uncommons,
-1 basic Energy, and 1 rare. The other sets have 7 commons, 3 uncommons, and
-1 rare. The rare is placed last and has a simulated one in three chance of
-using the holo pool. Cards are drawn without replacement inside each rarity
-pool. These are approximate simulation odds, not certified physical collation.
-The existing five card Story Mode packs are unchanged.
+1 basic Energy, and 1 rare. Other sets have 7 commons, 3 uncommons, and 1 rare.
+The rare is last and has an approximate one in three chance of using the holo
+pool. Draws are without replacement within each rarity pool. These are simulation
+odds, not certified physical collation.
 
-## Optional values and artwork
+Pack and card values are cached TCGplayer market estimates in USD via TCGCSV,
+with the source date visible. Pack quotes match the exact unlimited edition
+products used for the photographs. Card quotes match set, number, and foil type;
+first edition prices are not substituted. A missing quote is shown as unavailable.
+The initial snapshot has 574 card quotes and all six pack quotes. Actual prices
+vary with condition and edition; these are neither original retail prices nor
+live seller offers.
 
-The Card values switch hides values everywhere, including individual cards,
-pack totals, the session total, and the gallery. Values are TCGplayer market
-estimates in USD from a cached TCGCSV snapshot. Unlimited and ordinary printings
-are matched by set, card number, and foil type; first edition values are not
-substituted. The source date is visible. Missing quotes say Price unavailable,
-and partial totals are labeled Known value. Condition and edition affect actual
-market value.
-
-## Simulated money and pack prices
-
-New players receive $1,000 in simulated USD. The balance is stored separately
-from Story Mode in `localStorage` under `ppc-card-opener-wallet-v1`; refreshing,
-returning from the menu, opening another tab, and clearing the Cards Opened
-gallery do not grant more starting money. Balances and charges use integer
-cents, and purchases are allowed when they would make the balance negative or
-when it is already negative. This is a free simulation with no real payments.
-
-The first badge click does not spend anything. Confirmation reserves the sealed
-pack and deducts the cached source price exactly once. Interrupted purchase
-animations and page refreshes recover the sealed pack from the current tab's
-session. Resuming or ripping it never charges again. Clearing the gallery keeps
-an unopened paid pack and the wallet balance. Revealed card values are estimates
-for viewing, not credits to the wallet or ownership in the game collection.
-
-Pack prices use TCGplayer market quotes for the exact unlimited edition booster
-products already used for the pack photographs, supplied by the same TCGCSV
-snapshot as the card prices. Source date and USD units are visible. The price
-refresh script also checks that all six selected packs have positive source
-quotes and refuses to replace the snapshot if a quote is missing. The Card
-values switch affects revealed card estimates, not purchase prices or money.
-
-| Pack | TCGplayer product | Initial market estimate, October 25, 2026 |
-| --- | --- | --- |
-| Base Set, revised unlimited | 138130 | $916.46 |
-| Jungle, unlimited | 138129 | $330.45 |
-| Fossil, unlimited | 138134 | $340.31 |
-| Team Rocket, unlimited | 138135 | $328.26 |
-| Gym Heroes, unlimited | 138138 | $269.72 |
-| Gym Challenge, unlimited | 138139 | $419.99 |
-
-These are cached market estimates for vintage sealed packs, not the original
-retail price, a certified weight, a first edition price, or a live seller offer.
-
-## Artwork and source refresh
-
-The initial snapshot has 574 quotes for 575 cards. No browser requests are made
-to TCGCSV. The maintenance script follows its documented daily cache pattern:
+Refresh source data with:
 
 ```sh
 python3 scripts/update_opener_data.py
 ```
 
-The script checks the provider build timestamp, caches the raw responses in
+The script checks the provider timestamp, caches daily responses in
 `.cache/card-opener/`, and writes `src/data/openerCards.json` and
-`src/data/openerPrices.json`. It also downloads original booster photographs
-to `public/boosterpacks/`. The card art uses the same existing image host as the
-game. The shop interior and transparent shopkeeper are generated illustrations;
-their saved paths, provenance, and exact prompts are in
-[CARD_SHOP_ARTWORK.md](CARD_SHOP_ARTWORK.md).
-
-The card back uses the image supplied by the user, a recreation of the classic
-Pokémon TCG back by [Jasowke](https://www.deviantart.com/jasowke), titled
-“Pokemon TCG Card Back 4k high res remake.” It is stored unchanged at
-`public/card-opener/card-back.jpg` and shared by row cards, the top stack card,
-and the cards underneath. Serving it locally avoids depending on a signed
-external image URL.
+`src/data/openerPrices.json`. It refuses to replace the snapshot if a pack quote
+is missing or card price coverage is too low. The browser never fetches TCGCSV.
+Original pack photos remain in `public/boosterpacks/`; card scans use the existing
+host. The user supplied back remains at `public/card-opener/card-back.jpg`, a
+recreation by [Jasowke](https://www.deviantart.com/jasowke).
 
 Provider documentation: https://tcgcsv.com/docs
-
-Reference rhythm: https://www.youtube.com/shorts/zYArzGD83WM
 
 ## Verification
 
@@ -146,17 +132,13 @@ npm run test:ui:opener
 npm run build
 ```
 
-The UI check uses installed Chrome through Playwright. Run Vite on port 5199
-first, or set `OPENER_URL` to a local or deployed URL. Screenshots are saved to
-`.cache/card-opener-ui/`; `OPENER_SHOTS` can override the folder.
-
-Coverage includes the image frames and overlapping badges, confirmation and
-delivery animation, sourced prices, persistent balances, purchases below zero,
-single charges, recovery of paid packs, shop preferences, minimal popup focus
-and background isolation, mouse and touch tearing, disappearing guides, all
-eleven cards emerging in both modes, keyboard opening, independent flips,
-sequential stack reveals, inspection, gallery search/filtering/sorting, clear
-confirmation, and proof that the Story Mode profile is unchanged.
+The browser check uses installed Chrome through Playwright. Start Vite on port
+5199 or set `OPENER_URL` to a local or deployed URL. `OPENER_SHOTS` overrides
+`.cache/card-opener-ui/` for screenshots. Coverage includes the cabinet and badge,
+starting grant migration, purchases below zero, paid pack recovery, mouse and
+touch tearing, both reveal modes, big hit effects, View/Sell, individual and
+confirmed bulk sales, duplicate sale prevention, sale recovery, filters,
+inspection, clearing, keyboard controls, and Story Mode profile isolation.
 
 ## Production release
 

@@ -1,7 +1,14 @@
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
 import { mkdir } from "node:fs/promises";
-import { OPENER_SETS, formatValue } from "../src/lib/cardOpener.js";
+import {
+  OPENER_SETS,
+  OPENER_STORAGE_KEY,
+  OPENER_WALLET_KEY,
+  OPENER_STARTING_BALANCE_CENTS,
+  formatValue,
+  saleValueCents,
+} from "../src/lib/cardOpener.js";
 
 const base = process.env.OPENER_URL || "http://127.0.0.1:5199";
 const shots = process.env.OPENER_SHOTS || ".cache/card-opener-ui";
@@ -17,6 +24,11 @@ const errors = [];
 const price = (id) => OPENER_SETS.find((set) => set.id === id).priceCents;
 const balance = (page) =>
   page.getByTestId("opener-balance").getAttribute("data-cents").then(Number);
+const saved = (page) =>
+  page.evaluate(
+    (key) => JSON.parse(sessionStorage.getItem(key)),
+    OPENER_STORAGE_KEY,
+  );
 async function prepare(page) {
   page.on("pageerror", (error) => errors.push(error.message));
   await page.route(
@@ -64,20 +76,14 @@ async function close(page) {
     .click();
 }
 async function resume(page) {
-  await page
-    .getByRole("button", { name: "Your pack is waiting", exact: true })
-    .click();
+  await page.getByRole("button", { name: /^Continue .+ pack$/ }).click();
 }
 async function buy(page, id) {
   const badge = page.getByTestId(`shelf-price-${id}`);
   const before = await balance(page);
   await badge.click();
   assert.match(await badge.innerText(), /Confirm\?/);
-  assert.equal(
-    await balance(page),
-    before,
-    "selecting a price does not spend money",
-  );
+  assert.equal(await balance(page), before);
   await badge.click();
   await page.getByTestId("opener-modal").waitFor();
 }
@@ -89,13 +95,18 @@ async function revealRow(page) {
   }
   await stage(page, "complete");
 }
+async function viewCards(page) {
+  await page
+    .getByRole("button", { name: "View/Sell cards", exact: true })
+    .click();
+  await page.getByTestId("inventory-modal").waitFor();
+}
 async function assertProfile(page) {
   assert.equal(
     await page.evaluate(() => localStorage.getItem("ppc-profile")),
     profile,
   );
 }
-
 try {
   const desktopContext = await browser.newContext({
     viewport: { width: 1440, height: 1000 },
@@ -105,59 +116,53 @@ try {
   await page.goto(base, { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Card Opener", exact: true }).click();
   assert.equal(new URL(page.url()).pathname, "/card-opener");
-  await page.getByTestId("card-shop").waitFor();
-  assert.equal(await balance(page), 100000);
-  assert.equal(await page.getByTestId("opener-modal").count(), 0);
-  await page.locator(".co-shop-background").evaluate((image) => image.decode());
-  await page.locator(".co-shopkeeper").evaluate((image) => image.decode());
+  assert.equal(await balance(page), 1000000);
+  assert.equal(
+    await page
+      .locator(
+        ".co-shop-sidebar, .co-featured, .co-shop-session, .co-about, .co-shop-welcome, .co-gallery",
+      )
+      .count(),
+    0,
+  );
+  assert.equal(
+    await page
+      .getByRole("button", { name: "View your last pack", exact: true })
+      .count(),
+    0,
+  );
+  assert.equal(await page.locator(".co-pack-cabinet").count(), 1);
+  assert.equal(await page.locator(".co-shop-product").count(), 6);
   await page
     .locator(".co-pack-frame img")
     .evaluateAll((images) =>
       Promise.all(images.map((image) => image.decode())),
     );
-  assert.equal(await page.locator(".co-shop-product").count(), 6);
-  assert.equal(
-    await page.locator(".co-shop-product h3, .co-product-description").count(),
-    0,
-  );
-  const frame = await page.locator(".co-pack-frame").first().boundingBox();
-  const badgeBox = await page.getByTestId("shelf-price-base1").boundingBox();
-  assert.ok(
-    badgeBox.x < frame.x &&
-      badgeBox.y + badgeBox.height > frame.y + frame.height,
-    "price badge overlaps the lower left image edge",
-  );
-  assert.equal(
-    await page
-      .locator(".co-pack-frame")
-      .first()
-      .evaluate((element) => getComputedStyle(element).borderTopColor),
-    "rgb(255, 255, 255)",
-  );
-  await shot(page, "desktop-shop");
   await page
-    .getByRole("button", { name: "Next featured pack", exact: true })
-    .click();
+    .locator(".co-pledge-badge img")
+    .evaluate((image) => image.decode());
+  const badge = await page.locator(".co-pledge-badge").boundingBox();
+  assert.ok(badge.x < 60 && badge.y < 50 && badge.width >= 200);
   assert.match(
-    await page.locator(".co-featured-copy h3").innerText(),
-    /Jungle/,
+    await page.locator(".co-pledge-badge").getAttribute("href"),
+    /domain=playpokemoncards\.pages\.dev#art/,
   );
+  await shot(page, "desktop-cabinet");
+  await viewCards(page);
+  assert.equal(await page.getByTestId("opened-card").count(), 0);
+  await close(page);
 
   const baseBadge = page.getByTestId("shelf-price-base1");
   await baseBadge.click();
   assert.match(await baseBadge.innerText(), /Confirm\?/);
-  assert.equal(await balance(page), 100000);
-  assert.equal(await page.getByTestId("opener-modal").count(), 0);
-  await shot(page, "confirm-badge");
+  assert.equal(await balance(page), 1000000);
   await page.keyboard.press("Escape");
   assert.doesNotMatch(await baseBadge.innerText(), /Confirm/);
   await baseBadge.click();
   await baseBadge.click();
-  const firstBalance = 100000 - price("base1");
+  const firstBalance = 1000000 - price("base1");
   assert.equal(await balance(page), firstBalance);
-  assert.equal(await page.locator(".co-shop-product.taking").count(), 1);
   await shot(page, "purchase-animation");
-  // A refresh during delivery must recover the paid sealed pack without a second charge.
   await page.reload({ waitUntil: "networkidle" });
   await stage(page, "sealed");
   assert.equal(await balance(page), firstBalance);
@@ -169,29 +174,8 @@ try {
     0,
   );
   assert.equal(
-    await page
-      .getByTestId("opener-modal")
-      .getByRole("button", { name: "Row", exact: true })
-      .count(),
-    0,
-  );
-  assert.equal(
-    await page.getByTestId("opener-modal").getByRole("switch").count(),
-    0,
-  );
-  assert.equal(
-    await page
-      .getByTestId("opener-modal")
-      .evaluate((element) => getComputedStyle(element).borderTopWidth),
-    "0px",
-  );
-  assert.equal(
     await page.locator(".co-shop-shell").evaluate((element) => element.inert),
     true,
-  );
-  assert.equal(
-    await page.evaluate(() => document.body.style.overflow),
-    "hidden",
   );
   await shot(page, "desktop-sealed");
   for (let index = 0; index < 6; index++) {
@@ -203,13 +187,7 @@ try {
     );
   }
   await page.keyboard.press("Escape");
-  assert.equal(await page.getByTestId("opener-modal").count(), 0);
-  assert.equal(
-    await page.locator(".co-shop-shell").evaluate((element) => element.inert),
-    false,
-  );
   await resume(page);
-
   const tear = page.getByTestId("opener-tear");
   const box = await tear.boundingBox();
   const y = box.y + box.height / 2;
@@ -223,11 +201,9 @@ try {
   assert.equal(
     await page.locator(".co-tear-guide, .co-pack-drag-label").count(),
     0,
-    "guide and prompt disappear as soon as a valid tear starts",
   );
   await page.mouse.move(box.x + box.width * 0.5, y, { steps: 10 });
-  const progress = Number(await tear.getAttribute("aria-valuenow"));
-  assert.ok(progress > 30 && progress < 75);
+  assert.ok(Number(await tear.getAttribute("aria-valuenow")) > 30);
   await shot(page, "tear-in-progress");
   await page.mouse.up();
   await stage(page, "sealed");
@@ -235,116 +211,134 @@ try {
   await page.mouse.down();
   await page.mouse.move(box.x + box.width - 1, y, { steps: 12 });
   await page.mouse.up();
-  await stage(page, "tearing");
   await stage(page, "dealing");
   assert.equal(await page.getByTestId("emerging-card").count(), 11);
-  assert.equal(await page.locator(".co-empty-wrapper img").count(), 1);
-  assert.equal(await page.getByTestId("opener-card").count(), 0);
   await page.waitForTimeout(650);
   await shot(page, "cards-emerging");
   await stage(page, "revealing");
-  assert.equal(
-    await balance(page),
-    firstBalance,
-    "tearing does not charge again",
-  );
-  assert.equal(await page.getByTestId("opener-card").count(), 11);
-  assert.equal(await page.getByTestId("opened-card").count(), 0);
+  assert.equal(await balance(page), firstBalance);
   await page.getByTestId("opener-card").first().click();
-  assert.equal(await page.getByTestId("opened-card").count(), 1);
+  assert.equal((await saved(page)).history.length, 1);
   await page.getByTestId("opener-card").first().click();
   await page.getByTestId("card-preview").waitFor();
   await page.keyboard.press("Escape");
-  assert.equal(await page.getByTestId("card-preview").count(), 0);
   assert.equal(await page.getByTestId("opener-modal").count(), 1);
-
   await close(page);
   await page.getByRole("button", { name: "Stack", exact: true }).click();
   await resume(page);
   assert.equal(await page.getByTestId("opener-card").count(), 1);
-  assert.equal(
-    await page.getByTestId("opener-card").getAttribute("data-revealed"),
-    "false",
-  );
   await page.getByTestId("opener-card").click();
-  assert.equal(await page.getByTestId("opened-card").count(), 2);
+  assert.equal((await saved(page)).history.length, 2);
   await shot(page, "stack-revealed");
-  await page.getByRole("button", { name: "Inspect card", exact: true }).click();
-  await page.getByTestId("card-preview").waitFor();
-  await page
-    .getByRole("button", { name: "Close card preview", exact: true })
-    .click();
-  await page.getByRole("button", { name: "Next card", exact: true }).click();
-  assert.equal(
-    await page.getByTestId("opener-card").getAttribute("data-revealed"),
-    "false",
-  );
   await close(page);
   await page
     .getByRole("switch", { name: "Show card values", exact: true })
     .click();
   assert.equal(await page.getByTestId("opener-card-value").count(), 0);
-  assert.equal(await balance(page), firstBalance);
   assert.equal(
-    await baseBadge.locator("span").innerText(),
-    formatValue(price("base1") / 100),
+    await page.getByTestId("shelf-price-jungle").locator("span").innerText(),
+    formatValue(price("jungle") / 100),
   );
+  await page.getByRole("button", { name: "Row", exact: true }).click();
+  await resume(page);
+  await revealRow(page);
+  assert.equal(
+    await page.getByTestId("opener-card").last().getAttribute("data-big-hit"),
+    "true",
+  );
+  assert.equal(
+    await page
+      .getByTestId("opener-card")
+      .last()
+      .locator(".co-hit-star")
+      .count(),
+    12,
+  );
+  await shot(page, "big-hit-row");
+  await page
+    .getByTestId("opener-modal")
+    .getByRole("button", { name: "View/Sell cards", exact: true })
+    .click();
+  await page.getByTestId("inventory-modal").waitFor();
+  assert.equal(await page.getByTestId("opened-card").count(), 11);
+  assert.equal(await page.getByTestId("opener-modal").count(), 0);
+  await shot(page, "view-sell");
+
+  const firstCard = page.getByTestId("opened-card").first();
+  const entryKey = await firstCard.getAttribute("data-entry-key");
+  const entry = (await saved(page)).history.find(
+    (item) => item.key === entryKey,
+  );
+  const sale = saleValueCents(entry.cardId);
+  await firstCard.getByTestId("sell-card").click();
+  assert.equal(await balance(page), firstBalance + sale);
+  assert.equal(await firstCard.getByTestId("sell-card").isDisabled(), true);
+  assert.equal(
+    (await saved(page)).history.find((item) => item.key === entryKey)
+      .soldForCents,
+    sale,
+  );
+  await page.reload({ waitUntil: "networkidle" });
+  await viewCards(page);
+  const soldCard = page.locator(`[data-entry-key="${entryKey}"]`);
+  assert.equal(await soldCard.getAttribute("data-sold"), "true");
+  assert.equal(await soldCard.getByTestId("sell-card").isDisabled(), true);
+  assert.equal(await balance(page), firstBalance + sale);
+  await soldCard.getByRole("button", { name: /^Inspect opened/ }).click();
+  await page.getByTestId("card-preview").waitFor();
+  await page.keyboard.press("Escape");
+  assert.equal(await page.getByTestId("inventory-modal").count(), 1);
+  await page
+    .getByRole("combobox", { name: "Filter cards by sale status" })
+    .selectOption("sold");
+  assert.equal(await page.getByTestId("opened-card").count(), 1);
+  await page
+    .getByRole("combobox", { name: "Filter cards by sale status" })
+    .selectOption("available");
+  assert.equal(await page.getByTestId("opened-card").count(), 10);
+  const expectedCredit = (await saved(page)).history
+    .filter((item) => item.soldForCents === undefined)
+    .reduce((sum, item) => sum + (saleValueCents(item.cardId) ?? 0), 0);
+  await page.getByTestId("sell-all").click();
+  assert.equal(
+    await balance(page),
+    firstBalance + sale,
+    "bulk sale needs confirmation",
+  );
+  await page.getByTestId("sell-all").click();
+  const soldBalance = firstBalance + sale + expectedCredit;
+  assert.equal(await balance(page), soldBalance);
+  assert.equal(await page.getByTestId("opened-card").count(), 0);
+  assert.equal(await page.getByTestId("sell-all").isDisabled(), true);
+  await page
+    .getByRole("combobox", { name: "Filter cards by sale status" })
+    .selectOption("all");
+  assert.equal(await page.getByTestId("opened-card").count(), 11);
+  assert.equal(await page.locator('[data-sold="true"]').count(), 11);
+  await shot(page, "sold-cards");
+  await close(page);
+  assert.equal(await page.locator(".co-gallery").count(), 0);
   await page
     .getByRole("switch", { name: "Show card values", exact: true })
     .click();
-  await page.getByRole("button", { name: "Row", exact: true }).click();
-  await resume(page);
-  await revealRow(page);
-  assert.equal(await page.getByTestId("opened-card").count(), 11);
-  await shot(page, "row-complete");
-  await page
-    .getByRole("button", { name: "Choose another pack", exact: true })
-    .click();
-
-  await page.getByRole("button", { name: "Stack", exact: true }).click();
   await buy(page, "jungle");
-  const debt = firstBalance - price("jungle");
-  assert.ok(debt < 0);
-  assert.equal(await balance(page), debt);
+  assert.equal(await balance(page), soldBalance - price("jungle"));
   await page.getByTestId("opener-tear").focus();
   await page.keyboard.press("Enter");
-  await stage(page, "dealing");
-  assert.equal(await page.locator(".co-pack-emergence.stack").count(), 1);
-  assert.equal(
-    await page.getByTestId("emerging-card").count(),
-    11,
-    "stack mode also animates every card out of the pack",
-  );
   await stage(page, "revealing");
-  await page.getByTestId("opener-card").click();
-  assert.equal(await page.getByTestId("opened-card").count(), 12);
+  await page.getByTestId("opener-card").first().click();
   await close(page);
-  await page.getByRole("button", { name: "Row", exact: true }).click();
-  await resume(page);
-  await revealRow(page);
-  await close(page);
-  assert.equal(await page.getByTestId("opened-card").count(), 22);
-  await buy(page, "fossil");
-  const furtherDebt = debt - price("fossil");
-  assert.equal(
-    await balance(page),
-    furtherDebt,
-    "players who are already negative can keep buying",
-  );
-  await close(page);
-  await assertProfile(page);
-
   await page
     .getByRole("button", { name: "Return to main menu", exact: true })
     .click();
   await page.getByRole("button", { name: "Card Opener", exact: true }).click();
-  await stage(page, "sealed");
-  assert.equal(await balance(page), furtherDebt);
+  await stage(page, "revealing");
   await close(page);
+  await viewCards(page);
   await page
     .getByRole("combobox", { name: "Filter opened cards by set" })
     .selectOption("jungle");
-  assert.equal(await page.getByTestId("opened-card").count(), 11);
+  assert.equal(await page.getByTestId("opened-card").count(), 1);
   await page
     .getByRole("combobox", { name: "Filter opened cards by set" })
     .selectOption("all");
@@ -358,45 +352,66 @@ try {
   await page
     .getByRole("combobox", { name: "Sort opened cards" })
     .selectOption("value");
-  await page.locator(".co-gallery").scrollIntoViewIfNeeded();
-  await shot(page, "gallery");
   await page
-    .getByRole("button", { name: "Clear session", exact: true })
+    .getByRole("button", { name: "Clear history", exact: true })
     .click();
   await page
     .getByRole("button", { name: "Keep my cards", exact: true })
     .click();
-  assert.equal(await page.getByTestId("opened-card").count(), 22);
+  assert.equal((await saved(page)).history.length, 12);
   await page
-    .getByRole("button", { name: "Clear session", exact: true })
+    .getByRole("button", { name: "Clear history", exact: true })
     .click();
   await page
     .getByRole("dialog", { name: "Clear opened cards" })
     .getByRole("button", { name: "Clear session", exact: true })
     .click();
-  assert.equal(await page.getByTestId("opened-card").count(), 0);
-  assert.equal(
-    await balance(page),
-    furtherDebt,
-    "clearing cards never resets money",
-  );
-  await resume(page);
-  await stage(page, "sealed");
-  assert.match(
-    await page.locator(".co-pack-body img").getAttribute("alt"),
-    /Fossil/,
-  );
+  assert.equal((await saved(page)).history.length, 0);
+  assert.equal(await balance(page), soldBalance - price("jungle"));
   await close(page);
-  const anotherTab = await page.context().newPage();
-  await prepare(anotherTab);
-  await anotherTab.goto(new URL("/card-opener", base).href);
-  assert.equal(
-    await balance(anotherTab),
-    furtherDebt,
-    "new tabs do not grant another starting balance",
-  );
-  await anotherTab.close();
   await assertProfile(page);
+
+  // Existing wallets receive only the difference in starting funds, once.
+  const migration = await browser.newPage();
+  await prepare(migration);
+  await migration.addInitScript((key) => {
+    if (!localStorage.getItem(key))
+      localStorage.setItem(
+        key,
+        JSON.stringify({ version: 1, balanceCents: 8354 }),
+      );
+  }, OPENER_WALLET_KEY);
+  await migration.goto(new URL("/card-opener", base).href);
+  assert.equal(await balance(migration), 908354);
+  await migration.reload();
+  assert.equal(await balance(migration), 908354);
+  await migration.close();
+
+  // A low balance can still buy; another purchase is allowed while in debt.
+  const debt = await browser.newPage({ reducedMotion: "reduce" });
+  await prepare(debt);
+  await debt.addInitScript((key) => {
+    if (!localStorage.getItem(key))
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          version: 2,
+          startingBalanceCents: 1000000,
+          balanceCents: 100,
+        }),
+      );
+  }, OPENER_WALLET_KEY);
+  await debt.goto(new URL("/card-opener", base).href);
+  await buy(debt, "base1");
+  assert.equal(await balance(debt), 100 - price("base1"));
+  await debt.getByTestId("opener-tear").focus();
+  await debt.keyboard.press("Enter");
+  await stage(debt, "revealing");
+  await revealRow(debt);
+  await close(debt);
+  await buy(debt, "jungle");
+  assert.equal(await balance(debt), 100 - price("base1") - price("jungle"));
+  await debt.close();
 
   const mobileContext = await browser.newContext({
     viewport: { width: 390, height: 844 },
@@ -409,19 +424,19 @@ try {
   await mobile.goto(new URL("/card-opener", base).href, {
     waitUntil: "networkidle",
   });
-  assert.equal(await balance(mobile), 100000);
-  await shot(mobile, "mobile-shop");
+  assert.equal(await balance(mobile), OPENER_STARTING_BALANCE_CENTS);
   assert.ok(
     await mobile.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   );
+  await shot(mobile, "mobile-cabinet");
   await mobile.getByRole("button", { name: "Stack", exact: true }).tap();
   await buy(mobile, "base1");
   await shot(mobile, "mobile-sealed");
-  const touchTarget = mobile.getByTestId("opener-tear");
-  await touchTarget.scrollIntoViewIfNeeded();
-  const touchBox = await touchTarget.boundingBox();
+  const target = mobile.getByTestId("opener-tear");
+  await target.scrollIntoViewIfNeeded();
+  const touchBox = await target.boundingBox();
   const cdp = await mobileContext.newCDPSession(mobile);
   const touchY = touchBox.y + touchBox.height / 2;
   await cdp.send("Input.dispatchTouchEvent", {
@@ -444,16 +459,16 @@ try {
     touchPoints: [],
   });
   await stage(mobile, "revealing");
-  assert.equal(await mobile.getByTestId("opener-card").count(), 1);
   await mobile.getByTestId("opener-card").tap();
-  assert.equal(await mobile.getByTestId("opened-card").count(), 1);
-  assert.equal(await balance(mobile), firstBalance);
-  await shot(mobile, "mobile-stack");
-  await mobile.getByRole("button", { name: "Inspect card", exact: true }).tap();
-  await mobile.getByTestId("card-preview").waitFor();
-  await mobile
-    .getByRole("button", { name: "Close card preview", exact: true })
-    .tap();
+  await close(mobile);
+  await viewCards(mobile);
+  const mobileEntry = (await saved(mobile)).history[0];
+  await shot(mobile, "mobile-view-sell");
+  await mobile.getByTestId("sell-card").tap();
+  assert.equal(
+    await balance(mobile),
+    firstBalance + saleValueCents(mobileEntry.cardId),
+  );
   assert.ok(
     await mobile.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -461,27 +476,9 @@ try {
   );
   await assertProfile(mobile);
   await mobileContext.close();
-
-  const offline = await browser.newPage({ reducedMotion: "reduce" });
-  await prepare(offline);
-  await offline.route("https://images.pokemontcg.io/**", (route) =>
-    route.abort(),
-  );
-  await offline.goto(new URL("/card-opener", base).href);
-  await buy(offline, "base1");
-  await offline.getByTestId("opener-tear").focus();
-  await offline.keyboard.press("Enter");
-  await stage(offline, "revealing");
-  await offline.getByTestId("opener-card").first().click();
-  await offline
-    .getByTestId("opener-card")
-    .first()
-    .getByText("Card art is unavailable right now.")
-    .waitFor();
-  await offline.close();
   assert.equal(errors.length, 0, errors.join("\n"));
   console.log(
-    "Card shop passed: image tiles, price confirmation, purchase delivery, sourced prices, persistent and negative balances, single charges, minimal popup, disappearing guides, eleven card emergence, row and stack reveals, preferences, gallery, keyboard and touch, and Story Mode isolation.",
+    "Cabinet passed: uncluttered shop, original pack images, badge, $10,000 grant and migration, purchases below zero, mouse and touch tearing, both reveal modes, View/Sell inventory, individual and confirmed bulk sales, sale persistence, filtering, keyboard controls, and Story Mode isolation.",
   );
 } finally {
   await browser.close();

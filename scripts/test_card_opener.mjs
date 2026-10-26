@@ -17,6 +17,7 @@ import {
   restoreOpenerSession,
   rollOpenerPack,
   saveOpenerSession,
+  saleValueCents,
 } from "../src/lib/cardOpener.js";
 
 function rng(seed) {
@@ -264,7 +265,7 @@ test("new players start with simulated money and confirmed purchases can take it
   const jungle = OPENER_SETS.find((set) => set.id === "jungle");
   let state = initialOpenerSession();
   assert.equal(state.balanceCents, OPENER_STARTING_BALANCE_CENTS);
-  assert.equal(state.balanceCents, 100000);
+  assert.equal(state.balanceCents, 1000000);
   const unpurchased = openerReducer(state, {
     type: "open",
     ids: rollOpenerPack("base1"),
@@ -278,7 +279,7 @@ test("new players start with simulated money and confirmed purchases can take it
   });
   assert.equal(
     state.balanceCents,
-    100000 - base.priceCents,
+    1000000 - base.priceCents,
     "the cached price controls the charge",
   );
   assert.equal(
@@ -289,6 +290,7 @@ test("new players start with simulated money and confirmed purchases can take it
   state = open(state);
   for (let i = 0; i < 11; i++)
     state = openerReducer(state, { type: "reveal", index: i });
+  state = { ...state, balanceCents: 1 };
   const balance = state.balanceCents;
   state = openerReducer(state, { type: "purchase", id: "jungle" });
   assert.equal(state.balanceCents, balance - jungle.priceCents);
@@ -356,13 +358,115 @@ test("closing or clearing a session cannot refill the wallet or charge a reserve
       OPENER_WALLET_KEY,
       JSON.stringify({ version: 1, balanceCents: -12345 }),
     );
-    assert.equal(loadOpenerSession().balanceCents, -12345);
+    assert.equal(loadOpenerSession().balanceCents, 887655);
     storage.set(OPENER_WALLET_KEY, "broken");
-    assert.equal(loadOpenerSession().balanceCents, 100000);
+    assert.equal(loadOpenerSession().balanceCents, 1000000);
   } finally {
     if (oldLocal === undefined) delete globalThis.localStorage;
     else globalThis.localStorage = oldLocal;
     if (oldSession === undefined) delete globalThis.sessionStorage;
     else globalThis.sessionStorage = oldSession;
   }
+});
+
+test("older $1,000 wallets receive the $9,000 increase only once and preserve spending", () => {
+  const storage = new Map([
+    [OPENER_WALLET_KEY, JSON.stringify({ version: 1, balanceCents: 8354 })],
+  ]);
+  const sessions = new Map();
+  const previousLocal = globalThis.localStorage;
+  const previousSession = globalThis.sessionStorage;
+  globalThis.localStorage = {
+    getItem: (key) => storage.get(key) ?? null,
+    setItem: (key, value) => storage.set(key, value),
+  };
+  globalThis.sessionStorage = {
+    getItem: (key) => sessions.get(key) ?? null,
+    setItem: (key, value) => sessions.set(key, value),
+  };
+  try {
+    const migrated = loadOpenerSession();
+    assert.equal(migrated.balanceCents, 908354);
+    saveOpenerSession(migrated);
+    assert.equal(JSON.parse(storage.get(OPENER_WALLET_KEY)).version, 2);
+    assert.equal(loadOpenerSession().balanceCents, 908354);
+    sessions.clear();
+    assert.equal(loadOpenerSession().balanceCents, 908354);
+    const legacy = { ...initialOpenerSession(), balanceCents: -12345 };
+    delete legacy.startingBalanceCents;
+    assert.equal(
+      restoreOpenerSession(JSON.stringify(legacy)).balanceCents,
+      887655,
+    );
+  } finally {
+    if (previousLocal === undefined) delete globalThis.localStorage;
+    else globalThis.localStorage = previousLocal;
+    if (previousSession === undefined) delete globalThis.sessionStorage;
+    else globalThis.sessionStorage = previousSession;
+  }
+});
+
+test("individual sales credit each revealed copy once without changing the pack", () => {
+  let state = open();
+  assert.equal(
+    openerReducer(state, { type: "sell", key: "1:0" }),
+    state,
+    "hidden cards cannot be sold",
+  );
+  state = openerReducer(state, { type: "reveal", index: 0 });
+  const entry = state.history[0];
+  const before = state.balanceCents;
+  const pack = state.pack;
+  state = openerReducer(state, { type: "sell", key: entry.key });
+  assert.equal(state.balanceCents, before + saleValueCents(entry.cardId));
+  assert.equal(state.history[0].soldForCents, saleValueCents(entry.cardId));
+  assert.deepEqual(state.pack, pack);
+  assert.equal(openerReducer(state, { type: "sell", key: entry.key }), state);
+  const restored = restoreOpenerSession(JSON.stringify(state));
+  assert.equal(restored.history[0].soldForCents, state.history[0].soldForCents);
+  assert.equal(
+    openerReducer(restored, { type: "sell", key: entry.key }),
+    restored,
+  );
+});
+
+test("bulk sales use the requested copies and skip sold cards or unavailable quotes", () => {
+  let state = open();
+  for (let index = 0; index < 11; index++)
+    state = openerReducer(state, { type: "reveal", index });
+  const before = state.balanceCents;
+  const selected = state.history.slice(0, 3);
+  const amount = selected.reduce(
+    (sum, entry) => sum + saleValueCents(entry.cardId),
+    0,
+  );
+  state = openerReducer(state, {
+    type: "sell_all",
+    keys: selected.map((entry) => entry.key),
+  });
+  assert.equal(state.balanceCents, before + amount);
+  assert.equal(
+    state.history.filter((entry) => entry.soldForCents !== undefined).length,
+    3,
+  );
+  const after = state.balanceCents;
+  const remaining = state.history.filter(
+    (entry) => entry.soldForCents === undefined,
+  );
+  state = openerReducer(state, { type: "sell_all" });
+  assert.equal(
+    state.balanceCents,
+    after +
+      remaining.reduce((sum, entry) => sum + saleValueCents(entry.cardId), 0),
+  );
+  assert.equal(openerReducer(state, { type: "sell_all" }), state);
+  const missing = OPENER_CARDS.find((card) => saleValueCents(card.id) === null);
+  const unavailable = {
+    ...initialOpenerSession(),
+    history: [{ key: "1:0", packNumber: 1, cardId: missing.id }],
+  };
+  assert.equal(
+    openerReducer(unavailable, { type: "sell", key: "1:0" }),
+    unavailable,
+  );
 });
