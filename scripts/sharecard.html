@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800;900&display=swap" />
+    <title>Play Pokémon Cards sharing image</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+      body { color: #f5f6ed; background: #12151c; font-family: 'M PLUS Rounded 1c', sans-serif; }
+      .canvas { width: 1200px; height: 630px; position: relative; overflow: hidden; background: radial-gradient(ellipse at 82% 41%, #22394c 0, #151e29 34%, #12151c 67%); }
+      .frame { position: absolute; inset: 22px; border: 1px solid #9fb8d319; border-radius: 20px; }
+      .orbit { width: 550px; height: 550px; position: absolute; right: -50px; top: 15px; border: 1px solid #ccdeed12; border-radius: 50%; }
+      .orbit::before { content: ''; position: absolute; inset: 55px; border: 1px solid #ccdeed12; border-radius: 50%; }
+      .brand { position: absolute; top: 54px; left: 56px; display: flex; align-items: center; gap: 13px; font-size: 19px; font-weight: 900; letter-spacing: .2px; }
+      .brand img { width: 31px; height: 31px; }
+      .brand em { font-style: normal; color: #f86a54; }
+      .eyebrow { position: absolute; top: 139px; left: 56px; color: #e9c36f; font-size: 11px; letter-spacing: 2.3px; font-weight: 800; }
+      h1 { position: absolute; top: 163px; left: 53px; margin: 0; width: 580px; font-size: 57px; letter-spacing: -2.9px; font-weight: 900; line-height: 1.16; }
+      h1 span { color: #f1cc7b; }
+      .description { position: absolute; left: 57px; top: 325px; width: 495px; font-size: 19px; font-weight: 500; color: #b9c3ce; line-height: 1.7; margin: 0; }
+      .features { position: absolute; left: 56px; top: 429px; display: flex; gap: 19px; color: #e1e6eb; font-size: 13px; font-weight: 700; }
+      .features span { display: flex; align-items: center; gap: 7px; }
+      .features i { width: 5px; height: 5px; border-radius: 50%; background: #f1cc7b; }
+      .footer { position: absolute; left: 56px; right: 56px; bottom: 51px; border-top: 1px solid #b2c0d51c; padding-top: 22px; display: flex; align-items: center; justify-content: space-between; }
+      .footer strong { font-size: 14px; font-weight: 700; color: #b4c1cf; }
+      .footer span { font-size: 12px; color: #72889b; }
+      .cards { position: absolute; inset: 0; pointer-events: none; }
+      .card { position: absolute; width: 220px; border-radius: 11px; filter: drop-shadow(0 16px 16px #0009); }
+      .blastoise { left: 664px; top: 153px; transform: rotate(-17deg); }
+      .venusaur { left: 931px; top: 147px; transform: rotate(17deg); }
+      .charizard { width: 243px; left: 800px; top: 119px; transform: rotate(2deg); z-index: 2; }
+      .spark { position: absolute; background: #f7d592; width: 5px; height: 5px; transform: rotate(45deg); box-shadow: 0 0 15px #eeb76166; }
+      .spark.one { left: 748px; top: 89px; }
+      .spark.two { right: 60px; top: 482px; width: 8px; height: 8px; }
+      .spark.three { left: 647px; top: 450px; width: 3px; height: 3px; }
+    </style>
+  </head>
+  <body>
+    <main class="canvas">
+      <div class="frame"></div><div class="orbit"></div>
+      <div class="brand"><img src="../public/pokeball.svg" alt="" /><div>Play<em>Pokemon</em>Cards</div></div>
+      <div class="eyebrow">YOUR CLASSIC POKÉMON TCG ADVENTURE</div>
+      <h1>Your classic cards.<br /><span>Your next adventure.</span></h1>
+      <p class="description">Play all 530 cards from Base Set through Gym Challenge. Right in your browser.</p>
+      <div class="features"><span><i></i>AI battles</span><span><i></i>Story campaigns</span><span><i></i>Custom decks</span></div>
+      <div class="cards"><img class="card blastoise" src="shareassets/blastoise.png" alt="Blastoise card" /><img class="card venusaur" src="shareassets/venusaur.png" alt="Venusaur card" /><img class="card charizard" src="shareassets/charizard.png" alt="Charizard card" /></div>
+      <div class="spark one"></div><div class="spark two"></div><div class="spark three"></div>
+      <div class="footer"><strong>playpokemoncards.pages.dev</strong><span>No download. Just shuffle.</span></div>
+    </main>
+  </body>
+</html>
