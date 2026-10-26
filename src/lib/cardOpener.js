@@ -214,6 +214,15 @@ export function saveOpenerSession(session) {
 }
 
 export function openerReducer(state, action) {
+  if (action.type === "prepare") {
+    if (!["sealed", "complete"].includes(state.stage)) return state;
+    return {
+      ...state,
+      setId: openerSet(action.id ?? state.setId).id,
+      stage: "sealed",
+      pack: null,
+    };
+  }
   if (action.type === "set")
     return { ...state, setId: openerSet(action.id).id };
   if (action.type === "prices")

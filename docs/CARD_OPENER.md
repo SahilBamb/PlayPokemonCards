@@ -10,9 +10,23 @@ session. Clear session has a confirmation dialog.
 
 ## Opening and viewing
 
-Base Set is selected initially. Jungle, Fossil, Team Rocket, Gym Heroes, and Gym
-Challenge are also available. A pack photograph tears across the top from left
-to right, its top strip detaches, and the hidden cards emerge.
+The entry screen is an illustrated card shop with an independent shopkeeper
+layer, a featured pack carousel, and six working product listings. Base Set,
+Jungle, Fossil, Team Rocket, Gym Heroes, and Gym Challenge are available. Taking
+a pack is free and brings a sealed pack to a popup over the dimmed shop.
+
+Drag a mouse or finger across the dotted guide from left to right. The glowing
+tear follows the gesture, and releasing early retains the current progress.
+Once the tear reaches the far edge, its top strip detaches and the hidden cards
+emerge. The guide also accepts the right arrow key, Enter, or Space; Open pack
+provides a button alternative. Pointer capture and touch action handling keep
+the tear working when the pointer leaves the line, without scrolling the page.
+
+The popup traps focus, makes the shop inert, and restores focus and scrolling
+when closed. Escape or Back to card shop closes it. Card inspection remains
+above the popup, and Escape dismisses inspection first. An unfinished opened
+pack can be resumed and cannot be replaced by another product. Choosing another
+pack after completion prepares a fresh sealed wrapper without clearing history.
 
 Row mode allows any card to be flipped independently. Clicking a revealed card
 opens the existing full size card viewer with its foil effects. Stack mode
@@ -61,7 +75,9 @@ The script checks the provider build timestamp, caches the raw responses in
 `.cache/card-opener/`, and writes `src/data/openerCards.json` and
 `src/data/openerPrices.json`. It also downloads original booster photographs
 to `public/boosterpacks/`. The card art uses the same existing image host as the
-game. No generated artwork is used.
+game. The shop interior and transparent shopkeeper are generated illustrations;
+their saved paths, provenance, and exact prompts are in
+[CARD_SHOP_ARTWORK.md](CARD_SHOP_ARTWORK.md).
 
 The card back uses the image supplied by the user, a recreation of the classic
 Pokémon TCG back by [Jasowke](https://www.deviantart.com/jasowke), titled
@@ -87,10 +103,11 @@ The UI check uses installed Chrome through Playwright. Run Vite on port 5199
 first, or set `OPENER_URL` to a local or deployed URL. Screenshots are saved to
 `.cache/card-opener-ui/`; `OPENER_SHOTS` can override the folder.
 
-Coverage includes the tear progression, independent row flips, sequential stack
-reveals, inspection, value visibility, set selection, session recovery, gallery
-search and filtering, clear confirmation, touch controls, and proof that the
-Story Mode profile is unchanged.
+Coverage includes the storefront and carousel, popup focus and background
+isolation, mouse and touch dragging, reverse and partial gestures, keyboard
+opening, independent row flips, sequential stack reveals, inspection, value
+visibility, set selection, session recovery, gallery search and filtering, clear
+confirmation, and proof that the Story Mode profile is unchanged.
 
 ## Production release
 

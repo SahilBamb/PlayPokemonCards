@@ -147,6 +147,26 @@ test("set selection changes the next pack without destroying the current pack", 
   assert.deepEqual(state.pack.ids, ids);
 });
 
+test("taking a shop pack prepares a sealed wrapper and cannot replace an unfinished pack", () => {
+  let state = openerReducer(initialOpenerSession(), {
+    type: "prepare",
+    id: "jungle",
+  });
+  assert.equal(state.setId, "jungle");
+  assert.equal(state.stage, "sealed");
+  assert.equal(state.packsOpened, 0);
+  state = open(state);
+  assert.equal(openerReducer(state, { type: "prepare", id: "fossil" }), state);
+  for (let index = 0; index < 11; index += 1)
+    state = openerReducer(state, { type: "reveal", index });
+  state = openerReducer(state, { type: "prepare", id: "fossil" });
+  assert.equal(state.pack, null);
+  assert.equal(state.stage, "sealed");
+  assert.equal(state.setId, "fossil");
+  assert.equal(state.history.length, 11);
+  assert.equal(state.packsOpened, 1);
+});
+
 test("completing a pack permits another pack while preserving session history", () => {
   let state = open();
   for (let index = 0; index < 11; index += 1)

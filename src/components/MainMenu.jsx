@@ -187,7 +187,6 @@ export function MainMenu({ onSandbox, onPlay, onEditor, onStory, onOpener }) {
           >
             Deck Editor
           </button>
-          <a className="art-pledge" href="https://honest-anti-ai-pledge.pages.dev/?domain=playpokemoncards.pages.dev#art" target="_blank" rel="noopener noreferrer"><img src="https://honest-anti-ai-pledge.pages.dev/badge/art.svg?domain=playpokemoncards.pages.dev&amp;theme=dark" alt="This website has taken the Honest Anti AI Art Pledge: playpokemoncards.pages.dev" width="400" height="88" style={{ maxWidth: '100%', height: 'auto', display: 'block' }} /></a>
         </div>
       ) : (
         <div className="w-[min(72rem,96vw)] h-[min(70vh,44rem)] flex bg-zinc-900/90 border-2 border-zinc-700 rounded-sm shadow-2xl backdrop-blur-sm overflow-hidden">

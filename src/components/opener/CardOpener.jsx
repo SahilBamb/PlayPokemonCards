@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  FaArrowLeft,
   FaArrowRight,
   FaBoxOpen,
   FaCheck,
@@ -11,9 +10,11 @@ import {
   FaLayerGroup,
   FaSearch,
   FaStar,
+  FaTimes,
+  FaHandPointer,
 } from "react-icons/fa";
 import { useCardPreview } from "../CardPreview.jsx";
-import { SettingsButton, useSettings } from "../Settings.jsx";
+import { useSettings } from "../Settings.jsx";
 import { playSfx } from "../../lib/sfx.js";
 import {
   OPENER_BY_ID,
@@ -26,7 +27,9 @@ import {
   quoteFor,
   rollOpenerPack,
 } from "../../lib/cardOpener.js";
+import { Shopfront } from "./Shopfront.jsx";
 import "./card-opener.css";
+import "./card-shop.css";
 
 function CardArt({ card, large = false }) {
   const [failed, setFailed] = useState(0);
@@ -143,13 +146,33 @@ function FlipCard({
 }
 
 function Pack({ set, tearing, onOpen, disabled }) {
+  const [progress, setProgress] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const drag = useRef(null);
   const imageStyle = { backgroundImage: `url("${set.image}")` };
+  const updateDrag = (event) => {
+    if (!drag.current || event.pointerId !== drag.current.pointerId) return;
+    const amount = Math.max(
+      drag.current.progress,
+      Math.min(1, (event.clientX - drag.current.left) / drag.current.width),
+    );
+    drag.current.progress = amount;
+    setProgress(amount);
+    if (amount >= 0.96) {
+      drag.current = null;
+      setDragging(false);
+      onOpen();
+    }
+  };
+  const stopDrag = () => {
+    drag.current = null;
+    setDragging(false);
+    // An interrupted gesture can be resumed from the torn edge.
+  };
   return (
-    <button
-      className={`co-pack ${tearing ? "tearing" : ""}`}
-      onClick={onOpen}
-      disabled={disabled}
-      aria-label={`Open ${set.name} booster pack`}
+    <div
+      className={`co-pack ${tearing ? "tearing" : ""} ${dragging ? "dragging" : ""} ${progress > 0 ? "partly-torn" : ""}`}
+      style={{ "--co-tear-progress": progress }}
       data-testid="opener-pack"
     >
       <span className="co-pack-glow" />
@@ -164,11 +187,164 @@ function Pack({ set, tearing, onOpen, disabled }) {
       <span className="co-tear-line" />
       <span className="co-tear-spark" />
       {!tearing && (
-        <span className="co-pack-hover">
-          <FaBoxOpen /> CLICK TO OPEN
-        </span>
+        <>
+          <div className="co-tear-guide" aria-hidden="true">
+            <span className="co-tear-dots" />
+            <span className="co-tear-direction">
+              <FaHandPointer />
+              <FaArrowRight />
+            </span>
+          </div>
+          <div
+            role="slider"
+            tabIndex={disabled ? -1 : 0}
+            aria-label={`Tear open ${set.name} pack from left to right`}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(progress * 100)}
+            aria-valuetext={`${Math.round(progress * 100)} percent torn. Drag right or press the right arrow. Press Enter to open.`}
+            aria-disabled={disabled}
+            className="co-tear-target"
+            data-testid="opener-tear"
+            onPointerDown={(event) => {
+              if (
+                disabled ||
+                (event.pointerType === "mouse" && event.button !== 0)
+              )
+                return;
+              const rect = event.currentTarget.getBoundingClientRect();
+              const start = (event.clientX - rect.left) / rect.width;
+              if (start > progress + 0.22) return;
+              event.preventDefault();
+              event.currentTarget.setPointerCapture(event.pointerId);
+              drag.current = {
+                pointerId: event.pointerId,
+                left: rect.left,
+                width: rect.width,
+                progress,
+              };
+              setDragging(true);
+            }}
+            onPointerMove={updateDrag}
+            onPointerUp={(event) => {
+              updateDrag(event);
+              stopDrag();
+            }}
+            onPointerCancel={stopDrag}
+            onLostPointerCapture={stopDrag}
+            onKeyDown={(event) => {
+              if (disabled) return;
+              if (["Enter", " "].includes(event.key)) {
+                event.preventDefault();
+                onOpen();
+              } else if (event.key === "ArrowRight") {
+                event.preventDefault();
+                const amount = Math.min(1, progress + 0.2);
+                setProgress(amount);
+                if (amount >= 0.96) onOpen();
+              }
+            }}
+          />
+          <span className="co-pack-drag-label">
+            {progress > 0 ? "KEEP GOING" : "DRAG TO OPEN"}
+            <FaArrowRight />
+          </span>
+        </>
       )}
-    </button>
+    </div>
+  );
+}
+
+function OpeningPopup({ children, onClose, title }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const previous = document.activeElement;
+    const oldOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    ref.current?.focus();
+    const onKey = (event) => {
+      if (
+        document.querySelector(
+          '[data-testid="card-preview"], [data-testid="settings-modal"]',
+        )
+      )
+        return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+      }
+      if (event.key === "Tab") {
+        const controls = [
+          ...ref.current.querySelectorAll(
+            'button:not(:disabled), select:not(:disabled), input:not(:disabled), [tabindex="0"], a[href]',
+          ),
+        ].filter((element) => element.getClientRects().length > 0);
+        const first = controls[0],
+          last = controls.at(-1);
+        if (!controls.length) {
+          event.preventDefault();
+          return;
+        }
+        if (
+          event.shiftKey &&
+          (document.activeElement === first ||
+            document.activeElement === ref.current)
+        ) {
+          event.preventDefault();
+          last.focus();
+        } else if (
+          !event.shiftKey &&
+          (document.activeElement === last ||
+            document.activeElement === ref.current)
+        ) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = oldOverflow;
+      document.removeEventListener("keydown", onKey);
+      if (previous?.isConnected) previous.focus();
+    };
+  }, [onClose]);
+  return (
+    <div
+      className="co-popup-backdrop"
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <section
+        className="co-popup"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="opener-popup-heading"
+        ref={ref}
+        tabIndex={-1}
+        data-testid="opener-modal"
+      >
+        <header className="co-popup-header">
+          <div>
+            <span className="co-eyebrow">AT THE OPENING TABLE</span>
+            <h2 id="opener-popup-heading">{title}</h2>
+          </div>
+          <button
+            className="co-popup-close"
+            onClick={onClose}
+            aria-label="Back to card shop"
+          >
+            <FaTimes />
+          </button>
+        </header>
+        {children}
+        <p className="co-popup-footnote">
+          On the house. A free simulation, with no cards added to your game
+          collection.
+        </p>
+      </section>
+    </div>
   );
 }
 
@@ -362,7 +538,11 @@ export function CardOpener({ state, dispatch, onExit }) {
     () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
   const [confirmClear, setConfirmClear] = useState(false);
-  const stageRef = useRef(null);
+  const [popupOpen, setPopupOpen] = useState(() =>
+    Boolean(state.pack && state.stage !== "complete"),
+  );
+  const [packNotice, setPackNotice] = useState("");
+  const closePopup = useCallback(() => setPopupOpen(false), []);
   const selectedSet = openerSet(state.setId);
   const packSet = state.pack ? openerSet(state.pack.setId) : selectedSet;
   const pack = state.pack;
@@ -407,13 +587,6 @@ export function CardOpener({ state, dispatch, onExit }) {
     if (!["sealed", "complete"].includes(state.stage)) return;
     playSfx("packTear");
     dispatch({ type: "open", ids: rollOpenerPack(state.setId), instant });
-    if (window.innerWidth < 620)
-      requestAnimationFrame(() =>
-        stageRef.current?.scrollIntoView({
-          behavior: instant ? "auto" : "smooth",
-          block: "start",
-        }),
-      );
   };
   const reveal = (index) => {
     if (busy || !pack || pack.flipped[index]) return;
@@ -434,427 +607,420 @@ export function CardOpener({ state, dispatch, onExit }) {
       data-motion={instant ? "reduced" : "full"}
       style={{ "--co-accent": packSet.accent }}
     >
-      <div className="co-shell">
-        <header className="co-header">
-          <div className="co-heading">
-            <button
-              className="co-back-button"
-              onClick={onExit}
-              aria-label="Return to main menu"
-            >
-              <FaArrowLeft />
-            </button>
-            <img src="/pokeball.svg" alt="" />
-            <div>
-              <span className="co-eyebrow">PLAYPOKEMONCARDS</span>
-              <h1>
-                Card Opener<span>.</span>
-              </h1>
-            </div>
-          </div>
-          <div className="co-header-right">
-            <span className="co-simulation">
-              <i /> SIMULATION ONLY
-            </span>
-            <SettingsButton />
-          </div>
-        </header>
-        <div className="co-introduction">
-          <div>
-            <h2>
-              A little nostalgia.
-              <br className="co-mobile-break" /> One card at a time.
-            </h2>
-            <p>Pick a pack. Feel the rip. Enjoy the reveal.</p>
-          </div>
-          <div className="co-stats">
-            <div>
-              <strong>{state.packsOpened}</strong>
-              <span>PACKS OPENED</span>
-            </div>
-            <div>
-              <strong>{state.history.length}</strong>
-              <span>CARDS REVEALED</span>
-            </div>
+      <div className="co-shop-shell" inert={popupOpen ? true : undefined}>
+        <Shopfront
+          state={state}
+          instant={instant}
+          onExit={onExit}
+          onChoose={(id) => {
+            setPackNotice(
+              state.pack &&
+                !["sealed", "complete"].includes(state.stage) &&
+                id !== state.pack.setId
+                ? `Your ${packSet.name} pack is still on the table. Finish revealing it before choosing another pack.`
+                : "",
+            );
+            dispatch({ type: "prepare", id });
+            setPopupOpen(true);
+          }}
+          onResume={() => {
+            setPackNotice("");
+            setPopupOpen(true);
+          }}
+          onGallery={() =>
+            document.getElementById("opened-heading")?.scrollIntoView({
+              behavior: instant ? "auto" : "smooth",
+              block: "start",
+            })
+          }
+          sessionValue={sessionValue}
+        />
+        <div className="co-shop-collection co-shell">
+          <Gallery state={state} onClear={() => setConfirmClear(true)} />
+          <div className="co-below-stage">
+            <p>
+              <FaBoxOpen /> Free simulation. Your reveals stay in this session.
+            </p>
             {state.showPrices && (
-              <div>
-                <strong>{formatValue(sessionValue.amount)}</strong>
-                <span>
-                  {sessionValue.priced < sessionValue.total
-                    ? "KNOWN SESSION VALUE"
-                    : "EST. SESSION VALUE"}
-                </span>
-              </div>
+              <p className="co-market-note">
+                USD market estimates · {sourceDate} ·{" "}
+                <a
+                  href={OPENER_MARKET.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  TCGplayer via TCGCSV ↗
+                </a>
+              </p>
             )}
           </div>
+          <details className="co-about" id="shop-how-it-works">
+            <summary>
+              About these simulated packs <FaChevronDown />
+            </summary>
+            <p>
+              Choose any of six classic sets. Your pack is on the house. Drag
+              along the dotted line from left to right, then flip your cards in
+              a row or one at a time in a stack. You can also press the right
+              arrow on the tear guide or use Open pack.
+            </p>
+            <p>
+              Each pack has 11 cards with an approximate common, uncommon, and
+              rare mix. The rare slot has a simulated one in three chance of a
+              holo. Displayed values are cached USD market estimates for
+              standard or unlimited printings. Your Cards Opened gallery stays
+              in this browser tab, including refreshes. Story Mode collections
+              and coins are separate.
+            </p>
+          </details>
         </div>
-
-        <section
-          className="co-opening-room"
-          aria-label="Pack opening simulator"
-          data-testid="card-opener"
+      </div>
+      {popupOpen && (
+        <OpeningPopup
+          title={state.stage === "sealed" ? selectedSet.name : packSet.name}
+          onClose={closePopup}
         >
-          <div className="co-toolbar">
-            <label className="co-set-picker">
-              <span className="co-control-label">CHOOSE YOUR SET</span>
-              <select
-                aria-label="Booster set"
-                value={state.setId}
-                disabled={busy}
-                onChange={(event) =>
-                  dispatch({ type: "set", id: event.target.value })
-                }
-              >
-                {OPENER_SETS.map((set) => (
-                  <option value={set.id} key={set.id}>
-                    {set.name} · {set.year}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <div className="co-mode-picker">
-              <span className="co-control-label">REVEAL STYLE</span>
-              <div role="group" aria-label="Card reveal style">
-                <button
-                  disabled={busy}
-                  aria-pressed={state.mode === "row"}
-                  onClick={() => dispatch({ type: "mode", mode: "row" })}
-                >
-                  <FaGripHorizontal /> Row
-                </button>
-                <button
-                  disabled={busy}
-                  aria-pressed={state.mode === "stack"}
-                  onClick={() => dispatch({ type: "mode", mode: "stack" })}
-                >
-                  <FaLayerGroup /> Stack
-                </button>
-              </div>
-            </div>
-            <button
-              className="co-price-toggle"
-              role="switch"
-              aria-checked={state.showPrices}
-              aria-label="Show card values"
-              onClick={() => dispatch({ type: "prices" })}
-            >
-              <FaCoins />
-              <span>Card values</span>
-              <i>
-                <b />
-              </i>
-            </button>
-          </div>
-
-          <div
-            ref={stageRef}
-            className={`co-stage ${state.stage} ${state.mode}`}
-            data-testid="opener-stage"
-            data-stage={state.stage}
-          >
-            <div className="co-stage-caption">
-              <span>
-                <i /> {packSet.name.toUpperCase()}
-              </span>
-              <span>
-                {state.stage === "sealed"
-                  ? `${selectedSet.count} CARDS TO DISCOVER`
-                  : `${revealedCount} / ${pack?.ids.length || 11} REVEALED`}
-              </span>
-            </div>
-            {["sealed", "tearing"].includes(state.stage) ? (
-              <div className="co-sealed-stage">
-                <div className="co-table-light" />
-                <Pack
-                  set={state.stage === "sealed" ? selectedSet : packSet}
-                  tearing={state.stage === "tearing"}
-                  onOpen={open}
-                  disabled={busy}
-                />
-                <div className="co-pack-instructions">
-                  <span className="co-eyebrow">
-                    {state.stage === "tearing"
-                      ? "A LITTLE ANTICIPATION…"
-                      : "YOUR NEXT PACK IS WAITING"}
-                  </span>
-                  <h3>
-                    {state.stage === "tearing"
-                      ? "Here we go."
-                      : selectedSet.name}
-                  </h3>
-                  <p>
-                    {state.stage === "tearing"
-                      ? "Unwrapping a little bit of the past."
-                      : "11 cards. One rare slot. A fresh surprise."}
-                  </p>
-                  {state.stage === "sealed" && (
-                    <button className="co-primary" onClick={open}>
-                      Open pack <FaArrowRight />
-                    </button>
-                  )}
-                </div>
-              </div>
-            ) : state.mode === "row" ? (
-              <div className="co-row-area">
-                <div className="co-row-guide">
-                  <span>
-                    {state.stage === "dealing"
-                      ? "A fresh row of possibilities."
-                      : state.stage === "complete"
-                        ? "A whole pack of memories."
-                        : "Your reveal. Your order."}
-                  </span>
-                  <small>
-                    {state.stage === "complete"
-                      ? "Click any card for a closer look."
-                      : "Click each card to turn it over."}
-                  </small>
-                </div>
-                <div className="co-card-row" aria-label="Cards from this pack">
-                  {pack.ids.map((id, index) => {
-                    const card = OPENER_BY_ID[id];
-                    return (
-                      <div
-                        className="co-row-slot"
-                        key={`${pack.number}:${index}`}
-                        style={{
-                          "--co-i": index,
-                          "--co-deal-x": `${(5 - index) * 105}px`,
-                        }}
-                      >
-                        <div className="co-deal-motion">
-                          <FlipCard
-                            card={card}
-                            index={index}
-                            revealed={pack.flipped[index]}
-                            disabled={busy}
-                            onClick={() =>
-                              pack.flipped[index]
-                                ? preview(card)
-                                : reveal(index)
-                            }
-                          />
-                        </div>
-                        <div className="co-row-card-caption">
-                          <span className="co-card-position">
-                            {String(index + 1).padStart(2, "0")}
-                          </span>
-                          {pack.flipped[index] && (
-                            <>
-                              <strong>{card.name}</strong>
-                              {state.showPrices && <CardValue card={card} />}
-                              {isShinyPull(card) && (
-                                <small className="co-holo-label">
-                                  <FaStar /> {card.rarity}
-                                </small>
-                              )}
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="co-swipe-note">
-                  Scroll across to see the whole pack <FaArrowRight />
-                </div>
-              </div>
-            ) : (
-              <div className="co-stack-area">
-                <div className="co-stack-scene">
-                  <div className="co-stack-shadow" />
-                  {Array.from(
-                    { length: Math.min(3, pack.ids.length - pack.index - 1) },
-                    (_, index) => (
-                      <div
-                        className="co-stack-under"
-                        style={{ "--co-depth": index + 1 }}
-                        key={index}
-                      >
-                        <CardBack />
-                      </div>
-                    ),
-                  )}
-                  <div
-                    className="co-stack-top co-deal-motion"
-                    key={`${pack.number}:${pack.index}`}
-                  >
-                    <FlipCard
-                      card={currentCard}
-                      index={pack.index}
-                      revealed={currentRevealed}
-                      disabled={busy}
-                      stack
-                      finished={state.stage === "complete"}
-                      onClick={() =>
-                        currentRevealed
-                          ? state.stage === "complete"
-                            ? preview(currentCard)
-                            : next()
-                          : reveal(pack.index)
-                      }
-                    />
-                  </div>
-                  {currentRevealed && state.showPrices && (
-                    <div
-                      className={`co-stack-value ${isShinyPull(currentCard) ? "rare" : ""}`}
-                      key={`value:${pack.number}:${pack.index}`}
-                    >
-                      <CardValue card={currentCard} large />
-                    </div>
-                  )}
-                </div>
-                <div className="co-stack-info">
-                  <span className="co-eyebrow">
-                    CARD {String(pack.index + 1).padStart(2, "0")} OF{" "}
-                    {pack.ids.length}
-                  </span>
-                  {currentRevealed ? (
-                    <>
-                      <span
-                        className={`co-rarity-badge ${isShinyPull(currentCard) ? "rare" : ""}`}
-                      >
-                        {isShinyPull(currentCard) && <FaStar />}
-                        {currentCard.rarity}
-                      </span>
-                      <h3>{currentCard.name}</h3>
-                      <p>
-                        {packSet.name} · No. {currentCard.number}
-                      </p>
-                      <div className="co-stack-actions">
-                        {state.stage !== "complete" && (
-                          <button className="co-primary" onClick={next}>
-                            Next card <FaArrowRight />
-                          </button>
-                        )}
-                        <button
-                          className="co-inspect-button"
-                          onClick={() => preview(currentCard)}
-                        >
-                          <FaExpandAlt /> Inspect card
-                        </button>
-                      </div>
-                      <small>
-                        {state.stage === "complete"
-                          ? "Your final card. Take a moment."
-                          : "Take your time. Click the card again when you are ready."}
-                      </small>
-                    </>
-                  ) : (
-                    <>
-                      <h3>A little mystery.</h3>
-                      <p>Click the card to see what is waiting.</p>
-                      <button
-                        className="co-primary"
-                        disabled={busy}
-                        onClick={() => reveal(pack.index)}
-                      >
-                        Reveal card <FaArrowRight />
-                      </button>
-                      <small>Every card is a moment worth enjoying.</small>
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
-            {state.stage === "dealing" && (
-              <span className="co-dealing-label" role="status">
-                Your cards are coming out…
-              </span>
-            )}
-          </div>
-
-          <div className="co-stage-footer">
-            <div
-              className="co-pack-progress"
-              aria-label={`${revealedCount} of 11 cards revealed`}
-            >
-              {pack ? (
-                <>
-                  <div>
-                    {pack.flipped.map((value, index) => (
-                      <i className={value ? "revealed" : ""} key={index} />
-                    ))}
-                  </div>
-                  <span>
-                    {state.stage === "complete" ? (
-                      <>
-                        <FaCheck /> Pack complete
-                      </>
-                    ) : state.stage === "sealed" ? (
-                      "Ready when you are"
-                    ) : (
-                      `${revealedCount} of 11 revealed`
-                    )}
-                  </span>
-                </>
-              ) : (
-                <span>
-                  <FaBoxOpen /> No rush. Enjoy every card.
-                </span>
-              )}
-            </div>
-            <div className="co-footer-actions">
-              {pack && state.showPrices && revealedCount > 0 && (
-                <span className="co-pack-total">
-                  {packValue.priced < packValue.total
-                    ? "Known pack value"
-                    : "Estimated pack value"}{" "}
-                  <strong>{formatValue(packValue.amount)}</strong>
-                </span>
-              )}
-              {state.stage === "complete" && (
-                <button className="co-primary" onClick={open}>
-                  Open another pack <FaBoxOpen />
-                </button>
-              )}
-            </div>
-          </div>
-          {state.setId !== pack?.setId && pack && (
-            <div className="co-next-set-note">
-              Your next pack will be {selectedSet.name}.
-            </div>
-          )}
-        </section>
-
-        <div className="co-below-stage">
-          <p>
-            <FaBoxOpen /> Free simulation. Your reveals stay in this session.
-          </p>
-          {state.showPrices && (
-            <p className="co-market-note">
-              USD market estimates · {sourceDate} ·{" "}
-              <a
-                href={OPENER_MARKET.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                TCGplayer via TCGCSV ↗
-              </a>
+          {packNotice && state.stage !== "complete" && (
+            <p className="co-popup-notice" role="status">
+              {packNotice}
             </p>
           )}
-        </div>
-        <Gallery state={state} onClear={() => setConfirmClear(true)} />
-        <details className="co-about">
-          <summary>
-            About these simulated packs <FaChevronDown />
-          </summary>
-          <p>
-            Each pack has 11 cards with a common, uncommon, and rare mix. Base
-            Set and the Gym sets include Energy cards. The rare slot uses a
-            simulated one in three chance of a holo. These are approximate
-            opening odds. Story Mode collections and coins are separate from
-            this simulator.
-          </p>
-          <p>
-            Displayed values are cached TCGplayer market estimates in USD for
-            standard or unlimited printings, supplied by TCGCSV. Actual card
-            condition and edition affect value. A missing price is shown as
-            unavailable. Your gallery lasts for this browser tab, including page
-            refreshes.
-          </p>
-        </details>
-      </div>
+          <section
+            className="co-opening-room"
+            aria-label="Pack opening simulator"
+            data-testid="card-opener"
+          >
+            <div className="co-toolbar">
+              <label className="co-set-picker">
+                <span className="co-control-label">CHOOSE YOUR SET</span>
+                <select
+                  aria-label="Booster set"
+                  value={state.setId}
+                  disabled={busy}
+                  onChange={(event) =>
+                    dispatch({ type: "set", id: event.target.value })
+                  }
+                >
+                  {OPENER_SETS.map((set) => (
+                    <option value={set.id} key={set.id}>
+                      {set.name} · {set.year}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div className="co-mode-picker">
+                <span className="co-control-label">REVEAL STYLE</span>
+                <div role="group" aria-label="Card reveal style">
+                  <button
+                    disabled={busy}
+                    aria-pressed={state.mode === "row"}
+                    onClick={() => dispatch({ type: "mode", mode: "row" })}
+                  >
+                    <FaGripHorizontal /> Row
+                  </button>
+                  <button
+                    disabled={busy}
+                    aria-pressed={state.mode === "stack"}
+                    onClick={() => dispatch({ type: "mode", mode: "stack" })}
+                  >
+                    <FaLayerGroup /> Stack
+                  </button>
+                </div>
+              </div>
+              <button
+                className="co-price-toggle"
+                role="switch"
+                aria-checked={state.showPrices}
+                aria-label="Show card values"
+                onClick={() => dispatch({ type: "prices" })}
+              >
+                <FaCoins />
+                <span>Card values</span>
+                <i>
+                  <b />
+                </i>
+              </button>
+            </div>
+
+            <div
+              className={`co-stage ${state.stage} ${state.mode}`}
+              data-testid="opener-stage"
+              data-stage={state.stage}
+            >
+              <div className="co-stage-caption">
+                <span>
+                  <i /> {packSet.name.toUpperCase()}
+                </span>
+                <span>
+                  {state.stage === "sealed"
+                    ? `${selectedSet.count} CARDS TO DISCOVER`
+                    : `${revealedCount} / ${pack?.ids.length || 11} REVEALED`}
+                </span>
+              </div>
+              {["sealed", "tearing"].includes(state.stage) ? (
+                <div className="co-sealed-stage">
+                  <div className="co-table-light" />
+                  <Pack
+                    key={selectedSet.id}
+                    set={state.stage === "sealed" ? selectedSet : packSet}
+                    tearing={state.stage === "tearing"}
+                    onOpen={open}
+                    disabled={busy}
+                  />
+                  <div className="co-pack-instructions">
+                    <span className="co-eyebrow">
+                      {state.stage === "tearing"
+                        ? "A LITTLE ANTICIPATION…"
+                        : "FOLLOW THE DOTTED LINE"}
+                    </span>
+                    <h3>
+                      {state.stage === "tearing"
+                        ? "Here we go."
+                        : selectedSet.name}
+                    </h3>
+                    <p>
+                      {state.stage === "tearing"
+                        ? "Unwrapping a little bit of the past."
+                        : "Drag across the top from left to right. A little rip, a fresh surprise."}
+                    </p>
+                    {state.stage === "sealed" && (
+                      <button className="co-primary" onClick={open}>
+                        Open pack <FaArrowRight />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ) : state.mode === "row" ? (
+                <div className="co-row-area">
+                  <div className="co-row-guide">
+                    <span>
+                      {state.stage === "dealing"
+                        ? "A fresh row of possibilities."
+                        : state.stage === "complete"
+                          ? "A whole pack of memories."
+                          : "Your reveal. Your order."}
+                    </span>
+                    <small>
+                      {state.stage === "complete"
+                        ? "Click any card for a closer look."
+                        : "Click each card to turn it over."}
+                    </small>
+                  </div>
+                  <div
+                    className="co-card-row"
+                    aria-label="Cards from this pack"
+                  >
+                    {pack.ids.map((id, index) => {
+                      const card = OPENER_BY_ID[id];
+                      return (
+                        <div
+                          className="co-row-slot"
+                          key={`${pack.number}:${index}`}
+                          style={{
+                            "--co-i": index,
+                            "--co-deal-x": `${(5 - index) * 105}px`,
+                          }}
+                        >
+                          <div className="co-deal-motion">
+                            <FlipCard
+                              card={card}
+                              index={index}
+                              revealed={pack.flipped[index]}
+                              disabled={busy}
+                              onClick={() =>
+                                pack.flipped[index]
+                                  ? preview(card)
+                                  : reveal(index)
+                              }
+                            />
+                          </div>
+                          <div className="co-row-card-caption">
+                            <span className="co-card-position">
+                              {String(index + 1).padStart(2, "0")}
+                            </span>
+                            {pack.flipped[index] && (
+                              <>
+                                <strong>{card.name}</strong>
+                                {state.showPrices && <CardValue card={card} />}
+                                {isShinyPull(card) && (
+                                  <small className="co-holo-label">
+                                    <FaStar /> {card.rarity}
+                                  </small>
+                                )}
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="co-swipe-note">
+                    Scroll across to see the whole pack <FaArrowRight />
+                  </div>
+                </div>
+              ) : (
+                <div className="co-stack-area">
+                  <div className="co-stack-scene">
+                    <div className="co-stack-shadow" />
+                    {Array.from(
+                      { length: Math.min(3, pack.ids.length - pack.index - 1) },
+                      (_, index) => (
+                        <div
+                          className="co-stack-under"
+                          style={{ "--co-depth": index + 1 }}
+                          key={index}
+                        >
+                          <CardBack />
+                        </div>
+                      ),
+                    )}
+                    <div
+                      className="co-stack-top co-deal-motion"
+                      key={`${pack.number}:${pack.index}`}
+                    >
+                      <FlipCard
+                        card={currentCard}
+                        index={pack.index}
+                        revealed={currentRevealed}
+                        disabled={busy}
+                        stack
+                        finished={state.stage === "complete"}
+                        onClick={() =>
+                          currentRevealed
+                            ? state.stage === "complete"
+                              ? preview(currentCard)
+                              : next()
+                            : reveal(pack.index)
+                        }
+                      />
+                    </div>
+                    {currentRevealed && state.showPrices && (
+                      <div
+                        className={`co-stack-value ${isShinyPull(currentCard) ? "rare" : ""}`}
+                        key={`value:${pack.number}:${pack.index}`}
+                      >
+                        <CardValue card={currentCard} large />
+                      </div>
+                    )}
+                  </div>
+                  <div className="co-stack-info">
+                    <span className="co-eyebrow">
+                      CARD {String(pack.index + 1).padStart(2, "0")} OF{" "}
+                      {pack.ids.length}
+                    </span>
+                    {currentRevealed ? (
+                      <>
+                        <span
+                          className={`co-rarity-badge ${isShinyPull(currentCard) ? "rare" : ""}`}
+                        >
+                          {isShinyPull(currentCard) && <FaStar />}
+                          {currentCard.rarity}
+                        </span>
+                        <h3>{currentCard.name}</h3>
+                        <p>
+                          {packSet.name} · No. {currentCard.number}
+                        </p>
+                        <div className="co-stack-actions">
+                          {state.stage !== "complete" && (
+                            <button className="co-primary" onClick={next}>
+                              Next card <FaArrowRight />
+                            </button>
+                          )}
+                          <button
+                            className="co-inspect-button"
+                            onClick={() => preview(currentCard)}
+                          >
+                            <FaExpandAlt /> Inspect card
+                          </button>
+                        </div>
+                        <small>
+                          {state.stage === "complete"
+                            ? "Your final card. Take a moment."
+                            : "Take your time. Click the card again when you are ready."}
+                        </small>
+                      </>
+                    ) : (
+                      <>
+                        <h3>A little mystery.</h3>
+                        <p>Click the card to see what is waiting.</p>
+                        <button
+                          className="co-primary"
+                          disabled={busy}
+                          onClick={() => reveal(pack.index)}
+                        >
+                          Reveal card <FaArrowRight />
+                        </button>
+                        <small>Every card is a moment worth enjoying.</small>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+              {state.stage === "dealing" && (
+                <span className="co-dealing-label" role="status">
+                  Your cards are coming out…
+                </span>
+              )}
+            </div>
+
+            <div className="co-stage-footer">
+              <div
+                className="co-pack-progress"
+                aria-label={`${revealedCount} of 11 cards revealed`}
+              >
+                {pack ? (
+                  <>
+                    <div>
+                      {pack.flipped.map((value, index) => (
+                        <i className={value ? "revealed" : ""} key={index} />
+                      ))}
+                    </div>
+                    <span>
+                      {state.stage === "complete" ? (
+                        <>
+                          <FaCheck /> Pack complete
+                        </>
+                      ) : state.stage === "sealed" ? (
+                        "Ready when you are"
+                      ) : (
+                        `${revealedCount} of 11 revealed`
+                      )}
+                    </span>
+                  </>
+                ) : (
+                  <span>
+                    <FaBoxOpen /> No rush. Enjoy every card.
+                  </span>
+                )}
+              </div>
+              <div className="co-footer-actions">
+                {pack && state.showPrices && revealedCount > 0 && (
+                  <span className="co-pack-total">
+                    {packValue.priced < packValue.total
+                      ? "Known pack value"
+                      : "Estimated pack value"}{" "}
+                    <strong>{formatValue(packValue.amount)}</strong>
+                  </span>
+                )}
+                {state.stage === "complete" && (
+                  <button
+                    className="co-primary"
+                    onClick={() => dispatch({ type: "prepare" })}
+                  >
+                    Open another pack <FaBoxOpen />
+                  </button>
+                )}
+              </div>
+            </div>
+            {state.setId !== pack?.setId && pack && (
+              <div className="co-next-set-note">
+                Your next pack will be {selectedSet.name}.
+              </div>
+            )}
+          </section>
+        </OpeningPopup>
+      )}
+
       {confirmClear && (
         <ClearDialog
           onCancel={() => setConfirmClear(false)}
