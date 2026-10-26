@@ -27,3 +27,6 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# Intermediate layout captures, before the character assets are complete.
+docs/pixel-grove/screenshots/*-wip.png

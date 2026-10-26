@@ -4,6 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "test:pixel-grove": "node --test scripts/test_pixel_grove.mjs",
+    "test:pixel-grove:ui": "node scripts/ui_pixel_grove.mjs",
     "dev": "vite",
     "build": "vite build",
     "start": "node scripts/serve-dist.mjs",
