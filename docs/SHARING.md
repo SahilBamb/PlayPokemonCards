@@ -27,10 +27,10 @@ npm run build
 The renderer uses the existing Playwright dependency and installed Chrome.
 It checks the visible image copy for dash punctuation before exporting.
 
-This release preserves the currently deployed JavaScript and CSS because the
-checkout contains unrelated staged and unstaged interface work. The metadata
-and image are the only production changes. Those interface changes are excluded
-from the sharing commit and retain their original staging state.
+The sharing commit contains only metadata, artwork, and preview documentation.
+Other interface work was preserved and committed separately while this update
+was in progress. The final production build includes the current main branch
+so the sharing deployment also preserves that separately committed work.
 
 Verification checks the built HTML, image dimensions, and the live responses
 using browser, Facebook, X, and Apple crawler user agents. Platform display and
@@ -42,3 +42,16 @@ References:
 https://ogp.me/
 
 https://developer.apple.com/documentation/technotes/tn3156-create-rich-previews-for-messages
+
+## Verified production release
+
+Source commit: `6977002`.
+
+Deployment: https://55ee9ac6.playpokemoncards.pages.dev/
+
+Production: https://playpokemoncards.pages.dev/
+
+The page and JPEG both returned HTTP 200 for browser, Facebook, X, and Apple
+crawler requests. Each fetched JPEG matched the local file, and all preview
+copy passed the check for dash punctuation. Chrome also verified the live game
+menu, page title, metadata, and the image dimensions. The GitHub build passed.
