@@ -1,0 +1,322 @@
+import catalog from "../data/openerCards.json" with { type: "json" };
+import market from "../data/openerPrices.json" with { type: "json" };
+
+export const OPENER_STORAGE_KEY = "ppc-card-opener-session-v1";
+export const OPENER_CARDS = catalog;
+export const OPENER_BY_ID = Object.assign(
+  Object.create(null),
+  Object.fromEntries(catalog.map((card) => [card.id, card])),
+);
+export const OPENER_MARKET = market;
+export const OPENER_SETS = [
+  {
+    id: "base1",
+    name: "Base Set",
+    year: 1999,
+    accent: "#edb85d",
+    commons: 5,
+    energies: 2,
+  },
+  {
+    id: "jungle",
+    name: "Jungle",
+    year: 1999,
+    accent: "#8dcb85",
+    commons: 7,
+    energies: 0,
+  },
+  {
+    id: "fossil",
+    name: "Fossil",
+    year: 1999,
+    accent: "#dcad7c",
+    commons: 7,
+    energies: 0,
+  },
+  {
+    id: "rocket",
+    name: "Team Rocket",
+    year: 2000,
+    accent: "#d99fc8",
+    commons: 7,
+    energies: 0,
+  },
+  {
+    id: "gym1",
+    name: "Gym Heroes",
+    year: 2000,
+    accent: "#8bbbe6",
+    commons: 6,
+    energies: 1,
+  },
+  {
+    id: "gym2",
+    name: "Gym Challenge",
+    year: 2000,
+    accent: "#d19474",
+    commons: 6,
+    energies: 1,
+  },
+].map((set) => ({
+  ...set,
+  image: market.packs[set.id].image,
+  count: catalog.filter((card) => card.set === set.id).length,
+}));
+
+export const openerSet = (id) =>
+  OPENER_SETS.find((set) => set.id === id) || OPENER_SETS[0];
+export const isShinyPull = (card) => /Holo|Secret/.test(card.rarity);
+export const quoteFor = (id) =>
+  Object.hasOwn(market.cards, id) ? market.cards[id] : null;
+export const formatValue = (value) =>
+  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
+    value,
+  );
+
+function draw(pool, count, rng) {
+  const remaining = [...pool];
+  const result = [];
+  for (let i = 0; i < count; i += 1) {
+    if (!remaining.length)
+      throw new Error(
+        "This set does not have enough cards for the simulated pack.",
+      );
+    const index = Math.min(
+      remaining.length - 1,
+      Math.max(0, Math.floor(rng() * remaining.length)),
+    );
+    result.push(remaining.splice(index, 1)[0]);
+  }
+  return result;
+}
+
+// Separate from Story Mode's five-card packs and collection rewards.
+// Eleven-card simulated collation, with the rare kept last for the reveal.
+export function rollOpenerPack(setId, rng = Math.random) {
+  const set = openerSet(setId);
+  const pool = catalog.filter((card) => card.set === set.id);
+  const commons = pool.filter(
+    (card) => card.rarity === "Common" && card.supertype !== "energy",
+  );
+  const uncommons = pool.filter((card) => card.rarity === "Uncommon");
+  const energies = pool.filter(
+    (card) => card.supertype === "energy" && card.rarity === "Common",
+  );
+  const rares = pool.filter((card) => card.rarity === "Rare");
+  const holos = pool.filter(isShinyPull);
+  const cards = [
+    ...draw(commons, set.commons, rng),
+    ...draw(uncommons, 3, rng),
+    ...draw(energies, set.energies, rng),
+  ];
+  const rarePool =
+    rng() < 1 / 3
+      ? holos.length
+        ? holos
+        : rares
+      : rares.length
+        ? rares
+        : holos;
+  return [...cards, ...draw(rarePool, 1, rng)].map((card) => card.id);
+}
+
+export const initialOpenerSession = () => ({
+  version: 1,
+  setId: "base1",
+  mode: "row",
+  showPrices: true,
+  packsOpened: 0,
+  stage: "sealed",
+  pack: null,
+  history: [],
+});
+
+export function restoreOpenerSession(raw) {
+  const empty = initialOpenerSession();
+  if (!raw) return empty;
+  try {
+    const saved = JSON.parse(raw);
+    if (!saved || saved.version !== 1 || !Array.isArray(saved.history))
+      return empty;
+    const keys = new Set();
+    const history = saved.history.filter((entry) => {
+      if (
+        !entry ||
+        !OPENER_BY_ID[entry.cardId] ||
+        typeof entry.key !== "string" ||
+        !Number.isInteger(entry.packNumber) ||
+        entry.packNumber < 1 ||
+        keys.has(entry.key)
+      )
+        return false;
+      keys.add(entry.key);
+      return true;
+    });
+    const restored = {
+      ...empty,
+      setId: openerSet(saved.setId).id,
+      mode: saved.mode === "stack" ? "stack" : "row",
+      showPrices: saved.showPrices !== false,
+      packsOpened: history.reduce(
+        (largest, entry) => Math.max(largest, entry.packNumber),
+        Number.isInteger(saved.packsOpened) && saved.packsOpened >= 0
+          ? saved.packsOpened
+          : 0,
+      ),
+      history,
+    };
+    const pack = saved.pack;
+    if (
+      pack &&
+      Number.isInteger(pack.number) &&
+      pack.number > 0 &&
+      Array.isArray(pack.ids) &&
+      pack.ids.length === 11 &&
+      pack.ids.every((id) => OPENER_BY_ID[id]?.set === pack.setId) &&
+      Array.isArray(pack.flipped) &&
+      pack.flipped.length === pack.ids.length
+    ) {
+      const flipped = pack.flipped.map((value) => value === true);
+      restored.pack = {
+        number: pack.number,
+        setId: openerSet(pack.setId).id,
+        ids: pack.ids,
+        flipped,
+        index: Math.min(
+          10,
+          Math.max(0, Number.isInteger(pack.index) ? pack.index : 0),
+        ),
+      };
+      restored.packsOpened = Math.max(restored.packsOpened, pack.number);
+      // Refreshing never strands a half-finished animation.
+      restored.stage = flipped.every(Boolean) ? "complete" : "revealing";
+    }
+    return restored;
+  } catch {
+    return empty;
+  }
+}
+
+export function loadOpenerSession() {
+  try {
+    return restoreOpenerSession(sessionStorage.getItem(OPENER_STORAGE_KEY));
+  } catch {
+    return initialOpenerSession();
+  }
+}
+
+export function saveOpenerSession(session) {
+  try {
+    sessionStorage.setItem(OPENER_STORAGE_KEY, JSON.stringify(session));
+  } catch {
+    /* The in-memory session stays usable if browser storage is full. */
+  }
+}
+
+export function openerReducer(state, action) {
+  if (action.type === "set")
+    return { ...state, setId: openerSet(action.id).id };
+  if (action.type === "prices")
+    return { ...state, showPrices: !state.showPrices };
+  if (action.type === "mode") {
+    if (!["row", "stack"].includes(action.mode)) return state;
+    const firstHidden =
+      state.pack?.flipped.findIndex((flipped) => !flipped) ?? -1;
+    return {
+      ...state,
+      mode: action.mode,
+      pack: state.pack
+        ? {
+            ...state.pack,
+            index: firstHidden < 0 ? state.pack.ids.length - 1 : firstHidden,
+          }
+        : null,
+    };
+  }
+  if (action.type === "open") {
+    if (!["sealed", "complete"].includes(state.stage)) return state;
+    if (
+      !Array.isArray(action.ids) ||
+      action.ids.length !== 11 ||
+      action.ids.some(
+        (id) => !OPENER_BY_ID[id] || OPENER_BY_ID[id].set !== state.setId,
+      )
+    )
+      return state;
+    const number = state.packsOpened + 1;
+    return {
+      ...state,
+      packsOpened: number,
+      stage: action.instant ? "revealing" : "tearing",
+      pack: {
+        number,
+        setId: state.setId,
+        ids: action.ids,
+        flipped: action.ids.map(() => false),
+        index: 0,
+      },
+    };
+  }
+  if (action.type === "advance") {
+    if (state.stage !== action.from) return state;
+    if (state.stage === "tearing") return { ...state, stage: "dealing" };
+    if (state.stage === "dealing") return { ...state, stage: "revealing" };
+    return state;
+  }
+  if (action.type === "reveal") {
+    const pack = state.pack;
+    const index = action.index;
+    if (
+      state.stage !== "revealing" ||
+      !pack ||
+      !Number.isInteger(index) ||
+      index < 0 ||
+      index >= pack.ids.length ||
+      pack.flipped[index]
+    )
+      return state;
+    if (state.mode === "stack" && index !== pack.index) return state;
+    const flipped = pack.flipped.map((value, i) => value || i === index);
+    return {
+      ...state,
+      stage: flipped.every(Boolean) ? "complete" : state.stage,
+      pack: { ...pack, flipped },
+      history: [
+        ...state.history,
+        {
+          key: `${pack.number}:${index}`,
+          cardId: pack.ids[index],
+          packNumber: pack.number,
+        },
+      ],
+    };
+  }
+  if (action.type === "next") {
+    if (!state.pack || !state.pack.flipped[state.pack.index]) return state;
+    const index = state.pack.flipped.findIndex(
+      (flipped, i) => i > state.pack.index && !flipped,
+    );
+    return index < 0 ? state : { ...state, pack: { ...state.pack, index } };
+  }
+  if (action.type === "clear")
+    return {
+      ...initialOpenerSession(),
+      setId: state.setId,
+      mode: state.mode,
+      showPrices: state.showPrices,
+    };
+  return state;
+}
+
+export function openedValue(entries) {
+  let amount = 0;
+  let priced = 0;
+  for (const entry of entries) {
+    const quote = quoteFor(entry.cardId);
+    if (quote) {
+      amount += quote.usd;
+      priced += 1;
+    }
+  }
+  return { amount, priced, total: entries.length };
+}

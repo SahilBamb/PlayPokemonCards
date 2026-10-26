@@ -97,7 +97,7 @@ function CustomDeckOption({ deck, selected, onClick }) {
   )
 }
 
-export function MainMenu({ onSandbox, onPlay, onEditor, onStory }) {
+export function MainMenu({ onSandbox, onPlay, onEditor, onStory, onOpener }) {
   const [picking, setPicking] = useState(false)
   const [group, setGroup] = useState('starter')
   const [sel, setSel] = useState({ kind: 'preset', id: 'blazeSurf' })
@@ -173,6 +173,12 @@ export function MainMenu({ onSandbox, onPlay, onEditor, onStory }) {
               text-lg font-bold tracking-wide uppercase transition"
           >
             Sandbox
+          </button>
+          <button
+            onClick={onOpener}
+            className="px-6 py-3 rounded-sm bg-zinc-900 hover:bg-zinc-800 border-2 border-amber-600/70 hover:border-amber-400 text-amber-200 text-lg font-bold tracking-wide uppercase transition flex items-center justify-center gap-3"
+          >
+            <FaBoxOpen /> Card Opener
           </button>
           <button
             onClick={onEditor}

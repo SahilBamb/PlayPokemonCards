@@ -14,6 +14,8 @@ import { MatchScreen, useFxSync } from './components/MatchScreen.jsx'
 import { StoryMode } from './components/story/StoryMode.jsx'
 import { reducer, initialGameState, pendingClickTargets } from './engine/reducer.js'
 import { makeCard, makeSlot } from './engine/cards.js'
+import { CardOpener } from './components/opener/CardOpener.jsx'
+import { loadOpenerSession, openerReducer, saveOpenerSession } from './lib/cardOpener.js'
 
 function SandboxScreen({ onExit }) {
   const [state, dispatch] = useReducer(reducer, undefined, initialGameState)
@@ -69,14 +71,30 @@ function SandboxScreen({ onExit }) {
 }
 
 export default function App() {
-  const [screen, setScreen] = useState('menu') // menu | sandbox | game | editor | story
+  const [screen, setScreen] = useState(() => window.location.pathname === '/card-opener' ? 'opener' : 'menu')
+  const [opener, openerDispatch] = useReducer(openerReducer, undefined, loadOpenerSession)
   const [matchConfig, setMatchConfig] = useState(null)
   const [matchKey, setMatchKey] = useState(0)
 
-  const toMenu = useCallback(() => setScreen('menu'), [])
+  const toMenu = useCallback(() => {
+    if (window.location.pathname === '/card-opener') window.history.pushState({}, '', '/')
+    setScreen('menu')
+  }, [])
+  const toOpener = useCallback(() => {
+    if (window.location.pathname !== '/card-opener') window.history.pushState({}, '', '/card-opener')
+    setScreen('opener')
+  }, [])
+  useEffect(() => { saveOpenerSession(opener) }, [opener])
+  useEffect(() => {
+    const onPopState = () => setScreen(window.location.pathname === '/card-opener' ? 'opener' : 'menu')
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
 
   let content
-  if (screen === 'sandbox') {
+  if (screen === 'opener') {
+    content = <CardOpener state={opener} dispatch={openerDispatch} onExit={toMenu} />
+  } else if (screen === 'sandbox') {
     content = <SandboxScreen onExit={toMenu} />
   } else if (screen === 'editor') {
     content = <DeckEditor onExit={toMenu} />
@@ -94,6 +112,7 @@ export default function App() {
   } else {
     content = (
       <MainMenu
+        onOpener={toOpener}
         onSandbox={() => setScreen('sandbox')}
         onEditor={() => setScreen('editor')}
         onStory={() => setScreen('story')}
@@ -108,7 +127,7 @@ export default function App() {
   return (
     <SettingsProvider>
       <CardPreviewProvider>
-        {screen !== 'story' && <PokeballBackground />}
+        {screen !== 'story' && screen !== 'opener' && <PokeballBackground />}
         {content}
       </CardPreviewProvider>
     </SettingsProvider>

@@ -73,6 +73,18 @@ function playTones(tones) {
 }
 
 const SOUNDS = {
+  packTear: [
+    { noise: true, f: 1400, f2: 5200, d: 0.55, g: 0.18 },
+    { noise: true, f: 2800, f2: 700, t: 0.4, d: 0.45, g: 0.14 },
+  ],
+  cardFlip: [{ noise: true, f: 1600, f2: 500, d: 0.12, g: 0.07 }, { f: 880, d: 0.11, t: 0.12, type: 'sine', g: 0.05 }],
+  cardSlide: [{ noise: true, f: 900, f2: 1900, d: 0.16, g: 0.07 }],
+  cardRare: [
+    { f: 523, d: 0.25, type: 'sine', g: 0.1 },
+    { f: 659, d: 0.3, t: 0.12, type: 'sine', g: 0.1 },
+    { f: 784, d: 0.5, t: 0.24, type: 'sine', g: 0.1 },
+    { f: 1047, d: 0.6, t: 0.36, type: 'sine', g: 0.07 },
+  ],
   // coin toss: metallic ring while spinning
   coin: [
     { f: 900, f2: 1400, d: 0.35, type: 'triangle', g: 0.18 },
