@@ -21,6 +21,7 @@ Functional and visual checks cover the same states. Screenshots are under
 | Album / reference / guide | Open, close, Escape, backdrop | Dialog fit and readable cards |
 | Sound | On, off | Toggle label |
 | Classic game | `/classic` loads existing menu | Existing game menu |
+| Appearance | Light/Dark/Transparent, saved across reload and classic mode | Three desktop appearances and mobile transparent panel |
 | Responsive controls | Touch hand, target, details and end turn | 390px mobile and 1440px desktop |
 | Keyboard | Escape cancels, Space ends turn | Selection cleared / turn changes |
 
@@ -31,3 +32,11 @@ switch selection while waiting for the AI, and open dialogs on small screens.
 Viewport checks include board/controls bounds, horizontal overflow, readable
 labels, overlapping sprites, sprite transparency, and mobile overlays blocking
 targets. Intentional scrolling is supported on small screens.
+
+Verified: 14 reducer tests pass. The desktop/mobile browser flow passes,
+including every interaction listed above except a whole match victory through
+browser clicks (victory/prize completion is covered by reducer tests). Both
+Pikachu poses, all six cards, desktop collection fit, and all three appearances
+were visually inspected. Browser checks found no missing game assets, runtime
+errors, or horizontal overflow. Desktop board and controls fit without scrolling.
+The mobile details sheet leaves card targeting accessible when dismissed.

@@ -112,7 +112,7 @@ export function LogBody() {
 
 export function LogPanel() {
   return (
-    <aside className="w-64 shrink-0 h-full bg-zinc-950/85 border border-zinc-800 rounded-sm backdrop-blur-sm flex flex-col">
+    <aside className="ppc-log-surface w-64 shrink-0 h-full bg-zinc-950/85 border border-zinc-800 rounded-sm backdrop-blur-sm flex flex-col">
       <h2 className="text-zinc-400 text-xs font-bold uppercase tracking-widest px-3 py-2 border-b-2 border-poke-red/60 flex items-center gap-2">
         <img src="/pokeball.svg" alt="" className="w-3.5 h-3.5 opacity-70" draggable={false} />
         Game Log
@@ -155,7 +155,7 @@ export function GameOverOverlay({ onExit, onRematch, exitLabel = 'Return to Menu
 
 export function Board() {
   return (
-    <div className="flex-1 min-w-0 flex flex-col justify-between gap-3 p-4 overflow-auto bg-zinc-100/90 border border-zinc-300 dark:bg-zinc-900/80 dark:border-zinc-700 rounded-sm shadow-2xl">
+    <div className="ppc-board-surface flex-1 min-w-0 flex flex-col justify-between gap-3 p-4 overflow-auto bg-zinc-100/90 border border-zinc-300 dark:bg-zinc-900/80 dark:border-zinc-700 rounded-sm shadow-2xl">
       <Hand player="p2" />
       <Row player="p2" mirrored />
       <div className="flex justify-center">

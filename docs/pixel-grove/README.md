@@ -43,18 +43,23 @@ Generated with the built-in image tool:
 - `public/pixel-grove/assets/card-objects.png` (2 × 2 atlas)
 - `public/pixel-grove/assets/energy-coins.png` (2 × 2 transparent atlas)
 
-**Pending:** the image service repeatedly rejected the Pokémon sprite atlas,
-six-character card art, and an individual awake Pikachu in its output safety
-check. No specific reason was provided. The user has been asked whether to use
-reference cutouts plus existing pixel sprites for missing views. The two
-character atlas paths are currently reserved but are not complete.
+The user approved using reference cutouts plus existing pixel sprites for missing
+views after character generation was rejected by the image service. Both final
+atlases are complete: `pokemon-sprites.png` and `card-art.png`. Individual assets
+are also saved in `sprites/` and `card-art/`. Six full card reference PNGs are in
+`docs/pixel-grove/card-references/`. See [ASSETS.md](ASSETS.md) for provenance and
+the repeatable asset preparation command.
+
+Light, Dark, and Transparent appearance choices are available in the demo and
+classic Settings. The choice is saved in the existing `ppc-settings` preference.
+Transparent uses translucent panels so the forest/background remains visible.
 
 Prompts and results are recorded in [ASSET-PROMPTS.md](ASSET-PROMPTS.md).
 Validation inventory: [QA.md](QA.md).
 
 ## Branch preview deployment
 
-After completing the art, build and deploy **only the branch preview**, preserving
+Build and deploy **only the branch preview**, preserving
 the production `main` deployment:
 
 ```sh

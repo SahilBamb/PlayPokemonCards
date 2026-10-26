@@ -1,6 +1,8 @@
 import { useEffect, useReducer, useRef, useState } from 'react'
 import { POKEMON, cardDefinition, fullName, groveReducer, hpLeft, initialGroveState } from './game.js'
 import './pixel-grove.css'
+import { AppearanceOptions } from '../components/AppearanceOptions.jsx'
+import { loadAppearance, saveAppearance } from '../lib/appearance.js'
 
 const ASSETS = '/pixel-grove/assets/'
 const atlasPosition = (index, columns, rows) => ({
@@ -90,6 +92,7 @@ export default function PixelGrove() {
   const [handIndex, setHandIndex] = useState(null)
   const [modal, setModal] = useState(null)
   const [sound, setSound] = useState(false)
+  const [appearance, setAppearance] = useState(loadAppearance)
   const [mobilePanel, setMobilePanel] = useState(false)
   const audio = useRef(null)
   const allPokemon = [state.player.active, ...state.player.bench, state.opponent.active, ...state.opponent.bench].filter(Boolean)
@@ -101,6 +104,8 @@ export default function PixelGrove() {
   const isPlayer = state.phase === 'player'
   const isSelectedActive = selected.uid === state.player.active.uid
   const send = (action) => dispatch({ ...action, roll: Math.random(), rolls: [Math.random(), Math.random()] })
+
+  useEffect(() => { saveAppearance(appearance) }, [appearance])
 
   useEffect(() => {
     if (state.phase !== 'opponent') return
@@ -157,7 +162,7 @@ export default function PixelGrove() {
     else { setSelectedUid(pokemon.uid); setHandIndex(null); setMobilePanel(true) }
   }
   const endTurn = () => { setHandIndex(null); send({ type: 'end-turn' }) }
-  const reset = () => { dispatch({ type: 'reset' }); setSelectedUid('p-pikachu'); setHandIndex(null); setModal(null) }
+  const reset = () => { dispatch({ type: 'reset' }); setSelectedUid('p-pikachu'); setHandIndex(null); setMobilePanel(false); setModal(null) }
   const toggleSound = () => {
     if (!audio.current) audio.current = new (window.AudioContext || window.webkitAudioContext)()
     audio.current.resume()
@@ -165,7 +170,7 @@ export default function PixelGrove() {
   }
   const cardHint = !selectedCard ? 'Choose a card from your hand or a Pokémon in the clearing.' : selectedCard.evolvesFrom ? 'Choose a Voltorb to evolve.' : selectedCard.kind === 'energy' ? 'Choose one of your Pokémon to attach Energy.' : selectedCardId === 'potion' ? 'Choose a damaged Pokémon to heal.' : 'Choose an empty patch on your bench.'
 
-  return <main className="grove-app">
+  return <main className="grove-app" data-appearance={appearance}>
     <div className="grove-page-no">FIELD STUDY <span>001</span></div>
     <div className="grove-shell">
       <aside className="grove-left">
@@ -174,7 +179,7 @@ export default function PixelGrove() {
         <div className="grove-turn-card"><span className={`grove-status-light ${!isPlayer ? 'thinking' : ''}`} /><div><span className="grove-eyebrow">TURN {String(state.turn).padStart(2, '0')}</span><strong>{state.phase === 'over' ? 'Battle complete' : isPlayer ? 'Your move' : 'Their move…'}</strong></div><span className="grove-turn-symbol">{isPlayer ? '↗' : '···'}</span></div>
         <div className="grove-turn-checks"><span className={state.attached ? 'done' : ''}>{state.attached ? '✓' : '○'} Energy attached</span><span className={state.retreated ? 'done' : ''}>{state.retreated ? '✓' : '○'} Pokémon switched</span></div>
         <div className="grove-field-notes"><h2>From the clearing <span>↘</span></h2><ol>{state.log.slice(0, 4).map((entry, i) => <li key={entry.id} className={i === 0 ? 'latest' : ''}><span className="grove-note-dot" />{entry.text}</li>)}</ol></div>
-        <div className="grove-left-bottom"><button className="grove-end-turn" onClick={endTurn} disabled={!isPlayer}>End turn <span>→</span></button><div className="grove-small-controls"><button onClick={() => setModal('guide')}>? How to play</button><button onClick={toggleSound} aria-pressed={sound}>{sound ? '♪ Sound on' : '♪ Sound off'}</button></div><a href="/classic" className="grove-classic-link">Return to the classic game ↗</a></div>
+        <div className="grove-left-bottom"><button className="grove-end-turn" onClick={endTurn} disabled={!isPlayer}>End turn <span>→</span></button><AppearanceOptions value={appearance} onChange={setAppearance} /><div className="grove-small-controls"><button onClick={() => setModal('guide')}>? How to play</button><button onClick={toggleSound} aria-pressed={sound}>{sound ? '♪ Sound on' : '♪ Sound off'}</button></div><a href="/classic" className="grove-classic-link">Return to the classic game ↗</a></div>
       </aside>
 
       <section className="grove-table-column" aria-label="Forest battle table">
@@ -192,7 +197,7 @@ export default function PixelGrove() {
           <div className="grove-discard player" aria-label={`${state.player.discard} cards in your discard pile`}><span /><span />{state.player.discard > 0 && <b>{state.player.discard}</b>}</div>
           {state.opponent.bench.map((pokemon, i) => pokemon && <Creature key={pokemon.uid} pokemon={pokemon} side="opponent" index={i} selected={selected.uid === pokemon.uid && !selectedCard} onClick={() => choosePokemon(pokemon, 'opponent')} event={state.event} />)}
           <Creature pokemon={state.opponent.active} side="opponent" active selected={selected.uid === state.opponent.active.uid && !selectedCard} onClick={() => choosePokemon(state.opponent.active, 'opponent')} event={state.event} />
-          {state.player.active.species === 'pikachu' && <div className="grove-stump grove-sprite" style={atlasPosition(7, 4, 2)} aria-hidden="true" />}
+          {state.player.active.species === 'pikachu' && state.player.active.status !== 'asleep' && <div className="grove-stump grove-sprite" style={atlasPosition(7, 4, 2)} aria-hidden="true" />}
           <Creature pokemon={state.player.active} side="player" active selected={selected.uid === state.player.active.uid && !selectedCard} targetable={validTarget(state.player.active)} onClick={() => choosePokemon(state.player.active, 'player')} event={state.event} />
           {state.player.bench.map((pokemon, i) => pokemon ? <Creature key={pokemon.uid} pokemon={pokemon} side="player" index={i} selected={selected.uid === pokemon.uid && !selectedCard} targetable={validTarget(pokemon)} onClick={() => choosePokemon(pokemon, 'player')} event={state.event} /> : <button className={`grove-empty-bench ${selectedCard && POKEMON[selectedCardId]?.stage === 'Basic' ? 'targetable' : ''}`} key={`empty-${i}`} style={{ left: `${29 + i * 22}%` }} aria-label={`Empty bench patch ${i + 1}`} onClick={() => selectedCard && playCard(undefined, i)}><span>+</span><small>BENCH</small></button>)}
           <button className={`grove-wake-coin ${state.coin ? `coin-${state.coin}` : ''}`} onClick={() => send({ type: 'wake' })} disabled={!isPlayer || state.player.active.status !== 'asleep' || state.sleepChecked} aria-label="Flip wake-up coin" title="Flip the silver coin to wake up"><EnergyIcon type="silver" />{state.player.active.status === 'asleep' && !state.sleepChecked && <span>FLIP TO WAKE</span>}{state.coin && <span>{state.coin.toUpperCase()}</span>}</button>
@@ -213,12 +218,12 @@ export default function PixelGrove() {
           <div className="grove-inspector-status"><span className="grove-hp-number">{hpLeft(selected)} <small>/ {data.hp} HP</small></span><span className={`grove-condition ${selected.status || ''}`}>{selected.status === 'asleep' ? 'zZ Asleep' : selected.status === 'poisoned' ? 'Poisoned' : 'Ready'}</span></div>
           <div className="grove-inspector-energy"><span>Attached Energy</span><div>{selected.energy ? Array.from({ length: Math.min(selected.energy, 8) }, (_, i) => <EnergyIcon key={i} type={friendly ? 'lightning' : data.type} />) : <span className="grove-no-energy">None yet</span>}</div></div>
           <div className="grove-actions">{data.attacks.map((attack, index) => <button key={attack.name} onClick={() => send({ type: 'attack', index })} disabled={!isPlayer || !isSelectedActive || selected.status === 'asleep' || selected.energy < attack.cost} aria-label={`Use ${attack.name}`}><span><span className="grove-action-cost">{Array.from({ length: attack.cost }, (_, i) => <EnergyIcon key={i} type={data.type} />)}</span><strong>{attack.name}</strong></span><b>{attack.damage || 'zZ'}</b></button>)}</div>
-          {isSelectedActive && selected.status === 'asleep' && <button className="grove-wake-action" onClick={() => send({ type: 'wake' })} disabled={!isPlayer || state.sleepChecked}><EnergyIcon type="silver" />{state.sleepChecked ? 'Still asleep. Try next turn.' : 'Flip a coin to wake up'}<span>↗</span></button>}
+          {isSelectedActive && selected.status === 'asleep' && <button className="grove-wake-action" aria-label="Flip a coin to wake up" onClick={() => send({ type: 'wake' })} disabled={!isPlayer || state.sleepChecked}><EnergyIcon type="silver" />{state.sleepChecked ? 'Still asleep. Try next turn.' : 'Flip a coin to wake up'}<span>↗</span></button>}
           {friendly && !isSelectedActive && <button className="grove-switch" onClick={() => { send({ type: 'retreat', target: selected.uid }); setMobilePanel(false) }} disabled={!isPlayer || state.retreated || !state.player.active.energy || state.player.active.status === 'asleep'}>Switch into the clearing <span>1 <EnergyIcon /> ↗</span></button>}
           {!friendly && <p className="grove-selection-note">Their side of the clearing. Choose one of your Pokémon to make a move.</p>}
         </>}
         <div className="grove-live-notice" role="status" aria-live="polite"><span>✦</span><p>{state.notice || cardHint}</p></div>
-        <div className="grove-right-bottom"><button className="grove-album-button" onClick={() => setModal('album')}><span><b>06</b> The card collection</span><span>↗</span></button><div className="grove-inspector-utilities"><button onClick={() => setModal('guide')}>? How to play</button><button onClick={toggleSound} aria-pressed={sound}>{sound ? '♪ Sound on' : '♪ Sound off'}</button></div><div className="grove-prototype-label"><i /> A PLAYABLE PIXEL-ART EXPERIMENT</div></div>
+        <div className="grove-right-bottom"><button className="grove-album-button" onClick={() => setModal('album')}><span><b>06</b> The card collection</span><span>↗</span></button><div className="grove-mobile-appearance"><AppearanceOptions value={appearance} onChange={setAppearance} /></div><div className="grove-inspector-utilities"><button onClick={() => setModal('guide')}>? How to play</button><button onClick={toggleSound} aria-pressed={sound}>{sound ? '♪ Sound on' : '♪ Sound off'}</button></div><div className="grove-prototype-label"><i /> A PLAYABLE PIXEL-ART EXPERIMENT</div></div>
       </aside>
     </div>
     <div className="grove-mobile-bar">{selectedCard && <div className="grove-mobile-target-hint"><span>{cardHint}</span><button onClick={() => setHandIndex(null)}>Cancel ×</button></div>}<button onClick={() => { setSelectedUid(state.player.active.uid); setHandIndex(null); setMobilePanel(true) }}>Pokémon & attacks ↗</button><button disabled={!isPlayer} onClick={endTurn}>End turn →</button></div>

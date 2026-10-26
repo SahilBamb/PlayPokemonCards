@@ -1,0 +1,72 @@
+.appearance-options {
+  margin: 15px 0 5px;
+  color: inherit;
+}
+.appearance-label {
+  display: block;
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  opacity: 0.7;
+  margin-bottom: 9px;
+}
+.appearance-options > div {
+  display: flex;
+  border: 1px solid #9cad8155;
+  gap: 3px;
+  padding: 3px;
+}
+.appearance-options button {
+  border: 0;
+  padding: 7px 6px;
+  background: transparent;
+  flex: 1;
+  min-width: 0;
+  font-size: 9px;
+  color: inherit;
+  opacity: 0.7;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
+}
+.appearance-options button:hover {
+  opacity: 1;
+  background: #9cad8122;
+}
+.appearance-options button[aria-pressed="true"] {
+  background: #dce9a2;
+  color: #2e4326;
+  opacity: 1;
+}
+.appearance-options.classic {
+  margin: 0;
+  color: #e4e4e7;
+}
+.appearance-options.classic .appearance-label {
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
+  opacity: 1;
+}
+.appearance-options.classic > div {
+  border-color: #52525b;
+}
+.appearance-options.classic button {
+  font-size: 11px;
+  padding: 7px;
+}
+.appearance-options.classic button[aria-pressed="true"] {
+  background: #e3350d;
+  color: #fff;
+}
+html[data-ppc-theme="transparent"] .ppc-board-surface,
+html[data-ppc-theme="transparent"] .ppc-log-surface {
+  background: rgba(24, 24, 27, 0.2);
+  backdrop-filter: blur(9px);
+  border-color: #d4d4d844;
+}
+html[data-ppc-theme="transparent"] [data-testid="settings-modal"] {
+  background: rgba(24, 24, 27, 0.5);
+  backdrop-filter: blur(18px);
+}

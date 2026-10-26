@@ -9,6 +9,7 @@ await mkdir(screenshots, { recursive: true })
 const browser = await chromium.launch({ channel: 'chrome', headless: true })
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
+  await page.route(/https:\/\/(all-sites-analytics\.pages\.dev\/a\.js|static\.cloudflareinsights\.com\/beacon\.min\.js)/, (route) => route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }))
   const errors = []
   const missing = []
   page.on('pageerror', (error) => errors.push(error.message))
@@ -74,6 +75,15 @@ try {
   await page.getByRole('button', { name: '♪ Sound off', exact: true }).first().click()
   await page.getByRole('button', { name: '♪ Sound on', exact: true }).first().click()
 
+  for (const mode of ['light', 'transparent', 'dark']) {
+    await page.getByRole('button', { name: `${mode[0].toUpperCase() + mode.slice(1)} appearance`, exact: true }).first().click()
+    assert.equal(await page.locator('.grove-app').getAttribute('data-appearance'), mode)
+    await page.waitForTimeout(300)
+    await page.screenshot({ path: `${screenshots}/appearance-${mode}.png` })
+  }
+  await page.reload({ waitUntil: 'networkidle' })
+  assert.equal(await page.locator('.grove-app').getAttribute('data-appearance'), 'dark')
+
   await page.setViewportSize({ width: 390, height: 844 })
   await page.screenshot({ path: `${screenshots}/mobile.png`, fullPage: true })
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'mobile should not overflow horizontally')
@@ -82,10 +92,22 @@ try {
   await page.locator('[data-creature="p-pikachu"]').click()
   await page.getByRole('button', { name: 'Pokémon & attacks ↗', exact: true }).click()
   await page.getByRole('button', { name: 'Flip a coin to wake up', exact: true }).click()
+  await page.getByRole('button', { name: 'Transparent appearance', exact: true }).last().click()
+  assert.equal(await page.locator('.grove-app').getAttribute('data-appearance'), 'transparent')
+  await page.waitForTimeout(300)
   await page.screenshot({ path: `${screenshots}/mobile-details.png` })
   await page.getByRole('button', { name: 'Close Pokémon details', exact: true }).click()
   await page.getByRole('button', { name: 'End turn →', exact: true }).click()
   await page.getByText('Your move', { exact: true }).waitFor()
+  await page.goto(new URL('/classic', url).href, { waitUntil: 'networkidle' })
+  await page.getByRole('button', { name: 'Settings', exact: true }).click()
+  const settings = page.getByTestId('settings-modal')
+  await settings.getByRole('button', { name: 'Transparent appearance', exact: true }).click()
+  assert.equal(await page.locator('html').getAttribute('data-ppc-theme'), 'transparent')
+  await settings.getByRole('button', { name: 'Light appearance', exact: true }).click()
+  assert.equal(await page.locator('html').getAttribute('class'), '')
+  await settings.getByRole('button', { name: 'Dark appearance', exact: true }).click()
+  assert.equal(await page.locator('html').getAttribute('data-ppc-theme'), 'dark')
   assert.equal(errors.length, 0, errors.join('\n'))
   assert.equal(missing.length, 0, `Missing art assets: ${missing.join(', ')}`)
   console.log('Pixel Grove desktop/mobile flow passed. Screenshots and six card reference PNGs saved.')

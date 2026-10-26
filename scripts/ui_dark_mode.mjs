@@ -1,21 +1,22 @@
-// Dark-mode UI smoke: gameplay board defaults to dark; the Settings modal
-// exposes a "Dark mode" toggle that switches the board back to light.
-// Run with the dev server on :5199.
+// Classic appearance smoke: dark default, light and transparent board surfaces.
+// Override CLASSIC_URL when checking another local server or a branch preview.
 import { chromium } from 'playwright'
 import fs from 'fs'
 
-const shots = 'scripts/shots'
+const shots = 'docs/pixel-grove/screenshots/classic'
 fs.mkdirSync(shots, { recursive: true })
 
-const browser = await chromium.launch()
+const browser = await chromium.launch({ channel: 'chrome' })
 const page = await browser.newPage({ viewport: { width: 1600, height: 950 } })
+// Exclude third-party telemetry from deterministic UI checks.
+await page.route(/https:\/\/(all-sites-analytics\.pages\.dev\/a\.js|static\.cloudflareinsights\.com\/beacon\.min\.js)/, (route) => route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }))
 const errors = []
 page.on('pageerror', (e) => errors.push('pageerror: ' + e.message))
 page.on('console', (m) => m.type() === 'error' && errors.push('console: ' + m.text()))
 
 // deterministic runs: disable battle animations and sound (theme omitted → dark default)
 await page.addInitScript(() => localStorage.setItem('ppc-settings', JSON.stringify({ animations: false, sound: false, volume: 0 })))
-await page.goto('http://localhost:5199', { waitUntil: 'networkidle' })
+await page.goto(process.env.CLASSIC_URL || 'http://127.0.0.1:5187/classic', { waitUntil: 'networkidle' })
 await page.waitForTimeout(400)
 
 // Default is dark: <html> carries .dark even for pre-existing saved settings
@@ -47,7 +48,7 @@ await page.screenshot({ path: `${shots}/dk1_board_dark.png` })
 // Toggle light mode through Settings
 await page.getByRole('button', { name: 'Settings' }).click()
 await page.waitForSelector('[data-testid="settings-modal"]')
-await page.getByRole('switch', { name: 'Dark mode' }).click()
+await page.getByRole('button', { name: 'Light appearance', exact: true }).click()
 await page.screenshot({ path: `${shots}/dk2_settings.png` })
 await page.locator('[data-testid="settings-modal"] button', { hasText: '×' }).click()
 await page.waitForTimeout(200)
@@ -62,6 +63,15 @@ await page.screenshot({ path: `${shots}/dk3_board_light.png` })
 // Setting persists in localStorage
 const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('ppc-settings')))
 if (saved.theme !== 'light') errors.push('theme not persisted: ' + JSON.stringify(saved))
+
+await page.getByRole('button', { name: 'Settings', exact: true }).click()
+await page.getByRole('button', { name: 'Transparent appearance', exact: true }).click()
+await page.locator('[data-testid="settings-modal"] button', { hasText: '×' }).click()
+const transparentBg = await boardBg()
+console.log('board bg (transparent):', transparentBg)
+if (!transparentBg?.includes('0.2')) errors.push(`board surface not transparent: ${transparentBg}`)
+const theme = await page.evaluate(() => JSON.parse(localStorage.getItem('ppc-settings')).theme)
+if (theme !== 'transparent') errors.push('transparent appearance did not persist')
 
 console.log(errors.length ? 'ERRORS:\n' + errors.join('\n') : 'Dark mode UI smoke passed, no console errors')
 await browser.close()
