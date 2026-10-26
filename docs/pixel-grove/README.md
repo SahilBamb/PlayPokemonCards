@@ -69,7 +69,12 @@ CLOUDFLARE_ACCOUNT_ID=77965546ba0ef6c4f1741d7d8a04039e \
   --project-name playpokemoncards --branch pixel-grove
 ```
 
-The intended preview alias is `https://pixel-grove.playpokemoncards.pages.dev`.
-Verify the actual deployment URL returned by Wrangler, plus all asset requests
-and the same browser flows, before recording it as live. Do not deploy this
-experiment with `--branch main` or merge it into `master` without user direction.
+Live preview: https://pixel-grove.playpokemoncards.pages.dev/
+
+Verified deployment: https://e37935cc.playpokemoncards.pages.dev/ (source commit
+`8f1637e`). The complete desktop/mobile browser flow passed on the deployed
+build, and all five main art files matched local bytes over HTTPS. Screenshots
+record the deployed build. The local Vite server runs at http://localhost:5187/.
+
+Do not deploy this experiment with `--branch main` or merge it into `master`
+without user direction.

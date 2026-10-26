@@ -40,3 +40,9 @@ Pikachu poses, all six cards, desktop collection fit, and all three appearances
 were visually inspected. Browser checks found no missing game assets, runtime
 errors, or horizontal overflow. Desktop board and controls fit without scrolling.
 The mobile details sheet leaves card targeting accessible when dismissed.
+
+The same browser flow passed against the Cloudflare branch preview at
+`https://pixel-grove.playpokemoncards.pages.dev/`, deployment `e37935cc`, source
+`8f1637e`. All five main PNG assets matched local SHA-256 hashes. Classic board
+appearance checks also passed (dark, light, transparent alpha 0.2). Third-party
+analytics scripts are stubbed during UI checks so tests do not send telemetry.
