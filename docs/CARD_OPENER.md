@@ -63,6 +63,13 @@ The script checks the provider build timestamp, caches the raw responses in
 to `public/boosterpacks/`. The card art uses the same existing image host as the
 game. No generated artwork is used.
 
+The card back uses the image supplied by the user, a recreation of the classic
+Pokémon TCG back by [Jasowke](https://www.deviantart.com/jasowke), titled
+“Pokemon TCG Card Back 4k high res remake.” It is stored unchanged at
+`public/card-opener/card-back.jpg` and shared by row cards, the top stack card,
+and the cards underneath. Serving it locally avoids depending on a signed
+external image URL.
+
 Provider documentation: https://tcgcsv.com/docs
 
 Reference rhythm: https://www.youtube.com/shorts/zYArzGD83WM

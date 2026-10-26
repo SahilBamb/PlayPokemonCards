@@ -69,14 +69,13 @@ function CardArt({ card, large = false }) {
 
 function CardBack() {
   return (
-    <div className="co-card-back" aria-hidden="true">
-      <div className="co-back-orbit" />
-      <span className="co-back-word top">Pokémon</span>
-      <img src="/pokeball.svg" alt="" draggable={false} />
-      <span className="co-back-word bottom">Pokémon</span>
-      <i />
-      <i />
-    </div>
+    <img
+      className="co-card-back"
+      src="/card-opener/card-back.jpg"
+      alt=""
+      aria-hidden="true"
+      draggable={false}
+    />
   );
 }
 
