@@ -203,3 +203,23 @@ Both routes, both illustrations, the supplied back, the sharing image, and the
 application JavaScript/CSS matched the deployed build byte for byte. GitHub
 Actions build `40392499556` succeeded. The temporary local test server was
 stopped after verification.
+
+## Cabinet, sales, and big hits release
+
+Published October 26, 2026, from source commit `b7a3610` to the same Cloudflare
+account, Pages project, production branch, and public feature URL above.
+
+Verified release: https://9d975fd1.playpokemoncards.pages.dev
+
+All 21 opener checks, 19 Story Mode checks, scoped ESLint, and the production
+build passed. The revised browser flow passed locally and against production,
+including the cabinet layout, original pack images, hosted badge, $10,000 grant,
+one time legacy wallet increase, purchases below zero, both reveal modes,
+View/Sell inspection and filters, individual and confirmed bulk sales, duplicate
+sale prevention, sale recovery after reload, mouse/touch/keyboard controls, and
+Story Mode profile isolation. A separate stack check verified the rare glow,
+twelve sparkles, foil layers, and reduced motion behavior. Both page routes,
+all six original pack photos, shop illustrations, supplied back, sharing image,
+and application JavaScript/CSS matched the deployed build byte for byte. GitHub
+Actions build `40400613195` succeeded. The temporary local test server was stopped
+after verification.
