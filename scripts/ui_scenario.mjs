@@ -73,7 +73,7 @@ if (after.machopDc !== 30 || after.p1Energy !== 1) errors.push('Ember result wro
 
 // Retreat flow: bench a second pokemon, then retreat (cost 1 -> energy choice, then bench click)
 await stage('Squirtle', 'p1', 1)
-await page.locator('div.border-r-2').getByRole('button', { name: /Retreat/ }).click()
+await page.getByTestId('active-p1').getByRole('button', { name: /Retreat/ }).click()
 await page.waitForTimeout(300)
 // pay 1 energy
 await page.locator('.fixed.inset-0 div.cursor-pointer:has-text("Fire Energy")').first().click()

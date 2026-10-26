@@ -49,7 +49,7 @@ for (const p of ['p1', 'p2']) {
 
 // Place an Active: drag hand cards onto the active spot until one sticks
 // (opening hands are random; non-basics are rejected by the engine).
-const activeSpot = () => page.locator('div.border-r-2 > div').first()
+const activeSpot = () => page.getByTestId('active-p1').locator(':scope > div')
 const handSize = await faceImgs('[data-testid="hand-p1"]').count()
 for (let i = 0; i < handSize; i++) {
   const placed = (await activeSpot().locator('img:not([alt=""])').count()) > 0
@@ -77,7 +77,7 @@ console.log('turn banner:', banner)
 if (!/Your turn|Opponent is thinking/.test(banner)) errors.push('turn banner missing after setup: ' + banner)
 
 // AI should have placed an Active by now
-const aiActive = await page.locator('div.border-l-2 img:not([alt=""])').count()
+const aiActive = await page.getByTestId('active-p2').locator('img:not([alt=""])').count()
 console.log('AI board active imgs:', aiActive)
 if (aiActive === 0) errors.push('AI never placed an Active')
 

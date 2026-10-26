@@ -33,13 +33,13 @@ await page.waitForTimeout(400)
 const entry = catalog.locator('img[alt="Charizard"]').first()
 await entry.waitFor({ state: 'visible' })
 const src = await entry.boundingBox()
-const dst = await page.locator('div.border-r-2 > div').first().boundingBox()
+const dst = await page.getByTestId('active-p1').locator(':scope > div').boundingBox()
 await page.mouse.move(src.x + src.width / 2, src.y + src.height / 2)
 await page.mouse.down()
 await page.mouse.move(dst.x + dst.width / 2, dst.y + dst.height / 2, { steps: 15 })
 await page.mouse.up()
 await page.waitForTimeout(300)
-const placed = (await page.locator('div.border-r-2 img[alt="Charizard"]').count()) > 0
+const placed = (await page.getByTestId('active-p1').locator('img[alt="Charizard"]').count()) > 0
 console.log('catalog drag placed Charizard:', placed)
 if (!placed) errors.push('catalog drag-to-field failed')
 

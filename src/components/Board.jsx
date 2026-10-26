@@ -157,7 +157,7 @@ export function Board() {
   return (
     <div className="flex-1 min-w-0 flex flex-col justify-between gap-3 p-4 overflow-auto bg-zinc-100/90 border border-zinc-300 dark:bg-zinc-900/80 dark:border-zinc-700 rounded-sm shadow-2xl">
       <Hand player="p2" />
-      <Row player="p2" mirrored />
+      <Row player="p2" />
       <div className="flex justify-center">
         <PromptBar />
       </div>

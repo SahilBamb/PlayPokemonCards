@@ -60,7 +60,7 @@ export function Prizes({ player }) {
   if (mode !== 'match') return null
   const prizes = view[player].prizes ?? []
   return (
-    <div data-testid={`prizes-${player}`} className="flex flex-col items-center gap-1" title={`${prizes.length} prize cards left`}>
+    <div data-testid={`prizes-${player}`} className="w-[68px] shrink-0 flex flex-col items-center gap-1" title={`${prizes.length} prize cards left`}>
       <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">Prizes</span>
       <div className="grid grid-cols-2 gap-1">
         {prizes.map((c) => (
@@ -90,35 +90,26 @@ export function Hand({ player }) {
   )
 }
 
-export function Row({ player, mirrored = false }) {
+export function Row({ player }) {
   const { state } = useGame()
   const mon = state[player].mon
   const active = mon[0] ? <BoardCard slot={mon[0]} player={player} id={0} /> : <EmptySpot player={player} id={0} />
   const bench = (
-    <div className="flex gap-2">
+    <div data-testid={`bench-${player}`} className="flex gap-2">
       {mon.slice(1).map((slot, i) =>
         slot ? <BoardCard key={slot.uid} slot={slot} player={player} id={i + 1} /> : <EmptySpot key={`e${i}`} player={player} id={i + 1} />
       )}
     </div>
   )
   return (
-    <div className="flex items-start justify-center gap-6">
+    <div data-testid={`battle-row-${player}`} className="flex items-start justify-center gap-6">
       <div className="flex flex-col gap-2">
         <Deck player={player} />
         <DiscardPile player={player} />
       </div>
       <Prizes player={player} />
-      {mirrored ? (
-        <>
-          {bench}
-          <div className="border-l-2 border-zinc-300 dark:border-zinc-700 pl-6">{active}</div>
-        </>
-      ) : (
-        <>
-          <div className="border-r-2 border-zinc-300 dark:border-zinc-700 pr-6">{active}</div>
-          {bench}
-        </>
-      )}
+      <div data-testid={`active-${player}`} className="border-r-2 border-zinc-300 dark:border-zinc-700 pr-6">{active}</div>
+      {bench}
     </div>
   )
 }

@@ -50,13 +50,13 @@ const srcLoc = page.locator('div[draggable="true"]:has(img[alt="Ponyta"])').last
 await srcLoc.hover()
 await page.waitForTimeout(350)
 const src = await srcLoc.boundingBox()
-const dst = await page.locator('div.border-r-2 > div').first().boundingBox()
+const dst = await page.getByTestId('active-p1').locator(':scope > div').boundingBox()
 await page.mouse.move(src.x + src.width / 2, src.y + src.height / 2)
 await page.mouse.down()
 await page.mouse.move(dst.x + dst.width / 2, dst.y + dst.height / 2, { steps: 15 })
 await page.mouse.up()
 await page.waitForTimeout(300)
-const placed = (await page.locator('div.border-r-2 img[alt="Ponyta"]').count()) > 0
+const placed = (await page.getByTestId('active-p1').locator('img[alt="Ponyta"]').count()) > 0
 console.log('placed Ponyta on active via drag:', placed)
 if (!placed) errors.push('drag-to-play failed')
 await page.waitForTimeout(400)
