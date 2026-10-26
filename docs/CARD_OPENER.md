@@ -84,3 +84,30 @@ Coverage includes the tear progression, independent row flips, sequential stack
 reveals, inspection, value visibility, set selection, session recovery, gallery
 search and filtering, clear confirmation, touch controls, and proof that the
 Story Mode profile is unchanged.
+
+## Production release
+
+Published October 26, 2026, from feature commit `8421eb0` to the existing
+Cloudflare Pages project `playpokemoncards` in hosting account
+`77965546ba0ef6c4f1741d7d8a04039e`, with production branch `main`.
+
+Public feature: https://playpokemoncards.pages.dev/card-opener
+
+Verified release: https://5c992380.playpokemoncards.pages.dev
+
+The 14 opener checks, 19 Story Mode checks, scoped ESLint, production build, and
+desktop/mobile browser flows passed. The browser flows also passed against the
+production host. Both HTML routes, all six booster photographs, the application
+JavaScript/CSS, and the existing sharing image matched the local build byte for
+byte. GitHub Actions build run `40348846600` succeeded. The direct upload path
+was used because the repository does not yet have a deployment API token secret.
+
+To publish a future release after running the checks above:
+
+```sh
+npm run build
+CLOUDFLARE_ACCOUNT_ID=77965546ba0ef6c4f1741d7d8a04039e npx wrangler@4.152.0 pages deploy dist --project-name playpokemoncards --branch main
+```
+
+Read the shared deployment context before publishing. No DNS changes are needed
+for this existing `pages.dev` project.
