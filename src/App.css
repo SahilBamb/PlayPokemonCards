@@ -100,3 +100,8 @@ body {
     100% { opacity: 0; }
   }
 }
+/* Hosted Art pledge badge. */
+.art-pledge{display:block;width:300px;max-width:100%;line-height:0}.art-pledge:focus-visible{outline:2px solid #fff;outline-offset:5px}
+.art-pledge{align-self:center;flex-shrink:0}
+
+@media(max-height:720px){.h-screen:has(.art-pledge){justify-content:flex-start;overflow-y:auto;padding-block:24px}.h-screen:has(.art-pledge)>div{flex-shrink:0}}
