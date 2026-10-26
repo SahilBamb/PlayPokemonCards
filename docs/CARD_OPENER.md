@@ -135,3 +135,19 @@ CLOUDFLARE_ACCOUNT_ID=77965546ba0ef6c4f1741d7d8a04039e npx wrangler@4.152.0 page
 
 Read the shared deployment context before publishing. No DNS changes are needed
 for this existing `pages.dev` project.
+
+## Shop redesign release
+
+Published October 26, 2026, from source commit `87d875e` to the same account,
+Pages project, production branch, and public feature URL above.
+
+Verified release: https://df99f35e.playpokemoncards.pages.dev
+
+All 15 opener checks, 19 Story Mode checks, scoped ESLint, and the production
+build passed. The updated browser flow passed locally and against production,
+including the storefront, focus trap, background isolation, mouse and touch
+tearing, partial tear recovery, keyboard opening, both reveal modes, inspection,
+gallery recovery, and profile isolation. Additional light theme checks passed
+at widths of 360, 768, and 1280 pixels. Both routes, both generated illustrations,
+the supplied card back, application JavaScript/CSS, and existing sharing image
+matched the deployed build byte for byte. GitHub Actions build `40385810539`+succeeded. The temporary local test server was stopped after verification.
