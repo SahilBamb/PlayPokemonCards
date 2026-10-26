@@ -146,7 +146,7 @@ export function MainMenu({ onSandbox, onPlay, onEditor, onStory }) {
           <h1 className={`${picking ? 'text-2xl' : 'text-5xl'} font-black tracking-tight drop-shadow-lg`}>
             Play<span className="text-poke-red">Pokemon</span>Cards
           </h1>
-          {!picking && <p className="text-zinc-400 font-medium">Base Set through Gym Challenge — all 530 cards playable.</p>}
+          {!picking && <p className="text-zinc-400 font-medium">Base Set through Gym Challenge, all 530 cards playable.</p>}
         </div>
       </div>
 
