@@ -201,3 +201,23 @@ at widths of 360, 768, and 1280 pixels. Both routes, both generated illustration
 the supplied card back, application JavaScript/CSS, and existing sharing image
 matched the deployed build byte for byte. GitHub Actions build `40385810539`
 succeeded. The temporary local test server was stopped after verification.
+
+## Pack purchasing and balance release
+
+Published October 26, 2026, from source commit `2fbbe96` to the same Cloudflare
+account, Pages project, production branch, and public feature URL above.
+
+Verified release: https://76a53120.playpokemoncards.pages.dev
+
+All 18 opener checks, 19 Story Mode checks, scoped ESLint, and the production
+build passed. The revised browser flow passed locally and against production,
+covering overlapping price badges, confirmation before spending, delivery
+animation, sealed pack recovery after refresh, a persistent $1,000 starting
+balance, further purchases below zero, single charges, shop preferences, the
+minimal opening view, disappearing tear prompts, eleven card emergence in both
+modes, gallery controls, keyboard and touch, and Story Mode profile isolation.
+Additional light theme layouts passed at widths of 360, 768, and 1440 pixels.
+Both routes, both illustrations, the supplied back, the sharing image, and the
+application JavaScript/CSS matched the deployed build byte for byte. GitHub
+Actions build `40392499556` succeeded. The temporary local test server was
+stopped after verification.
