@@ -150,4 +150,5 @@ tearing, partial tear recovery, keyboard opening, both reveal modes, inspection,
 gallery recovery, and profile isolation. Additional light theme checks passed
 at widths of 360, 768, and 1280 pixels. Both routes, both generated illustrations,
 the supplied card back, application JavaScript/CSS, and existing sharing image
-matched the deployed build byte for byte. GitHub Actions build `40385810539`+succeeded. The temporary local test server was stopped after verification.
+matched the deployed build byte for byte. GitHub Actions build `40385810539`
+succeeded. The temporary local test server was stopped after verification.
