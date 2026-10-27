@@ -81,7 +81,7 @@ async function resume(page) {
 async function buy(page, id) {
   const badge = page.getByTestId(`shelf-price-${id}`);
   const before = await balance(page);
-  await badge.click();
+  await page.getByTestId(`shelf-pack-${id}`).locator("img").click();
   assert.match(await badge.innerText(), /Confirm\?/);
   assert.equal(await balance(page), before);
   await badge.click();
@@ -147,24 +147,41 @@ try {
     await page.locator(".co-pledge-badge").getAttribute("href"),
     /domain=playpokemoncards\.pages\.dev#art/,
   );
+  assert.equal(
+    await page.getByRole("button", { name: "Stack", exact: true }).getAttribute("aria-pressed"),
+    "true",
+  );
+  assert.equal(
+    await page.locator(".co-cabinet-heading .co-cabinet-preferences").count(),
+    1,
+  );
+  const preferences = await page.locator(".co-cabinet-preferences").boundingBox();
+  const heading = await page.locator(".co-cabinet-title").boundingBox();
+  assert.ok(
+    preferences.x > heading.x + heading.width &&
+      preferences.y < heading.y + heading.height,
+  );
   await shot(page, "desktop-cabinet");
+  await page.getByRole("button", { name: "Row", exact: true }).click();
   await viewCards(page);
   assert.equal(await page.getByTestId("opened-card").count(), 0);
   await close(page);
 
   const baseBadge = page.getByTestId("shelf-price-base1");
-  await baseBadge.click();
+  const basePack = page.getByTestId("shelf-pack-base1").locator("img");
+  await basePack.click();
   assert.match(await baseBadge.innerText(), /Confirm\?/);
   assert.equal(await balance(page), 1000000);
   await page.keyboard.press("Escape");
   assert.doesNotMatch(await baseBadge.innerText(), /Confirm/);
-  await baseBadge.click();
-  await baseBadge.click();
+  await basePack.click();
+  await basePack.click();
   const firstBalance = 1000000 - price("base1");
   assert.equal(await balance(page), firstBalance);
   await shot(page, "purchase-animation");
   await page.reload({ waitUntil: "networkidle" });
   await stage(page, "sealed");
+  assert.equal((await saved(page)).mode, "row");
   assert.equal(await balance(page), firstBalance);
   assert.equal(
     await page
@@ -204,6 +221,14 @@ try {
   );
   await page.mouse.move(box.x + box.width * 0.5, y, { steps: 10 });
   assert.ok(Number(await tear.getAttribute("aria-valuenow")) > 30);
+  const seam = await page.locator(".co-tear-line").evaluate((element) => ({
+    clip: getComputedStyle(element).clipPath,
+    transform: getComputedStyle(element).transform,
+    points: element.querySelector("polyline").points.numberOfItems,
+  }));
+  assert.match(seam.clip, /inset/);
+  assert.equal(seam.transform, "none");
+  assert.ok(seam.points > 30);
   await shot(page, "tear-in-progress");
   await page.mouse.up();
   await stage(page, "sealed");
@@ -402,6 +427,7 @@ try {
       );
   }, OPENER_WALLET_KEY);
   await debt.goto(new URL("/card-opener", base).href);
+  await debt.getByRole("button", { name: "Row", exact: true }).click();
   await buy(debt, "base1");
   assert.equal(await balance(debt), 100 - price("base1"));
   await debt.getByTestId("opener-tear").focus();
@@ -431,7 +457,10 @@ try {
     ),
   );
   await shot(mobile, "mobile-cabinet");
-  await mobile.getByRole("button", { name: "Stack", exact: true }).tap();
+  assert.equal(
+    await mobile.getByRole("button", { name: "Stack", exact: true }).getAttribute("aria-pressed"),
+    "true",
+  );
   await buy(mobile, "base1");
   await shot(mobile, "mobile-sealed");
   const target = mobile.getByTestId("opener-tear");
@@ -478,7 +507,7 @@ try {
   await mobileContext.close();
   assert.equal(errors.length, 0, errors.join("\n"));
   console.log(
-    "Cabinet passed: uncluttered shop, original pack images, badge, $10,000 grant and migration, purchases below zero, mouse and touch tearing, both reveal modes, View/Sell inventory, individual and confirmed bulk sales, sale persistence, filtering, keyboard controls, and Story Mode isolation.",
+    "Cabinet passed: whole pack confirmation, header preferences, default Stack and saved Row, jagged foil tear, uncluttered shop, original pack images, badge, $10,000 grant and migration, purchases below zero, mouse and touch tearing, both reveal modes, View/Sell inventory, individual and confirmed bulk sales, sale persistence, filtering, keyboard controls, and Story Mode isolation.",
   );
 } finally {
   await browser.close();

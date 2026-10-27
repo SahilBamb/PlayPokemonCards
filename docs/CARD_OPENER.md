@@ -15,18 +15,22 @@ generated artwork documented in [CARD_SHOP_ARTWORK.md](CARD_SHOP_ARTWORK.md).
 
 ## Buying and opening
 
-Price badges overlap the packs' lower left edges. The first click changes the
+Price badges overlap the packs' lower left edges. The entire pack is a single
+button, including its image and badge. The first click changes the
 badge to Confirm? without spending money. The second reserves the sealed pack,
 deducts its cached market price once, and animates it to the opening popup.
 An unfinished pack's badge changes to Continue, allowing the pack to be resumed
 without another purchase. Completed packs are viewed through View/Sell.
 
-Row, Stack, and Card values preferences live in the cabinet footer. The opening
-popup shows the pack, tear guide, and close control. Drag a mouse or finger from
+Row, Stack, and Card values preferences live at the upper right of the cabinet
+header. New sessions default to Stack; a saved Row preference is preserved.
+The opening popup shows the pack, tear guide, and close control. Drag a mouse or finger from
 left to right across the top. The dotted guide, direction animation, and prompt
-disappear when a valid tear starts. The glowing cut follows the gesture, and a
-partial tear can be resumed. The right arrow, Enter, and Space provide keyboard
-controls. Pointer capture and touch action handling prevent accidental page
+disappear when a valid tear starts. An irregular cut with dark separation,
+bright foil edges, and little fibers follows the gesture without
+stretching the torn pattern. The loose strip and wrapper share the same ragged
+edge. A partial tear can be resumed. The right arrow, Enter, and Space provide
+keyboard controls. Pointer capture and touch action handling prevent accidental page
 scrolling while tearing.
 
 The top strip detaches and all eleven hidden cards visibly emerge from the
@@ -135,6 +139,7 @@ npm run build
 The browser check uses installed Chrome through Playwright. Start Vite on port
 5199 or set `OPENER_URL` to a local or deployed URL. `OPENER_SHOTS` overrides
 `.cache/card-opener-ui/` for screenshots. Coverage includes the cabinet and badge,
+whole pack confirmation, header preferences, default Stack and saved Row,
 starting grant migration, purchases below zero, paid pack recovery, mouse and
 touch tearing, both reveal modes, big hit effects, View/Sell, individual and
 confirmed bulk sales, duplicate sale prevention, sale recovery, filters,

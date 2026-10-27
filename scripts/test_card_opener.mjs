@@ -26,7 +26,10 @@ function rng(seed) {
     return seed / 4294967296;
   };
 }
-const open = (state = initialOpenerSession(), instant = true) => {
+const open = (
+  state = { ...initialOpenerSession(), mode: "row" },
+  instant = true,
+) => {
   const paid =
     state.purchase || !["sealed", "complete"].includes(state.stage)
       ? state
@@ -156,8 +159,18 @@ test("set selection changes the next pack without destroying the current pack", 
   assert.deepEqual(state.pack.ids, ids);
 });
 
+test("new sessions default to stack and restoration preserves an explicit row preference", () => {
+  assert.equal(initialOpenerSession().mode, "stack");
+  for (const mode of [undefined, "invalid", "stack", "row"]) {
+    const restored = restoreOpenerSession(
+      JSON.stringify({ ...initialOpenerSession(), mode }),
+    );
+    assert.equal(restored.mode, mode === "row" ? "row" : "stack");
+  }
+});
+
 test("buying a shop pack reserves a sealed wrapper and cannot replace an unfinished pack", () => {
-  let state = openerReducer(initialOpenerSession(), {
+  let state = openerReducer({ ...initialOpenerSession(), mode: "row" }, {
     type: "purchase",
     id: "jungle",
   });
@@ -263,7 +276,7 @@ test("pack prices match sourced unlimited products and include no invented quote
 test("new players start with simulated money and confirmed purchases can take it negative", () => {
   const base = OPENER_SETS.find((set) => set.id === "base1");
   const jungle = OPENER_SETS.find((set) => set.id === "jungle");
-  let state = initialOpenerSession();
+  let state = { ...initialOpenerSession(), mode: "row" };
   assert.equal(state.balanceCents, OPENER_STARTING_BALANCE_CENTS);
   assert.equal(state.balanceCents, 1000000);
   const unpurchased = openerReducer(state, {

@@ -138,7 +138,7 @@ export function rollOpenerPack(setId, rng = Math.random) {
 export const initialOpenerSession = () => ({
   version: 1,
   setId: "base1",
-  mode: "row",
+  mode: "stack",
   showPrices: true,
   packsOpened: 0,
   balanceCents: OPENER_STARTING_BALANCE_CENTS,
@@ -184,7 +184,7 @@ export function restoreOpenerSession(raw) {
     const restored = {
       ...empty,
       setId: openerSet(saved.setId).id,
-      mode: saved.mode === "stack" ? "stack" : "row",
+      mode: saved.mode === "row" ? "row" : "stack",
       showPrices: saved.showPrices !== false,
       packsOpened: history.reduce(
         (largest, entry) => Math.max(largest, entry.packNumber),

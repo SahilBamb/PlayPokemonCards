@@ -159,73 +159,10 @@ export function Shopfront({
           aria-labelledby="shop-packs-heading"
         >
           <header className="co-cabinet-heading">
-            <span>THE ORIGINAL SERIES</span>
-            <h2 id="shop-packs-heading">Choose a pack</h2>
-          </header>
-          <div className="co-cabinet-shelves">
-            {[0, 1].map((shelf) => (
-              <div className="co-cabinet-shelf" key={shelf}>
-                <div className="co-shop-product-grid">
-                  {OPENER_SETS.slice(shelf * 3, shelf * 3 + 3).map((item) => {
-                    const confirmed = pending === item.id;
-                    const purchased = taking === item.id;
-                    const continuing = inProgress && activeSet === item.id;
-                    return (
-                      <article
-                        className={`co-shop-product ${purchased ? "taking" : ""} ${continuing ? "reserved" : ""}`}
-                        key={item.id}
-                      >
-                        <div className="co-pack-frame" title={item.name}>
-                          <img
-                            src={item.image}
-                            alt={`${item.name} booster pack`}
-                            draggable={false}
-                          />
-                        </div>
-                        <button
-                          className={`co-pack-price ${confirmed ? "confirming" : ""} ${purchased ? "purchased" : ""} ${continuing ? "continuing" : ""}`}
-                          onClick={() => select(item.id)}
-                          disabled={Boolean(taking) || busy}
-                          aria-label={
-                            continuing
-                              ? `Continue ${item.name} pack`
-                              : confirmed
-                                ? `Confirm ${item.name} pack`
-                                : `Choose ${item.name} pack`
-                          }
-                          data-testid={`shelf-price-${item.id}`}
-                          aria-describedby="shop-price-description"
-                          title={
-                            continuing
-                              ? "Your pack is waiting at the opening table"
-                              : `${OPENER_MARKET.packs[item.id].name} · TCGplayer market estimate in USD`
-                          }
-                        >
-                          {continuing ? (
-                            <FaArrowRight />
-                          ) : purchased || confirmed ? (
-                            <FaCheck />
-                          ) : (
-                            <FaCoins />
-                          )}
-                          <span>
-                            {continuing && !purchased
-                              ? "Continue"
-                              : purchased
-                                ? "Ready!"
-                                : confirmed
-                                  ? "Confirm?"
-                                  : formatValue(item.priceCents / 100)}
-                          </span>
-                        </button>
-                      </article>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-          <footer className="co-cabinet-footer">
+            <div className="co-cabinet-title">
+              <span>THE ORIGINAL SERIES</span>
+              <h2 id="shop-packs-heading">Choose a pack</h2>
+            </div>
             <div
               className="co-cabinet-preferences"
               aria-label="Opening preferences"
@@ -261,6 +198,73 @@ export function Shopfront({
                 </i>
               </button>
             </div>
+          </header>
+          <div className="co-cabinet-shelves">
+            {[0, 1].map((shelf) => (
+              <div className="co-cabinet-shelf" key={shelf}>
+                <div className="co-shop-product-grid">
+                  {OPENER_SETS.slice(shelf * 3, shelf * 3 + 3).map((item) => {
+                    const confirmed = pending === item.id;
+                    const purchased = taking === item.id;
+                    const continuing = inProgress && activeSet === item.id;
+                    return (
+                      <button
+                        type="button"
+                        onClick={() => select(item.id)}
+                        disabled={Boolean(taking) || busy}
+                        aria-label={
+                          continuing
+                            ? `Continue ${item.name} pack`
+                            : confirmed
+                              ? `Confirm ${item.name} pack`
+                              : `Choose ${item.name} pack`
+                        }
+                        aria-describedby="shop-price-description"
+                        data-testid={`shelf-pack-${item.id}`}
+                        className={`co-shop-product ${purchased ? "taking" : ""} ${continuing ? "reserved" : ""}`}
+                        key={item.id}
+                      >
+                        <span className="co-pack-frame" title={item.name}>
+                          <img
+                            src={item.image}
+                            alt={`${item.name} booster pack`}
+                            draggable={false}
+                          />
+                        </span>
+                        <span
+                          className={`co-pack-price ${confirmed ? "confirming" : ""} ${purchased ? "purchased" : ""} ${continuing ? "continuing" : ""}`}
+                          data-testid={`shelf-price-${item.id}`}
+                          title={
+                            continuing
+                              ? "Your pack is waiting at the opening table"
+                              : `${OPENER_MARKET.packs[item.id].name} · TCGplayer market estimate in USD`
+                          }
+                        >
+                          {continuing ? (
+                            <FaArrowRight />
+                          ) : purchased || confirmed ? (
+                            <FaCheck />
+                          ) : (
+                            <FaCoins />
+                          )}
+                          <span>
+                            {continuing && !purchased
+                              ? "Continue"
+                              : purchased
+                                ? "Ready!"
+                                : confirmed
+                                  ? "Confirm?"
+                                  : formatValue(item.priceCents / 100)}
+                          </span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+          <footer className="co-cabinet-footer">
             <p className="co-shop-simulation" id="shop-price-description">
               Simulated USD · Market estimates · {sourceDate}{" "}
               <a
