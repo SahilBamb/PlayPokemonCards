@@ -7,6 +7,7 @@
     "test:opener": "node --test scripts/test_card_opener.mjs",
     "test:ui:opener": "node scripts/ui_card_opener.mjs",
     "test:ui:opener-layout": "node scripts/ui_opener_layout.mjs",
+    "record:opener-short": "node scripts/record_opener_short.mjs",
     "dev": "vite",
     "build": "vite build",
     "start": "node scripts/serve-dist.mjs",

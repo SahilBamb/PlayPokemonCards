@@ -135,6 +135,23 @@ export function rollOpenerPack(setId, rng = Math.random) {
   return [...cards, ...draw(rarePool, 1, rng)].map((card) => card.id);
 }
 
+// A recording seed reproduces a pack without changing ordinary random openings.
+export function rollSeededOpenerPack(setId, seed, packNumber = 1) {
+  const input = `${seed}:${setId}:${packNumber}`;
+  let value = 2166136261;
+  for (const char of input) {
+    value ^= char.codePointAt(0);
+    value = Math.imul(value, 16777619);
+  }
+  const random = () => {
+    value = (value + 0x6d2b79f5) | 0;
+    let mixed = Math.imul(value ^ (value >>> 15), 1 | value);
+    mixed ^= mixed + Math.imul(mixed ^ (mixed >>> 7), 61 | mixed);
+    return ((mixed ^ (mixed >>> 14)) >>> 0) / 4294967296;
+  };
+  return rollOpenerPack(setId, random);
+}
+
 export const initialOpenerSession = () => ({
   version: 1,
   setId: "base1",

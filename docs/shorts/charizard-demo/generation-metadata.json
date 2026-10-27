@@ -1,0 +1,31 @@
+{
+  "reference": "https://grok.com/imagine/post/2b64cec0-5e8e-4289-9626-20b798c113da?scope=asset",
+  "clips": [
+    {
+      "file": "01-opening.mp4",
+      "url": "https://grok.com/imagine/post/052dfadf-3b9c-4b86-b3df-9ebb75bcc73b?conversation=25f7a040-7591-423a-85a6-2fe6fda0338a",
+      "prompt": "prompts/01-opening.txt"
+    },
+    {
+      "file": "02-build.mp4",
+      "url": "https://grok.com/imagine/post/9b973ec4-d2f9-451f-b00e-3dd49b0b920e?conversation=90c4337a-26c4-459e-a598-54916b60f605",
+      "prompt": "prompts/02b-build.txt"
+    },
+    {
+      "file": "03-charizard.mp4",
+      "url": "https://grok.com/imagine/post/5e9291e5-a4d0-4547-af3c-713630a06494?conversation=08f90013-44d0-4af0-a896-c7f96ffc5bc8",
+      "prompt": "prompts/03-charizard.txt"
+    }
+  ],
+  "settings": {
+    "provider": "Grok Imagine in Chrome Kyle",
+    "resolution": "720p",
+    "aspectRatio": "16:9",
+    "durationSeconds": 10,
+    "audio": true
+  },
+  "failedAttempt": {
+    "prompt": "prompts/02-build.txt",
+    "reason": "Could not generate content that may contain copyrighted material."
+  }
+}

@@ -24,6 +24,7 @@ import {
   openerSet,
   quoteFor,
   rollOpenerPack,
+  rollSeededOpenerPack,
   saleValueCents,
 } from "../../lib/cardOpener.js";
 import { Shopfront } from "./Shopfront.jsx";
@@ -890,7 +891,11 @@ export function CardOpener({ state, dispatch, onExit }) {
   const open = () => {
     if (!["sealed", "complete"].includes(state.stage)) return;
     playSfx("packTear");
-    dispatch({ type: "open", ids: rollOpenerPack(state.setId), instant });
+    const seed = new URLSearchParams(window.location.search).get("seed");
+    const ids = seed
+      ? rollSeededOpenerPack(state.setId, seed)
+      : rollOpenerPack(state.setId);
+    dispatch({ type: "open", ids, instant });
   };
   const reveal = (index) => {
     if (busy || !pack || pack.flipped[index]) return;

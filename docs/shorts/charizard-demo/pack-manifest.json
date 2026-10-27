@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "seed": "CHARIZARD-STREAM-1715",
+  "setId": "base1",
+  "packNumber": 1,
+  "localReplayUrl": "http://127.0.0.1:5201/card-opener?seed=CHARIZARD-STREAM-1715",
+  "cards": [
+    {
+      "index": 0,
+      "id": "base1-68",
+      "name": "Vulpix",
+      "rarity": "Common",
+      "usd": 0.92,
+      "image": "https://images.pokemontcg.io/base1/68.png",
+      "largeImage": "https://images.pokemontcg.io/base1/68_hires.png"
+    },
+    {
+      "index": 1,
+      "id": "base1-58",
+      "name": "Pikachu",
+      "rarity": "Common",
+      "usd": 11.72,
+      "image": "https://images.pokemontcg.io/base1/58.png",
+      "largeImage": "https://images.pokemontcg.io/base1/58_hires.png"
+    },
+    {
+      "index": 2,
+      "id": "base1-57",
+      "name": "Pidgey",
+      "rarity": "Common",
+      "usd": 2.48,
+      "image": "https://images.pokemontcg.io/base1/57.png",
+      "largeImage": "https://images.pokemontcg.io/base1/57_hires.png"
+    },
+    {
+      "index": 3,
+      "id": "base1-46",
+      "name": "Charmander",
+      "rarity": "Common",
+      "usd": 3.52,
+      "image": "https://images.pokemontcg.io/base1/46.png",
+      "largeImage": "https://images.pokemontcg.io/base1/46_hires.png"
+    },
+    {
+      "index": 4,
+      "id": "base1-66",
+      "name": "Tangela",
+      "rarity": "Common",
+      "usd": 0.9,
+      "image": "https://images.pokemontcg.io/base1/66.png",
+      "largeImage": "https://images.pokemontcg.io/base1/66_hires.png"
+    },
+    {
+      "index": 5,
+      "id": "base1-25",
+      "name": "Dewgong",
+      "rarity": "Uncommon",
+      "usd": 3.67,
+      "image": "https://images.pokemontcg.io/base1/25.png",
+      "largeImage": "https://images.pokemontcg.io/base1/25_hires.png"
+    },
+    {
+      "index": 6,
+      "id": "base1-26",
+      "name": "Dratini",
+      "rarity": "Uncommon",
+      "usd": 3.13,
+      "image": "https://images.pokemontcg.io/base1/26.png",
+      "largeImage": "https://images.pokemontcg.io/base1/26_hires.png"
+    },
+    {
+      "index": 7,
+      "id": "base1-34",
+      "name": "Machoke",
+      "rarity": "Uncommon",
+      "usd": 1.33,
+      "image": "https://images.pokemontcg.io/base1/34.png",
+      "largeImage": "https://images.pokemontcg.io/base1/34_hires.png"
+    },
+    {
+      "index": 8,
+      "id": "base1-102",
+      "name": "Water Energy",
+      "rarity": "Common",
+      "usd": 0.41,
+      "image": "https://images.pokemontcg.io/base1/102.png",
+      "largeImage": "https://images.pokemontcg.io/base1/102_hires.png"
+    },
+    {
+      "index": 9,
+      "id": "base1-101",
+      "name": "Psychic Energy",
+      "rarity": "Common",
+      "usd": 0.62,
+      "image": "https://images.pokemontcg.io/base1/101.png",
+      "largeImage": "https://images.pokemontcg.io/base1/101_hires.png"
+    },
+    {
+      "index": 10,
+      "id": "base1-4",
+      "name": "Charizard",
+      "rarity": "Rare Holo",
+      "usd": 954.65,
+      "image": "https://images.pokemontcg.io/base1/4.png",
+      "largeImage": "https://images.pokemontcg.io/base1/4_hires.png"
+    }
+  ]
+}

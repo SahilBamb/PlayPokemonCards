@@ -16,6 +16,7 @@ import {
   quoteFor,
   restoreOpenerSession,
   rollOpenerPack,
+  rollSeededOpenerPack,
   saveOpenerSession,
   saleValueCents,
 } from "../src/lib/cardOpener.js";
@@ -496,4 +497,18 @@ test("inventory prices are independent, survive restoration, and preserve cards 
   const legacy = { ...hidden };
   delete legacy.showInventoryPrices;
   assert.equal(restoreOpenerSession(JSON.stringify(legacy)).showInventoryPrices, true);
+});
+
+
+test("recording seeds reproduce pack order and leave regular pack collation intact", () => {
+  const seed = "CHARIZARD-STREAM-1715";
+  const pack = rollSeededOpenerPack("base1", seed);
+  assert.deepEqual(pack, rollSeededOpenerPack("base1", seed));
+  assert.equal(pack.length, 11);
+  assert.equal(OPENER_BY_ID[pack.at(-1)].name, "Charizard");
+  assert.equal(OPENER_BY_ID[pack.at(-1)].rarity, "Rare Holo");
+  assert.equal(pack.filter((id) => OPENER_BY_ID[id].supertype === "energy").length, 2);
+  assert.equal(pack.slice(0, 5).every((id) => OPENER_BY_ID[id].rarity === "Common"), true);
+  assert.notDeepEqual(pack, rollSeededOpenerPack("base1", seed, 2));
+  assert.notDeepEqual(pack, rollSeededOpenerPack("base1", "different-seed"));
 });
