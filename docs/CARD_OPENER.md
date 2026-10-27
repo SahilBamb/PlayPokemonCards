@@ -331,3 +331,19 @@ Both routes and the application JavaScript/CSS matched local build bytes over
 HTTPS. GitHub Actions build `40589552807` succeeded. The temporary local preview
 server was stopped after verification. Existing unrelated local edits were kept
 outside the commits.
+
+## Opening view simplification release
+
+Published October 27, 2026, from source commit `eb44918`.
+Verified release: https://b9d35af5.playpokemoncards.pages.dev
+
+Removed the unrevealed stack prompt, Reveal card button, and Choose another
+pack button. Clicking the card still reveals and advances the stack. Next card
+and Inspect remain available after a reveal, View/Sell remains at completion,
+and the close control returns to the shop. Reserved layout slots prevent jumps.
+
+Scoped ESLint, the build, and the five viewport layout suite passed locally and
+against production, including all eleven reveals using the cards themselves and
+assertions that the removed text and buttons are absent. The production routes
+and application assets matched the local build over HTTPS. GitHub Actions build
+`40591048937` succeeded. The temporary local preview server was stopped.
