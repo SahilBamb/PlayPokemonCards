@@ -114,6 +114,15 @@ try {
   const page = await desktopContext.newPage();
   await prepare(page);
   await page.goto(base, { waitUntil: "networkidle" });
+  await page.getByTestId("landing-pledge-badge").locator("img").evaluate(
+    (image) => image.decode(),
+  );
+  const pledge = await page.getByTestId("landing-pledge-badge").boundingBox();
+  assert.ok(pledge.x < 30 && pledge.y < 30 && pledge.width >= 200);
+  assert.match(
+    await page.getByTestId("landing-pledge-badge").getAttribute("href"),
+    /domain=playpokemoncards\.pages\.dev#art/,
+  );
   await page.getByRole("button", { name: "Card Opener", exact: true }).click();
   assert.equal(new URL(page.url()).pathname, "/card-opener");
   assert.equal(await balance(page), 1000000);
@@ -138,15 +147,7 @@ try {
     .evaluateAll((images) =>
       Promise.all(images.map((image) => image.decode())),
     );
-  await page
-    .locator(".co-pledge-badge img")
-    .evaluate((image) => image.decode());
-  const badge = await page.locator(".co-pledge-badge").boundingBox();
-  assert.ok(badge.x < 60 && badge.y < 50 && badge.width >= 200);
-  assert.match(
-    await page.locator(".co-pledge-badge").getAttribute("href"),
-    /domain=playpokemoncards\.pages\.dev#art/,
-  );
+  assert.equal(await page.getByTestId("landing-pledge-badge").count(), 0);
   assert.equal(
     await page.getByRole("button", { name: "Stack", exact: true }).getAttribute("aria-pressed"),
     "true",

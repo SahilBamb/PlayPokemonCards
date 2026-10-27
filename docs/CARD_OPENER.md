@@ -4,9 +4,9 @@ Entry point: the Card Opener button on the main menu, or `/card-opener`.
 
 The page is a shop illustration, its shopkeeper, and a single glass and wood
 cabinet with six packs on two shelves. A compact top bar shows the balance,
-View/Sell, and settings. The owner's requested hosted Art pledge badge is at
-the upper left. The former sidebar cards, visit statistics, featured carousel,
-welcome card, last pack button, How it works section, and inline card gallery
+View/Sell, and settings. The owner's hosted Art pledge badge is at the upper
+left of the main landing page, outside the Card Opener. The former sidebar cards,
+visit statistics, featured carousel, welcome card, last pack button, How it works section, and inline card gallery
 have been removed.
 
 All six existing pack photographs remain in use. No generated pack replacement

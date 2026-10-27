@@ -136,7 +136,25 @@ export function MainMenu({ onSandbox, onPlay, onEditor, onStory, onOpener }) {
   const presetDecks = Object.values(DECKS).filter((d) => d.group === group)
 
   return (
-    <div className={`w-full h-screen flex flex-col items-center text-white ${picking ? 'justify-start pt-6 gap-4' : 'justify-center gap-10'}`}>
+    <div className={`w-full flex flex-col items-center text-white ${picking ? 'h-screen justify-start pt-6 gap-4' : 'min-h-screen justify-center gap-10 pt-20 pb-6'}`}>
+      {!picking && (
+        <a
+          className="absolute top-4 left-4 z-10 block w-[min(240px,calc(100vw-6rem))] rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+          href="https://honest-anti-ai-pledge.pages.dev/?domain=playpokemoncards.pages.dev#art"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Read this project's Art pledge"
+          data-testid="landing-pledge-badge"
+        >
+          <img
+            src="https://honest-anti-ai-pledge.pages.dev/badge/art.svg?domain=playpokemoncards.pages.dev&theme=light"
+            alt="Honest Anti AI Art Pledge for playpokemoncards.pages.dev"
+            width="400"
+            height="88"
+            className="block w-full h-auto"
+          />
+        </a>
+      )}
       <div className="absolute top-4 right-4">
         <SettingsButton />
       </div>

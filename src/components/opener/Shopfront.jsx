@@ -96,20 +96,6 @@ export function Shopfront({
       />
 
       <header className="co-store-header">
-        <a
-          className="co-pledge-badge"
-          href="https://honest-anti-ai-pledge.pages.dev/?domain=playpokemoncards.pages.dev#art"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Read this project's Art pledge"
-        >
-          <img
-            src="https://honest-anti-ai-pledge.pages.dev/badge/art.svg?domain=playpokemoncards.pages.dev&theme=light"
-            alt="Honest Anti AI Art Pledge for playpokemoncards.pages.dev"
-            width="400"
-            height="88"
-          />
-        </a>
         <div className="co-store-brand">
           <button
             className="co-store-back"

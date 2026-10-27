@@ -630,7 +630,7 @@
   right: 24px;
   z-index: 8;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 18px;
   padding: 10px 16px;
@@ -640,17 +640,6 @@
   color: #26344b;
   backdrop-filter: blur(14px);
   box-shadow: 0 5px 22px #17345335;
-}
-.co-pledge-badge {
-  display: block;
-  width: 240px;
-  max-width: 100%;
-  line-height: 0;
-}
-.co-pledge-badge img {
-  display: block;
-  width: 100%;
-  height: auto;
 }
 .co-store-brand {
   display: flex;
@@ -1152,9 +1141,6 @@
     gap: 12px;
     padding: 10px 12px;
   }
-  .co-pledge-badge {
-    width: 205px;
-  }
   .co-store-brand {
     gap: 7px;
   }
@@ -1181,17 +1167,13 @@
 }
 @media (max-width: 900px) {
   .co-store-header {
-    grid-template-columns: auto 1fr;
-    grid-template-areas: "badge brand" "nav nav";
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "brand" "nav";
     gap: 7px 15px;
-  }
-  .co-pledge-badge {
-    grid-area: badge;
-    width: 230px;
   }
   .co-store-brand {
     grid-area: brand;
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
   .co-store-header nav {
     grid-area: nav;
@@ -1270,9 +1252,6 @@
     right: 12px;
     padding: 8px 10px;
   }
-  .co-pledge-badge {
-    width: min(240px, calc(100vw - 100px));
-  }
   .co-store-brand {
     gap: 6px;
   }
@@ -1281,12 +1260,7 @@
     height: 25px;
   }
   .co-store-brand h1 {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
+    font-size: 20px;
   }
   .co-store-back {
     padding: 8px 0;

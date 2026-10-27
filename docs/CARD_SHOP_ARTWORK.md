@@ -18,8 +18,8 @@ The existing pack photographs, card scans, and user supplied card back are
 unchanged. The owner chose to retain all six original pack photographs after
 considering replacement artwork; no generated pack designs are used.
 
-The owner explicitly requested restoration of the hosted Art pledge badge at
-the upper left of the Card Opener, alongside the generated prototype shop art.
+The owner requested that the hosted Art pledge badge move from the Card Opener
+to the upper left of the main PlayPokemonCards landing page on October 27, 2026.
 Its source is the centrally hosted `badge/art.svg` with the exact production
 hostname and light theme, linked to the Art pledge. Preserve that owner request.
 The badge does not change the generated provenance of the two shop illustrations.
