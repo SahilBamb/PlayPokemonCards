@@ -502,6 +502,7 @@ function Gallery({ state, dispatch, onClear }) {
   const [sort, setSort] = useState("recent");
   const [limit, setLimit] = useState(30);
   const [confirmBulk, setConfirmBulk] = useState(false);
+  const [pendingSale, setPendingSale] = useState(null);
   const entries = useMemo(() => {
     const result = [...state.history].reverse().filter((entry) => {
       const card = OPENER_BY_ID[entry.cardId];
@@ -540,7 +541,26 @@ function Gallery({ state, dispatch, onClear }) {
     "en-US",
     { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" },
   );
+  const selectSale = (entry) => {
+    const card = OPENER_BY_ID[entry.cardId];
+    if (
+      entry.soldForCents !== undefined ||
+      saleValueCents(entry.cardId) === null
+    ) {
+      preview(card);
+      return;
+    }
+    setConfirmBulk(false);
+    if (pendingSale !== entry.key) {
+      setPendingSale(entry.key);
+      return;
+    }
+    dispatch({ type: "sell", key: entry.key });
+    playSfx("coin");
+    setPendingSale(null);
+  };
   const changed = () => {
+    setPendingSale(null);
     setLimit(30);
     setConfirmBulk(false);
   };
@@ -607,6 +627,7 @@ function Gallery({ state, dispatch, onClear }) {
               value={sort}
               onChange={(event) => {
                 setSort(event.target.value);
+                setPendingSale(null);
                 setConfirmBulk(false);
               }}
             >
@@ -616,14 +637,27 @@ function Gallery({ state, dispatch, onClear }) {
             </select>
           </div>
           <div className="co-inventory-actions">
-            <span>
-              {entries.length} {entries.length === 1 ? "card" : "cards"}
-            </span>
+            <div className="co-inventory-display">
+              <span>
+                {entries.length} {entries.length === 1 ? "card" : "cards"}
+              </span>
+              <button
+                className="co-price-toggle"
+                role="switch"
+                aria-label="Show inventory prices"
+                aria-checked={state.showInventoryPrices}
+                onClick={() => dispatch({ type: "inventory_prices" })}
+              >
+                Prices
+                <i><b /></i>
+              </button>
+            </div>
             <button
               className={`co-sell-all ${confirmBulk ? "confirming" : ""}`}
               data-testid="sell-all"
               disabled={!sellable.length}
               onClick={() => {
+                setPendingSale(null);
                 if (!confirmBulk) {
                   setConfirmBulk(true);
                   return;
@@ -648,6 +682,7 @@ function Gallery({ state, dispatch, onClear }) {
                 const card = OPENER_BY_ID[entry.cardId];
                 const sold = entry.soldForCents !== undefined;
                 const value = saleValueCents(entry.cardId);
+                const confirming = !sold && pendingSale === entry.key;
                 return (
                   <article
                     className={`co-gallery-card ${isShinyPull(card) ? "shiny" : ""} ${sold ? "sold" : ""}`}
@@ -655,15 +690,43 @@ function Gallery({ state, dispatch, onClear }) {
                     data-testid="opened-card"
                     data-entry-key={entry.key}
                     data-sold={sold ? "true" : "false"}
+                    data-confirming={confirming ? "true" : "false"}
                   >
                     <button
-                      onClick={() => preview(card)}
-                      aria-label={`Inspect opened ${card.name}`}
+                      className="co-gallery-open"
+                      data-testid="inventory-card"
+                      onClick={() => selectSale(entry)}
+                      aria-pressed={
+                        sold || value === null ? undefined : confirming
+                      }
+                      aria-label={
+                        sold || value === null
+                          ? `View ${sold ? "sold" : "unpriced"} ${card.name}`
+                          : confirming
+                            ? `Confirm selling ${card.name} for ${formatValue(value / 100)}`
+                            : `Select ${card.name} to sell`
+                      }
                     >
                       <CardArt card={card} />
-                      <span className="co-inspect-hover">
-                        <FaExpandAlt /> Inspect card
-                      </span>
+                      {state.showInventoryPrices && (
+                        <span
+                          className="co-inventory-card-price"
+                          data-testid="inventory-card-price"
+                        >
+                          {value === null && !sold ? (
+                            <span className="co-price-unavailable">
+                              Price unavailable
+                            </span>
+                          ) : (
+                            <span className="co-value large">
+                              {formatValue((sold ? entry.soldForCents : value) / 100)}
+                            </span>
+                          )}
+                        </span>
+                      )}
+                      {confirming && (
+                        <span className="co-card-sale-prompt">Click again to sell</span>
+                      )}
                     </button>
                     <div className="co-gallery-card-info">
                       <h3>{card.name}</h3>
@@ -679,33 +742,49 @@ function Gallery({ state, dispatch, onClear }) {
                         </small>
                       </div>
                     </div>
-                    <button
-                      className="co-sell-card"
-                      disabled={sold || value === null}
-                      data-testid="sell-card"
-                      aria-label={
-                        sold
-                          ? `${card.name} sold`
-                          : `Sell ${card.name} for ${value === null ? "unavailable price" : formatValue(value / 100)}`
-                      }
-                      onClick={() => {
-                        dispatch({ type: "sell", key: entry.key });
-                        playSfx("coin");
-                      }}
-                    >
-                      {sold ? (
-                        <>
-                          <FaCheck /> Sold ·{" "}
-                          {formatValue(entry.soldForCents / 100)}
-                        </>
-                      ) : value === null ? (
-                        "Price unavailable"
-                      ) : (
-                        <>
-                          Sell <strong>{formatValue(value / 100)}</strong>
-                        </>
-                      )}
-                    </button>
+                    <div className="co-gallery-card-actions">
+                      <button
+                        className={`co-sell-card ${confirming ? "confirming" : ""}`}
+                        disabled={sold || value === null}
+                        data-testid="sell-card"
+                        aria-label={
+                          sold
+                            ? `${card.name} sold`
+                            : `${confirming ? "Confirm selling" : "Sell"} ${card.name} for ${value === null ? "unavailable price" : formatValue(value / 100)}`
+                        }
+                        onClick={() => selectSale(entry)}
+                      >
+                        {sold ? (
+                          <><FaCheck /> Sold</>
+                        ) : value === null ? (
+                          "Price unavailable"
+                        ) : confirming ? (
+                          <>Confirm {formatValue(value / 100)}</>
+                        ) : (
+                          "Sell card"
+                        )}
+                      </button>
+                      <div className="co-gallery-secondary">
+                        <button
+                          className="co-inspect-button"
+                          aria-label={`Inspect opened ${card.name}`}
+                          onClick={() => {
+                            setPendingSale(null);
+                            preview(card);
+                          }}
+                        >
+                          <FaExpandAlt /> Inspect
+                        </button>
+                        {confirming && (
+                          <button
+                            className="co-cancel-sale"
+                            onClick={() => setPendingSale(null)}
+                          >
+                            Cancel
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   </article>
                 );
               })}
@@ -1034,58 +1113,53 @@ export function CardOpener({ state, dispatch, onExit }) {
                       CARD {String(pack.index + 1).padStart(2, "0")} OF{" "}
                       {pack.ids.length}
                     </span>
-                    {currentRevealed ? (
-                      <>
+                    <div className="co-stack-rarity">
+                      {currentRevealed && (
                         <span
                           className={`co-rarity-badge ${isShinyPull(currentCard) ? "rare" : ""}`}
                         >
                           {isShinyPull(currentCard) && <FaStar />}
                           {currentCard.rarity}
                         </span>
-                        <h3>{currentCard.name}</h3>
-                        <p>
-                          {packSet.name} · No. {currentCard.number}
-                        </p>
-                        <div className="co-stack-actions">
-                          {state.stage !== "complete" && (
-                            <button className="co-primary" onClick={next}>
-                              Next card <FaArrowRight />
-                            </button>
-                          )}
-                          <button
-                            className="co-inspect-button"
-                            onClick={() => preview(currentCard)}
-                          >
-                            <FaExpandAlt /> Inspect card
-                          </button>
-                        </div>
-                        <small>
-                          {state.stage === "complete"
-                            ? "Your final card. Take a moment."
-                            : "Take your time. Click the card again when you are ready."}
-                        </small>
-                      </>
-                    ) : (
-                      <>
-                        <h3>A little mystery.</h3>
-                        <p>Click the card to see what is waiting.</p>
-                        <button
-                          className="co-primary"
-                          disabled={busy}
-                          onClick={() => reveal(pack.index)}
-                        >
-                          Reveal card <FaArrowRight />
-                        </button>
-                        <small>Every card is a moment worth enjoying.</small>
-                      </>
-                    )}
+                      )}
+                    </div>
+                    <h3>
+                      {currentRevealed ? currentCard.name : "A little mystery."}
+                    </h3>
+                    <p>
+                      {currentRevealed
+                        ? `${packSet.name} · No. ${currentCard.number}`
+                        : "Click the card to see what is waiting."}
+                    </p>
+                    <div className="co-stack-actions">
+                      <button
+                        className={`co-primary ${state.stage === "complete" ? "co-hidden-slot" : ""}`}
+                        disabled={busy || state.stage === "complete"}
+                        aria-hidden={state.stage === "complete"}
+                        onClick={() =>
+                          currentRevealed ? next() : reveal(pack.index)
+                        }
+                      >
+                        {currentRevealed ? "Next card" : "Reveal card"} <FaArrowRight />
+                      </button>
+                      <button
+                        className={`co-inspect-button ${!currentRevealed ? "co-hidden-slot" : ""}`}
+                        disabled={!currentRevealed}
+                        aria-hidden={!currentRevealed}
+                        onClick={() => preview(currentCard)}
+                      >
+                        <FaExpandAlt /> Inspect card
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
 
             {["revealing", "complete"].includes(state.stage) && (
-              <div className="co-stage-footer">
+              <div
+                className={`co-stage-footer ${state.mode === "stack" ? "co-stack-footer" : ""}`}
+              >
                 <div
                   className="co-pack-progress"
                   aria-label={`${revealedCount} of 11 cards revealed`}
@@ -1125,14 +1199,14 @@ export function CardOpener({ state, dispatch, onExit }) {
                     </span>
                   )}
                   {state.stage === "complete" && (
-                    <button className="co-text-button" onClick={openInventory}>
-                      View/Sell cards
-                    </button>
-                  )}
-                  {state.stage === "complete" && (
-                    <button className="co-primary" onClick={closePopup}>
-                      Choose another pack <FaBoxOpen />
-                    </button>
+                    <div className="co-complete-actions">
+                      <button className="co-text-button" onClick={openInventory}>
+                        View/Sell cards
+                      </button>
+                      <button className="co-primary" onClick={closePopup}>
+                        Choose another pack <FaBoxOpen />
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>

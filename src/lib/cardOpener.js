@@ -140,6 +140,7 @@ export const initialOpenerSession = () => ({
   setId: "base1",
   mode: "stack",
   showPrices: true,
+  showInventoryPrices: true,
   packsOpened: 0,
   balanceCents: OPENER_STARTING_BALANCE_CENTS,
   startingBalanceCents: OPENER_STARTING_BALANCE_CENTS,
@@ -186,6 +187,7 @@ export function restoreOpenerSession(raw) {
       setId: openerSet(saved.setId).id,
       mode: saved.mode === "row" ? "row" : "stack",
       showPrices: saved.showPrices !== false,
+      showInventoryPrices: saved.showInventoryPrices !== false,
       packsOpened: history.reduce(
         (largest, entry) => Math.max(largest, entry.packNumber),
         Number.isInteger(saved.packsOpened) && saved.packsOpened >= 0
@@ -338,6 +340,8 @@ export function openerReducer(state, action) {
     return state.purchase
       ? state
       : { ...state, setId: openerSet(action.id).id };
+  if (action.type === "inventory_prices")
+    return { ...state, showInventoryPrices: !state.showInventoryPrices };
   if (action.type === "prices")
     return { ...state, showPrices: !state.showPrices };
   if (action.type === "mode") {
@@ -433,6 +437,7 @@ export function openerReducer(state, action) {
       setId: state.setId,
       mode: state.mode,
       showPrices: state.showPrices,
+      showInventoryPrices: state.showInventoryPrices,
       balanceCents: state.balanceCents,
       purchase: state.purchase,
     };

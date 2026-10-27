@@ -36,6 +36,11 @@ scrolling while tearing.
 The top strip detaches and all eleven hidden cards visibly emerge from the
 wrapper. They fan into a row or settle into a stack. Row cards flip independently.
 Stack cards remain visible until the player chooses Next card or clicks again.
+The stack reserves consistent slots for the rarity, a two line title, metadata,
+Reveal/Next and Inspect controls, progress, value total, and completion actions.
+The popup keeps the same size and position through all eleven reveals, including
+the last card. Card size adapts to viewport height; short landscape screens place
+card details beside the stack. New cards fade into the same position.
 Inspection opens the full size card viewer above either popup. Both popups trap
 focus, make the shop inert, and restore focus and scrolling when closed. Escape
 closes inspection first, then the popup. Reduced motion and the existing animation
@@ -57,7 +62,19 @@ It includes every revealed copy, full size inspection, set and sale status
 filters, name/rarity search, sorting, and pagination after the first 30 matches.
 Sold artwork remains inspectable, with a Sold label and its credited value.
 
-Each copy has a stable pack/index key. Sell credits the cached quote, rounded
+Each card displays its value over the artwork, styled like the stack price.
+A Prices switch hides these overlays for viewing the artwork. This preference
+is independent of the opening view, survives refreshes and reopening inventory,
+and is retained when history is cleared. Sold cards display their credited value.
+
+Clicking an available card or its Sell card button selects it without selling.
+The button changes to Confirm with the exact value, and a second click on the
+card or button completes the sale. Cancel, inspecting the card, selecting another
+card, changing filters, and sorting clear the pending selection. Inspect remains
+an explicit action even with prices hidden. Sold cards and cards without a quote
+can still be inspected, but cannot be sold again.
+
+Each copy has a stable pack/index key. A confirmed sale credits the cached quote, rounded
 to integer cents, once. The entry records `soldForCents`; repeated actions and
 reloads cannot credit the same copy again. Cards without a source quote cannot
 be sold. Selling changes the simulated wallet only and never writes the Story
@@ -69,8 +86,8 @@ total. The first click asks for inline confirmation; the second performs the sal
 Sold copies and missing quotes are skipped. All, Available, and Sold filters
 keep the sales view useful after a bulk sale.
 
-Card values hides estimates during opening. Sale prices remain visible in the
-inventory so players can decide what to sell. Revealed card history is stored
+Card values hides estimates during opening. Inventory has its own Prices switch;
+confirmation always states the price before selling. Revealed card history is stored
 in `sessionStorage` under `ppc-card-opener-session-v1`: it survives refreshes and
 menu navigation, and ends when the browser tab closes. Clear history has a
 confirmation dialog and preserves the wallet and any unopened paid pack.
@@ -133,6 +150,7 @@ Provider documentation: https://tcgcsv.com/docs
 npm run test:opener
 npm run test:story
 npm run test:ui:opener
+npm run test:ui:opener-layout
 npm run build
 ```
 
@@ -144,6 +162,11 @@ starting grant migration, purchases below zero, paid pack recovery, mouse and
 touch tearing, both reveal modes, big hit effects, View/Sell, individual and
 confirmed bulk sales, duplicate sale prevention, sale recovery, filters,
 inspection, clearing, keyboard controls, and Story Mode profile isolation.
+The layout check compares card, details, controls, progress, and popup bounds
+before and after every reveal and advance, including the final card, at five
+viewports. It exercises long names, missing quotes, holos, animation and reduced
+motion, hidden opening values, inventory price preference persistence, and sale
+cancellation and inspection without changing the balance.
 
 ## Production release
 

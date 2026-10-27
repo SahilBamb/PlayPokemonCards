@@ -1041,7 +1041,7 @@
 .co-gallery-card {
   min-width: 0;
 }
-.co-gallery-card > button {
+.co-gallery-card > .co-gallery-open {
   display: block;
   position: relative;
   width: 100%;
@@ -1054,11 +1054,11 @@
     filter 0.2s;
   box-shadow: 0 5px 12px #0003;
 }
-.co-gallery-card > button:hover {
+.co-gallery-card > .co-gallery-open:hover {
   transform: translateY(-4px);
   filter: brightness(1.06);
 }
-.co-gallery-card.shiny > button {
+.co-gallery-card.shiny > .co-gallery-open {
   box-shadow:
     0 0 0 1px #e4be662e,
     0 4px 20px #e4be6615;
@@ -1081,8 +1081,8 @@
   transition: opacity 0.2s;
   pointer-events: none;
 }
-.co-gallery-card > button:hover .co-inspect-hover,
-.co-gallery-card > button:focus-visible .co-inspect-hover {
+.co-gallery-card > .co-gallery-open:hover .co-inspect-hover,
+.co-gallery-card > .co-gallery-open:focus-visible .co-inspect-hover {
   opacity: 1;
 }
 .co-gallery-card-info {

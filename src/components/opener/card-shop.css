@@ -1097,7 +1097,7 @@
   color: #325f88;
   border-color: #bddcfc;
 }
-.card-opener .co-gallery-card > .co-sell-card {
+.card-opener .co-gallery-card .co-sell-card {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1113,18 +1113,18 @@
   font-weight: 700;
   box-shadow: none;
 }
-.card-opener .co-gallery-card > .co-sell-card:hover {
+.card-opener .co-gallery-card .co-sell-card:hover {
   transform: none;
   filter: brightness(1.05);
 }
-.card-opener .co-gallery-card.sold > .co-sell-card {
+.card-opener .co-gallery-card.sold .co-sell-card {
   border-color: #78a98744;
   background: #294438;
   color: #bce1c5;
   opacity: 1;
   font-size: 10px;
 }
-.co-gallery-card.sold > button:first-child {
+.co-gallery-card.sold > .co-gallery-open {
   opacity: 0.55;
   filter: saturate(0.6);
 }
@@ -1400,7 +1400,7 @@
     gap: 10px;
     font-size: 7px;
   }
-  .card-opener .co-gallery-card > .co-sell-card {
+  .card-opener .co-gallery-card .co-sell-card {
     min-height: 44px;
   }
 }
@@ -1625,4 +1625,213 @@
 .card-opener[data-motion="reduced"] .co-hit-star {
   opacity: 0.75;
   transform: none;
+}
+
+/* Reserve the same stack slots before and after every reveal. */
+.co-popup .co-stage.stack:is(.revealing, .complete) {
+  min-height: 0;
+}
+.co-popup .co-stack-scene {
+  width: clamp(120px, calc((100dvh - 444px) * 0.716374), 225px);
+}
+.co-popup .co-stack-top {
+  animation: coOpeningFade 0.18s ease-out both;
+}
+.co-popup .co-stack-info {
+  display: grid;
+  grid-template-rows: 12px 25px 65px 38px 43px;
+  gap: 6px;
+  width: min(450px, 100%);
+  max-width: 450px;
+  align-items: center;
+  justify-items: center;
+}
+.co-popup .co-stack-info > .co-eyebrow,
+.co-popup .co-stack-info h3,
+.co-popup .co-stack-info p,
+.co-popup .co-stack-actions {
+  margin: 0;
+}
+.co-popup .co-stack-info h3 {
+  display: grid;
+  align-content: center;
+  width: 100%;
+  height: 100%;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.co-stack-rarity {
+  height: 25px;
+}
+.co-popup .co-stack-actions {
+  display: grid;
+  grid-template-columns: 140px 110px;
+  gap: 18px;
+  height: 43px;
+}
+.co-popup .co-stack-actions > button {
+  justify-content: center;
+  font-size: 12px;
+  white-space: nowrap;
+  height: 43px;
+  padding: 8px;
+  gap: 8px;
+}
+.co-hidden-slot {
+  visibility: hidden;
+  pointer-events: none;
+}
+.co-complete-actions {
+  display: flex;
+  max-width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+.co-popup .co-stack-footer {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 18px 70px;
+  justify-content: normal;
+  justify-items: center;
+  gap: 10px;
+  height: 122px;
+  min-height: 122px;
+  padding: 12px 10px;
+}
+.co-stack-footer .co-footer-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 24px 36px;
+  justify-content: normal;
+  justify-items: center;
+  gap: 10px;
+  width: 100%;
+}
+.co-stack-footer .co-footer-actions:empty {
+  display: grid;
+}
+.co-stack-footer .co-pack-progress {
+  display: grid;
+  grid-template-columns: 139px 125px;
+  justify-content: center;
+  gap: 13px;
+  width: 100%;
+  height: 18px;
+}
+.co-stack-footer .co-pack-progress > div {
+  justify-content: flex-end;
+}
+.co-stack-footer .co-pack-total {
+  grid-row: 1;
+  flex-direction: row;
+}
+.co-stack-footer .co-complete-actions {
+  grid-row: 2;
+}
+.co-stack-footer .co-complete-actions .co-text-button {
+  font-size: 11px;
+  white-space: nowrap;
+}
+.co-popup .co-footer-actions {
+  flex-wrap: wrap;
+}
+@media (min-width: 700px) and (max-height: 650px) {
+  .co-popup .co-stack-area {
+    flex-direction: row;
+    gap: 40px;
+    padding: 20px;
+  }
+  .co-popup .co-stack-scene {
+    width: clamp(100px, calc((100dvh - 214px) * 0.716374), 225px);
+  }
+  .co-popup .co-stack-info {
+    width: 330px;
+    grid-template-rows: 12px 22px 53px 20px 43px;
+    gap: 4px;
+  }
+  .co-popup .co-stack-info h3 {
+    font-size: 22px;
+  }
+}
+
+/* Prices live on the artwork and sales always require a second click. */
+.co-inventory-display {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.co-inventory-display .co-price-toggle {
+  margin: 0;
+  padding: 0;
+  font-size: 11px;
+  color: #d4def0;
+}
+.co-inventory-card-price {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.co-inventory-card-price .co-value.large {
+  font-size: clamp(21px, 2.1vw, 32px);
+  -webkit-text-stroke-width: 5px;
+  letter-spacing: -0.8px;
+}
+.co-inventory-card-price .co-price-unavailable {
+  font-size: 9px;
+  color: #edf3ff;
+  background: #131f35e8;
+  padding: 5px;
+  border-radius: 4px;
+}
+.co-gallery-card[data-confirming="true"] .co-gallery-open {
+  outline: 2px solid #ffe2a0;
+  outline-offset: 4px;
+}
+.co-card-sale-prompt {
+  position: absolute;
+  top: 7%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 7px 8px;
+  border-radius: 6px;
+  background: #192840f5;
+  color: #fff0c7;
+  font-size: 10px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.co-gallery-card-actions {
+  display: grid;
+  grid-template-rows: 44px 32px;
+  gap: 4px;
+  margin-top: 8px;
+}
+.card-opener .co-gallery-card .co-sell-card {
+  width: 100%;
+  margin: 0;
+  padding: 8px 5px;
+}
+.card-opener .co-gallery-card .co-sell-card.confirming {
+  background: #e4f1ff;
+  border-color: #bddcfc;
+  color: #325f88;
+}
+.co-gallery-secondary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+.co-gallery-secondary button {
+  border: 0;
+  background: transparent;
+  color: #c3cfe2;
+  font-size: 10px;
+  padding: 5px 0;
 }

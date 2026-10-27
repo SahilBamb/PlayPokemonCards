@@ -483,3 +483,17 @@ test("bulk sales use the requested copies and skip sold cards or unavailable quo
     unavailable,
   );
 });
+
+
+test("inventory prices are independent, survive restoration, and preserve cards and money", () => {
+  const state = openerReducer(open(), { type: "reveal", index: 0 });
+  assert.equal(state.showInventoryPrices, true);
+  const hidden = openerReducer(state, { type: "inventory_prices" });
+  assert.deepEqual(hidden, { ...state, showInventoryPrices: false });
+  assert.equal(hidden.showPrices, true);
+  assert.equal(openerReducer(hidden, { type: "clear" }).showInventoryPrices, false);
+  assert.equal(restoreOpenerSession(JSON.stringify(hidden)).showInventoryPrices, false);
+  const legacy = { ...hidden };
+  delete legacy.showInventoryPrices;
+  assert.equal(restoreOpenerSession(JSON.stringify(legacy)).showInventoryPrices, true);
+});

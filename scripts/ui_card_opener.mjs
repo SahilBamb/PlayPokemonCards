@@ -295,7 +295,17 @@ try {
     (item) => item.key === entryKey,
   );
   const sale = saleValueCents(entry.cardId);
+  assert.equal(await page.getByTestId("inventory-card-price").count(), 11);
+  await page.getByRole("switch", { name: "Show inventory prices" }).click();
+  assert.equal(await page.getByTestId("inventory-card-price").count(), 0);
+  await page.getByRole("switch", { name: "Show inventory prices" }).click();
+  await firstCard.getByTestId("inventory-card").click();
+  assert.equal(await balance(page), firstBalance, "selecting does not sell");
+  await firstCard.getByRole("button", { name: "Cancel", exact: true }).click();
+  assert.equal(await firstCard.getAttribute("data-confirming"), "false");
   await firstCard.getByTestId("sell-card").click();
+  assert.equal(await balance(page), firstBalance, "sales need confirmation");
+  await firstCard.getByTestId("inventory-card").click();
   assert.equal(await balance(page), firstBalance + sale);
   assert.equal(await firstCard.getByTestId("sell-card").isDisabled(), true);
   assert.equal(
@@ -493,6 +503,8 @@ try {
   await viewCards(mobile);
   const mobileEntry = (await saved(mobile)).history[0];
   await shot(mobile, "mobile-view-sell");
+  await mobile.getByTestId("inventory-card").tap();
+  assert.equal(await balance(mobile), firstBalance);
   await mobile.getByTestId("sell-card").tap();
   assert.equal(
     await balance(mobile),
