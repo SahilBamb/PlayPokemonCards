@@ -1129,18 +1129,16 @@ export function CardOpener({ state, dispatch, onExit }) {
                     <p>
                       {currentRevealed
                         ? `${packSet.name} · No. ${currentCard.number}`
-                        : "Click the card to see what is waiting."}
+                        : ""}
                     </p>
                     <div className="co-stack-actions">
                       <button
-                        className={`co-primary ${state.stage === "complete" ? "co-hidden-slot" : ""}`}
-                        disabled={busy || state.stage === "complete"}
-                        aria-hidden={state.stage === "complete"}
-                        onClick={() =>
-                          currentRevealed ? next() : reveal(pack.index)
-                        }
+                        className={`co-primary ${!currentRevealed || state.stage === "complete" ? "co-hidden-slot" : ""}`}
+                        disabled={busy || !currentRevealed || state.stage === "complete"}
+                        aria-hidden={!currentRevealed || state.stage === "complete"}
+                        onClick={next}
                       >
-                        {currentRevealed ? "Next card" : "Reveal card"} <FaArrowRight />
+                        Next card <FaArrowRight />
                       </button>
                       <button
                         className={`co-inspect-button ${!currentRevealed ? "co-hidden-slot" : ""}`}
@@ -1202,9 +1200,6 @@ export function CardOpener({ state, dispatch, onExit }) {
                     <div className="co-complete-actions">
                       <button className="co-text-button" onClick={openInventory}>
                         View/Sell cards
-                      </button>
-                      <button className="co-primary" onClick={closePopup}>
-                        Choose another pack <FaBoxOpen />
                       </button>
                     </div>
                   )}

@@ -37,10 +37,14 @@ The top strip detaches and all eleven hidden cards visibly emerge from the
 wrapper. They fan into a row or settle into a stack. Row cards flip independently.
 Stack cards remain visible until the player chooses Next card or clicks again.
 The stack reserves consistent slots for the rarity, a two line title, metadata,
-Reveal/Next and Inspect controls, progress, value total, and completion actions.
+Next and Inspect controls, progress, value total, and completion actions.
 The popup keeps the same size and position through all eleven reveals, including
 the last card. Card size adapts to viewport height; short landscape screens place
-card details beside the stack. New cards fade into the same position.
+card details beside the stack. New cards fade into the same position. The card
+itself reveals and advances the stack; the former reveal prompt, Reveal card
+button, and Choose another pack button have been removed. Next card and Inspect
+remain available after a reveal. Use the popup close control to return to the
+shop, or View/Sell after the pack is complete.
 Inspection opens the full size card viewer above either popup. Both popups trap
 focus, make the shop inert, and restore focus and scrolling when closed. Escape
 closes inspection first, then the popup. Reduced motion and the existing animation

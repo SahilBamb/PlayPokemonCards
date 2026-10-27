@@ -79,9 +79,11 @@ try {
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(450);
     const initial = await geometry(page);
+    assert.equal(await page.getByText("Click the card to see what is waiting.", { exact: true }).count(), 0);
+    assert.equal(await page.getByRole("button", { name: "Reveal card", exact: true }).count(), 0);
     for (let index = 0; index < ids.length; index++) {
       if (index) {
-        await page.getByRole("button", { name: "Next card", exact: true }).click();
+        await page.getByTestId("opener-card").click();
         stable(await geometry(page), initial, `${width}x${height} back ${index}`);
       }
       await page.getByTestId("opener-card").click();
@@ -92,6 +94,7 @@ try {
       }
     }
     assert.equal(await page.getByTestId("opener-stage").getAttribute("data-stage"), "complete");
+    assert.equal(await page.getByRole("button", { name: "Choose another pack", exact: true }).count(), 0);
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     assert.ok(await page.getByTestId("opener-modal").evaluate((element) => element.scrollWidth <= element.clientWidth));
     const complete = await page.locator(".co-complete-actions").boundingBox();
