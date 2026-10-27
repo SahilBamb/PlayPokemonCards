@@ -68,3 +68,23 @@ energy cards are visible, and check the climax against the Charizard dialogue.
 FFprobe should report 1080 by 1920, 30 fps, 30 seconds, and stereo AAC. Speech
 transcription checks wording and timing, but does not establish vocal naturalness
 or perfect lip sync. Original source audio is retained for review.
+
+## Verified delivery
+
+The first video was exported and inspected on October 27, 2026. The actual frame
+start was calibrated at 0.88 seconds using the off-crop sync marker. A separate
+contact sheet verifies every final card reveal, including Water and Psychic
+Energy, and named dialogue frames were checked against Vulpix, Pikachu, and the
+Charizard climax. The final file is exactly 30 seconds with H.264 1080 by 1920
+video at 30 fps and 48 kHz stereo AAC. Peak audio level is below clipping.
+Source speech was transcribed locally; no claim of manual audio audition is made.
+
+The seeded opening feature and reusable pipeline are committed as `37c04c3`,
+retained on `experiment/influencer-pack-shorts`, and merged into `master`.
+Production release: https://b39dbdcc.playpokemoncards.pages.dev
+Replay: https://playpokemoncards.pages.dev/card-opener?seed=CHARIZARD-STREAM-1715
+Choose the Base Set pack. All 24 opener checks, scoped ESLint, and the production
+build passed. A browser check verified seeded draws after existing session packs,
+repeat seeded openings in production, and unchanged ordinary random draws.
+Production HTML, JavaScript, and CSS matched the local build. GitHub Actions run
+`40596193072` succeeded. The temporary recording server on port 5201 was stopped.
