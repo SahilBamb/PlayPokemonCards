@@ -228,3 +228,29 @@ all six original pack photos, shop illustrations, supplied back, sharing image,
 and application JavaScript/CSS matched the deployed build byte for byte. GitHub
 Actions build `40400613195` succeeded. The temporary local test server was stopped
 after verification.
+
+## Pack interaction and ragged foil release
+
+Published October 27, 2026, from source commit `e516e6d` to the same Cloudflare
+account, Pages project, production branch, and public feature URL above.
+
+Verified release: https://528faf43.playpokemoncards.pages.dev
+
+The entire pack now accepts the first selection and second confirmation click,
+including its image and overlapping price badge. It is one keyboard accessible
+button, preserving single charging and unfinished pack recovery. Row, Stack, and
+Card values now sit at the cabinet's upper right. New sessions use Stack;
+explicit saved Row preferences remain intact. The dragged tear exposes an
+irregular dark cut with silver foil edges and fibers. The cut, detached strip,
+and opened wrapper use the same seam, revealed progressively without stretching.
+
+All 22 opener checks, 19 Story Mode checks, scoped ESLint, and the production
+build passed. The browser flow passed locally and against production, including
+whole image confirmation, no charge on the first click, exactly one charge on
+confirmation, default Stack and saved Row, header placement, resumable jagged
+tearing, mouse and touch opening, both reveal modes, card sales, wallet recovery,
+and Story Mode isolation. Desktop and mobile screenshots were inspected. Both
+page routes, all six pack photographs, shop illustrations, supplied card back,
+sharing image, and application JavaScript/CSS matched local build bytes over
+production HTTPS. GitHub Actions build `40523349714` succeeded. The temporary
+local test server was stopped after verification.
