@@ -277,3 +277,33 @@ page routes, all six pack photographs, shop illustrations, supplied card back,
 sharing image, and application JavaScript/CSS matched local build bytes over
 production HTTPS. GitHub Actions build `40523349714` succeeded. The temporary
 local test server was stopped after verification.
+
+## Stable stack and inventory overlays release
+
+Published October 27, 2026, from source commit `3483b02` to the same Cloudflare
+account, Pages project, production branch, and public feature URL above.
+
+Verified release: https://e65c9d4d.playpokemoncards.pages.dev
+
+Stack details and footer slots now reserve consistent space before a reveal,
+after a reveal, between cards, and at completion. Card sizing responds to the
+viewport and short landscape screens use a layout with details beside the card.
+Inventory prices appear on the artwork and can be hidden with a remembered
+Prices switch. Individual sales use card selection followed by confirmation,
+with the exact price shown even when artwork prices are hidden. The explicit
+Inspect action and cancellation preserve browsing without selling.
+
+All 23 opener checks, 19 Story Mode checks, scoped ESLint, and the production
+build passed. Both browser suites passed locally and against production. The
+layout regression compares popup, stack, title, action controls, footer, and
+progress geometry through all eleven reveals and advances, including completion,
+at 1440 by 1000, 390 by 844, 360 by 667, 768 by 1024, and 844 by 390. Cases
+include long names, an unavailable quote, a holo, animation and reduced motion,
+and hidden opening values. Inventory checks cover overlay visibility, preference
+recovery after reload and reopening, selecting and cancelling without credit,
+inspection, confirmation before selling, credited receipts, and duplicate sale
+prevention. Desktop, phone, and landscape screenshots were inspected. Both page
+routes, application JavaScript/CSS, original pack photographs, shop illustrations,
+card back, and sharing image matched local build bytes over production HTTPS.
+GitHub Actions build `40525948618` succeeded. The temporary local test server was
+stopped after verification.
