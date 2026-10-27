@@ -307,3 +307,23 @@ routes, application JavaScript/CSS, original pack photographs, shop illustration
 card back, and sharing image matched local build bytes over production HTTPS.
 GitHub Actions build `40525948618` succeeded. The temporary local test server was
 stopped after verification.
+
+## Landing page pledge badge release
+
+Published October 27, 2026, from source commit `49b1e13`.
+Verified release: https://f04340c6.playpokemoncards.pages.dev
+
+At the owner's request, the hosted Honest Anti AI Art pledge badge now appears
+at the upper left of the main landing page. It is absent from the Card Opener
+and deck picker. Landing page spacing keeps it clear of the logo and settings
+on short phone screens, and the shop header fills the space it previously used.
+The badge source, domain, and Art pledge link are unchanged.
+
+Scoped ESLint and the production build passed. Browser checks passed locally
+and on production at widths of 1440, 390, and 360 pixels, verifying the loaded
+badge, corner position, clear spacing, shop header bounds, removal from other
+screens, and restoration on returning to the menu. Screenshots were inspected.
+Both routes and the application JavaScript/CSS matched local build bytes over
+HTTPS. GitHub Actions build `40589552807` succeeded. The temporary local preview
+server was stopped after verification. Existing unrelated local edits were kept
+outside the commits.
