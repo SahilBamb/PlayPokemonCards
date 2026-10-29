@@ -79,3 +79,8 @@ horizontal overflow or browser page errors were found. Review images are
 `story-atlas/48-story-home-font-dialogue.webp`,
 `story-atlas/49-story-home-font-hub.webp` and
 `story-atlas/53-story-home-font-mobile-deck.webp`.
+
+Published source `b86e7b5` as Cloudflare Pages deployment `3b038c66`.
+Production `/story-mode`, HTML, JS and CSS match the tested build. The public
+Home to Story Mode flow confirmed matching font families, 900-weight headings,
+no horizontal overflow at 1366 by 768 and no browser page errors.
