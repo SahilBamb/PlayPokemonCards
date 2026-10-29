@@ -283,9 +283,7 @@ export function ShopScreen({ story, profile, setProfile, onBack, onEditor }) {
       () => {
         purchasing.current = false;
         setTaking(null);
-        setNotice(
-          "Your pack is ready. It stays unopened until you rip the foil.",
-        );
+        setNotice("");
         startOpening(pack);
       },
       settings.animations ? 650 : 0,
