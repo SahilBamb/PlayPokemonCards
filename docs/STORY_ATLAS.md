@@ -151,3 +151,13 @@ locked areas, shop and editor, keyboard battle setup, concession rewards and the
 result popup. Viewport checks covered 1600 by 950, 1366 by 768, 1280 by 720, phone
 390 by 844 and phone landscape 844 by 390. Screenshots were visually inspected
 for overflow, overlapping deck controls, popup bounds and readable actions.
+
+Revision published October 29, 2026: source `eea77bd`, branch
+`feature/kanto-story-chapters`, deployment `61846e52`
+(<https://61846e52.playpokemoncards.pages.dev>). The production HTML, JS, CSS,
+six environments and manifest matched the build byte for byte. A fresh live
+profile visited all three maps before choosing a starter, canceled setup with
+zero coins, completed setup and opened an encounter popup over the hub. The deck
+dock remained inside the 1366 by 768 viewport and no page errors occurred.
+GitHub build [40890566065](https://github.com/SahilBamb/PlayPokemonCards/actions/runs/40890566065)
+passed for this source.
