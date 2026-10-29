@@ -40,3 +40,30 @@ purchase/tear/reveals, refresh recovery, stable card position, desktop and phone
 layouts, row mode, reduced motion and ordinary set fallback were checked in an
 isolated browser. Screenshots and the exact recorded session are in the media
 folder. Upload metadata is saved there separately after YouTube verification.
+
+## Release and Short
+
+Source `b694d87` is merged and pushed to `master`. Cloudflare Pages release
+`7c4325fa` is live at https://playpokemoncards.pages.dev. The live JavaScript and
+CSS match the clean branch build, and a production browser opening verified the
+God Pack type, exact eleven card identifiers, label and first reveal. GitHub
+Actions run `40793656426` passed.
+
+The finished Short is 16.25 seconds at 480 by 854, 24 fps, with stereo AAC.
+All eleven cards, their value overlays, the first frame thumbnail, caption band
+and final frame were inspected. Source and final speech were checked with ASR;
+this does not imply manual audio audition. The soundtrack starts at 1:34 and
+the video ends after the final “Oh my God”.
+
+Published video: https://www.youtube.com/shorts/t6pygtrJstg
+
+Title: POKEMON GOD PACK BASE SET PULL 🤯 Every Card Is a Holo!
+
+The video and separate generated thumbnail were uploaded through Chrome. The
+user completed publication and posted the requested indie developer comment;
+both were then visibly verified, so no duplicate comment was added. The
+description links only to the base site and discloses the fictional God Pack
+and AI streamer. YouTube checks found a music claim and no Community Guidelines
+issues. Claim territories and the final platform AI toggle were not separately
+inspected after user publication. Full details are in the local upload record.
+The isolated recording browser and local server have been stopped.
