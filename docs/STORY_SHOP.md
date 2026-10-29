@@ -63,3 +63,14 @@ the engine test suite passes. Vite also retains its existing large chunk warning
 Branch: `feature/story-shop-and-copy`. Deployment uses the existing Pages project
 `playpokemoncards`, production branch `main`, hosting account
 `77965546ba0ef6c4f1741d7d8a04039e`. See `STORY_ATLAS.md` for the publish command.
+
+Published October 29, 2026: source `cf9b4bd`, deployment `617d8b1e`
+(<https://617d8b1e.playpokemoncards.pages.dev>). Production HTML, JavaScript,
+CSS, the seven atlas assets and the asset manifest matched the tested build byte
+for byte over HTTPS. A fresh production profile completed a clean-text intro,
+visited the League Quartermaster, confirmed a 100-coin pack, tore it open with the
+keyboard, revealed its cards and returned to the cabinet. The initial confirmation
+kept 250 coins; the purchase left 150 coins and one unopened pack before tearing.
+The shop fit a 1366 by 768 viewport without page overflow or browser errors.
+GitHub build [40902690447](https://github.com/SahilBamb/PlayPokemonCards/actions/runs/40902690447)
+passed. Unrelated edits in the original checkout were preserved through the merge.
