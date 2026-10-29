@@ -25,6 +25,7 @@ import {
   quoteFor,
   rollOpenerPack,
   rollSeededOpenerPack,
+  rollGodOpenerPack,
   saleValueCents,
 } from "../../lib/cardOpener.js";
 import { Shopfront } from "./Shopfront.jsx";
@@ -79,6 +80,23 @@ function CardBack() {
       aria-hidden="true"
       draggable={false}
     />
+  );
+}
+
+function GodPackEffects({ stage }) {
+  return (
+    <div className={`co-god-effects ${stage}`} data-testid="god-pack-effects">
+      <div className="co-god-rays" aria-hidden="true" />
+      {Array.from({ length: 18 }, (_, i) => (
+        <i key={i} className="co-god-spark" aria-hidden="true"
+          style={{ "--spark-x": `${7 + (i * 37) % 86}%`, "--spark-y": `${10 + (i * 23) % 80}%`, "--spark-delay": `${(i % 7) * -0.43}s` }} />
+      ))}
+      <div className="co-god-banner" role="status">
+        <span>✦ EVERY CARD A HOLO ✦</span>
+        <strong>GOD PACK</strong>
+        <small>Fantasy Base Set pack</small>
+      </div>
+    </div>
   );
 }
 
@@ -891,11 +909,15 @@ export function CardOpener({ state, dispatch, onExit }) {
   const open = () => {
     if (!["sealed", "complete"].includes(state.stage)) return;
     playSfx("packTear");
-    const seed = new URLSearchParams(window.location.search).get("seed");
-    const ids = seed
+    const query = new URLSearchParams(window.location.search);
+    const seed = query.get("seed");
+    const godPack = state.setId === "base1" && query.get("pack") === "god";
+    const ids = godPack
+      ? rollGodOpenerPack(seed || "GOD-PACK")
+      : seed
       ? rollSeededOpenerPack(state.setId, seed)
       : rollOpenerPack(state.setId);
-    dispatch({ type: "open", ids, instant });
+    dispatch({ type: "open", ids, instant, kind: godPack ? "god" : "standard" });
   };
   const reveal = (index) => {
     if (busy || !pack || pack.flipped[index]) return;
@@ -979,10 +1001,13 @@ export function CardOpener({ state, dispatch, onExit }) {
             data-testid="card-opener"
           >
             <div
-              className={`co-stage ${state.stage} ${state.mode}`}
+              className={`co-stage ${state.stage} ${state.mode} ${pack?.kind === "god" ? "god-pack" : ""}`}
               data-testid="opener-stage"
               data-stage={state.stage}
             >
+              {pack?.kind === "god" && state.stage !== "tearing" && (
+                <GodPackEffects stage={state.stage} />
+              )}
               {["sealed", "tearing"].includes(state.stage) ? (
                 <div className="co-sealed-stage">
                   <div className="co-table-light" />

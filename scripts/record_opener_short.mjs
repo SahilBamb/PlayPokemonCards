@@ -7,7 +7,13 @@ import { OPENER_STORAGE_KEY } from "../src/lib/cardOpener.js";
 
 const folder = resolve(process.argv[2] || ".cache/pack-short");
 const manifest = JSON.parse(await readFile(join(folder, "pack-manifest.json"), "utf8"));
-const plan = JSON.parse(await readFile(join(folder, "edit-plan.json"), "utf8"));
+let plan;
+try {
+  plan = JSON.parse(await readFile(join(folder, "recording-plan.json"), "utf8"));
+} catch (error) {
+  if (error.code !== "ENOENT") throw error;
+  plan = JSON.parse(await readFile(join(folder, "edit-plan.json"), "utf8"));
+}
 const base = process.env.OPENER_URL || "http://127.0.0.1:5201";
 await mkdir(join(folder, "recordings", "raw"), { recursive: true });
 await mkdir(join(folder, "frames"), { recursive: true });
@@ -52,6 +58,7 @@ const recording = { seed: manifest.seed, events: [], viewport: { width: 720, hei
 try {
   const url = new URL("/card-opener", base);
   url.searchParams.set("seed", manifest.seed);
+  if (manifest.kind === "god") url.searchParams.set("pack", "god");
   await page.goto(url.href, { waitUntil: "networkidle" });
   await page.evaluate(() => document.fonts.ready);
   await page.locator(".co-pack-frame img").evaluateAll((images) =>
@@ -136,7 +143,7 @@ try {
   assert.equal(final.stage, "complete");
   assert.equal(final.history.length, 11);
   assert.equal(errors.length, 0, errors.join("\n"));
-  await page.screenshot({ path: join(folder, "frames", "recorded-charizard.png") });
+  await page.screenshot({ path: join(folder, "frames", "recorded-finale.png") });
   const end = elapsed();
   await page.close();
   await context.close();

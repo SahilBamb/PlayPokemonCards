@@ -286,6 +286,25 @@
     ),
     var(--co-bg);
 }
+.co-stage.god-pack {
+  isolation: isolate;
+  background: radial-gradient(ellipse at 50% 42%, #b775162e, transparent 68%), var(--co-bg);
+}
+.co-god-effects { position: absolute; inset: 0; overflow: hidden; pointer-events: none; border-radius: inherit; z-index: 0; }
+.co-god-rays { position: absolute; width: 1200px; height: 1200px; left: calc(50% - 600px); top: calc(43% - 600px); background: repeating-conic-gradient(from 0deg, #ffd67e00 0deg 14deg, #ffd67e14 16deg 23deg, #ffd67e00 25deg 36deg); mask-image: radial-gradient(circle, #000 15%, transparent 67%); animation: coGodRays 32s linear infinite; }
+.co-god-banner { position: absolute; top: 10px; left: 12px; right: 12px; text-align: center; color: #ffe6a1; display: flex; flex-direction: column; align-items: center; gap: 1px; animation: coGodArrive .65s cubic-bezier(.16,1,.3,1) both; }
+.co-god-banner > span { font-size: 8px; font-weight: 700; letter-spacing: 2px; color: #fff4d3; }
+.co-god-banner strong { font-size: clamp(26px, 4vw, 42px); line-height: 1.12; letter-spacing: 4px; font-weight: 950; background: linear-gradient(105deg, #c38425, #fff5c1 35%, #ffcf63 50%, #fff9dd 65%, #c38425); background-size: 220% 100%; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 1px 8px #e7af454d); animation: coGodShine 3.2s ease-in-out infinite; }
+.co-god-banner small { font-size: 9px; color: #d8c59c; letter-spacing: .6px; }
+.co-god-spark { position: absolute; left: var(--spark-x); top: var(--spark-y); width: 9px; height: 9px; background: #ffedab; clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%); animation: coGodSpark 3s var(--spark-delay) ease-in-out infinite; }
+.god-pack .co-stack-area { position: relative; z-index: 1; }
+.god-pack .co-stack-scene { filter: drop-shadow(0 0 22px #ffc45635); }
+.co-god-effects.dealing .co-god-banner { top: 10%; }
+.co-god-effects.dealing .co-god-banner strong { font-size: clamp(38px, 6vw, 66px); }
+@keyframes coGodRays { to { transform: rotate(360deg); } }
+@keyframes coGodShine { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@keyframes coGodSpark { 0%, 100% { opacity: 0; transform: translateY(10px) scale(.3); } 50% { opacity: .85; transform: translateY(-12px) scale(1); } }
+@keyframes coGodArrive { from { opacity: 0; transform: translateY(18px) scale(.8); } to { opacity: 1; transform: none; } }
 .co-stage-caption {
   display: flex;
   align-items: center;

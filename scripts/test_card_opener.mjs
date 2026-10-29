@@ -17,9 +17,42 @@ import {
   restoreOpenerSession,
   rollOpenerPack,
   rollSeededOpenerPack,
+  rollGodOpenerPack,
+  isGodOpenerPack,
   saveOpenerSession,
   saleValueCents,
 } from "../src/lib/cardOpener.js";
+
+test("fantasy God Packs are reproducible, eleven unique Base Set holos and Charizard last", () => {
+  for (let seed = 0; seed < 25; seed++) {
+    const ids = rollGodOpenerPack(`GOD-${seed}`);
+    assert.deepEqual(ids, rollGodOpenerPack(`GOD-${seed}`));
+    assert.ok(isGodOpenerPack(ids));
+    assert.equal(ids.at(-1), "base1-4");
+  }
+  assert.notDeepEqual(rollGodOpenerPack("A"), rollGodOpenerPack("B"));
+  assert.equal(isGodOpenerPack(Array(11).fill("base1-4")), false);
+  assert.equal(isGodOpenerPack(rollSeededOpenerPack("base1", "normal")), false);
+});
+
+test("God Pack identity survives opening and refresh, with purchase and sale accounting intact", () => {
+  const purchased = openerReducer(initialOpenerSession(), { type: "purchase", id: "base1" });
+  let state = openerReducer(purchased, { type: "open", kind: "god", ids: rollGodOpenerPack("test"), instant: true });
+  assert.equal(state.pack.kind, "god");
+  assert.equal(state.balanceCents, purchased.balanceCents);
+  assert.equal(restoreOpenerSession(JSON.stringify(state)).pack.kind, "god");
+  for (let i = 0; i < 11; i++) {
+    state = openerReducer(state, { type: "reveal", index: i });
+    state = openerReducer(state, { type: "next" });
+  }
+  assert.equal(state.stage, "complete");
+  assert.equal(state.history.length, 11);
+  const sold = openerReducer(state, { type: "sell", key: state.history[0].key });
+  assert.equal(sold.balanceCents, state.balanceCents + saleValueCents(state.history[0].cardId));
+  const ordinary = open();
+  assert.equal(ordinary.pack.kind, "standard");
+  assert.equal(restoreOpenerSession(JSON.stringify({ ...ordinary, pack: { ...ordinary.pack, kind: "god" } })).pack.kind, "standard");
+});
 
 function rng(seed) {
   return () => {

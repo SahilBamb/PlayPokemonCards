@@ -1731,6 +1731,17 @@
   }
 }
 
+/* The God Pack title reserves its own space so the stack never shifts on a flip. */
+.co-popup .god-pack .co-stack-area,
+.co-popup .god-pack .co-row-area { padding-top: 100px; }
+.co-popup .god-pack .co-stack-scene {
+  width: clamp(112px, calc((100dvh - 520px) * 0.716374), 225px);
+}
+@media (min-width: 700px) and (max-height: 650px) {
+  .co-popup .god-pack .co-stack-area { padding-top: 92px; }
+  .co-popup .god-pack .co-stack-scene { width: clamp(100px, calc((100dvh - 306px) * 0.716374), 200px); }
+}
+
 /* Prices live on the artwork and sales always require a second click. */
 .co-inventory-display {
   display: flex;

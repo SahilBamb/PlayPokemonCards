@@ -136,20 +136,39 @@ export function rollOpenerPack(setId, rng = Math.random) {
 }
 
 // A recording seed reproduces a pack without changing ordinary random openings.
-export function rollSeededOpenerPack(setId, seed, packNumber = 1) {
-  const input = `${seed}:${setId}:${packNumber}`;
+function seededRandom(input) {
   let value = 2166136261;
   for (const char of input) {
     value ^= char.codePointAt(0);
     value = Math.imul(value, 16777619);
   }
-  const random = () => {
+  return () => {
     value = (value + 0x6d2b79f5) | 0;
     let mixed = Math.imul(value ^ (value >>> 15), 1 | value);
     mixed ^= mixed + Math.imul(mixed ^ (mixed >>> 7), 61 | mixed);
     return ((mixed ^ (mixed >>> 14)) >>> 0) / 4294967296;
   };
-  return rollOpenerPack(setId, random);
+}
+
+export function rollSeededOpenerPack(setId, seed, packNumber = 1) {
+  return rollOpenerPack(setId, seededRandom(`${seed}:${setId}:${packNumber}`));
+}
+
+// Fictional, explicitly selected recording mode. Never part of normal collation.
+export function rollGodOpenerPack(seed, packNumber = 1) {
+  const finale = "base1-4";
+  const holos = catalog.filter(
+    (card) => card.set === "base1" && isShinyPull(card) && card.id !== finale,
+  );
+  const cards = draw(holos, 10, seededRandom(`${seed}:god:base1:${packNumber}`));
+  // Build towards the starter trio and keep Charizard as the final surprise.
+  cards.sort((a, b) => (saleValueCents(a.id) ?? 0) - (saleValueCents(b.id) ?? 0));
+  return [...cards.map((card) => card.id), finale];
+}
+
+export function isGodOpenerPack(ids) {
+  return Array.isArray(ids) && ids.length === 11 && new Set(ids).size === 11 &&
+    ids.every((id) => OPENER_BY_ID[id]?.set === "base1" && isShinyPull(OPENER_BY_ID[id]));
 }
 
 export const initialOpenerSession = () => ({
@@ -253,6 +272,7 @@ export function restoreOpenerSession(raw) {
           Math.max(0, Number.isInteger(pack.index) ? pack.index : 0),
         ),
         paidCents: Number.isSafeInteger(pack.paidCents) ? pack.paidCents : null,
+        kind: pack.kind === "god" && isGodOpenerPack(pack.ids) ? "god" : "standard",
       };
       restored.purchase = null;
       restored.packsOpened = Math.max(restored.packsOpened, pack.number);
@@ -404,6 +424,7 @@ export function openerReducer(state, action) {
         flipped: action.ids.map(() => false),
         index: 0,
         paidCents: state.purchase.priceCents,
+        kind: action.kind === "god" && isGodOpenerPack(action.ids) ? "god" : "standard",
       },
     };
   }
