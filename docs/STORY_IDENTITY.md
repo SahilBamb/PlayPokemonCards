@@ -48,3 +48,13 @@ Source branch: `feature/story-identity-and-navigation`. Deployment remains the
 `playpokemoncards` Cloudflare Pages project, account
 `77965546ba0ef6c4f1741d7d8a04039e`, production branch `main`. See `STORY_ATLAS.md`
 for the established deployment command.
+
+Published October 29, 2026: source `c86ddac`, deployment `ef86d0c6`
+(<https://ef86d0c6.playpokemoncards.pages.dev>). The public `/story-mode` URL
+served the current app, and its HTML, JS, CSS, asset manifest and all 18 atlas
+assets matched the tested build. The complete navigation regression passed on
+the production host, including the earlier Card Opener history sequence. All 15
+cover images loaded locally and the three distinct covers were inspected at
+1366 by 768 without browser errors. GitHub build
+[40912490218](https://github.com/SahilBamb/PlayPokemonCards/actions/runs/40912490218)
+passed for this source.
