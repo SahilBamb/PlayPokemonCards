@@ -105,3 +105,12 @@ CLOUDFLARE_ACCOUNT_ID=77965546ba0ef6c4f1741d7d8a04039e \
 
 The existing GitHub workflow builds pushes to `master`. Direct upload is the
 established publishing path until the deployment secret is configured.
+
+Published October 29, 2026: source `26b4647`, Cloudflare deployment
+`ab56a611` (<https://ab56a611.playpokemoncards.pages.dev>). Production HTML,
+JavaScript, CSS, all four WebP environments and the manifest matched the local
+build byte for byte over HTTPS. A fresh production profile completed starter
+selection and the introduction, displayed a ready 60-card deck and 250 coins,
+opened the shop and canceled an encounter with Escape without a browser error.
+GitHub build [40884187619](https://github.com/SahilBamb/PlayPokemonCards/actions/runs/40884187619)
+passed for the released source.
