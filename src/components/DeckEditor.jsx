@@ -63,7 +63,7 @@ function BrowserCard({ card, count, limit, onAdd }) {
         e.preventDefault()
         preview(card)
       }}
-      title={maxed ? `${card.name} — copy limit reached` : `${card.name} — click to add`}
+      title={maxed ? `${card.name}: copy limit reached` : `${card.name}: click to add`}
       className={`browser-card relative w-28 select-none ${maxed ? 'opacity-35' : 'cursor-pointer hover:scale-105 transition'}`}
     >
       {card.image ? (
@@ -310,7 +310,7 @@ export function DeckEditor({ onExit, collection = null, format = null, title = '
             }}
             className="flex-1 px-2 py-1 rounded-sm bg-zinc-800 border border-zinc-600 text-xs outline-none"
           >
-            <option value="">— unsaved deck —</option>
+            <option value="">Unsaved deck</option>
             {decks.map((d) => (
               <option key={d.id} value={d.id}>
                 {d.name || '(unnamed)'}
@@ -384,7 +384,7 @@ export function DeckEditor({ onExit, collection = null, format = null, title = '
         <div data-testid="deck-validation" className="px-3 py-2 border-t border-zinc-800 text-xs">
           {problems.length === 0 ? (
             <span className="text-green-400 font-semibold">
-              ✓ Match legal — {collection ? 'ready to battle.' : 'selectable in Quick Play.'}
+              ✓ Match legal: {collection ? 'ready to battle.' : 'selectable in Quick Play.'}
             </span>
           ) : (
             <ul className="text-amber-400 space-y-0.5 list-disc list-inside">

@@ -86,7 +86,7 @@ function turnMove(actions, state, player) {
 export const StallAI = {
   id: 'stall',
   name: 'Wall',
-  description: 'Defensive — heals, retreats, and wears you down with special conditions.',
+  description: 'Defensive. Heals, retreats, and wears you down with special conditions.',
   pickAction(actions, state, player) {
     if (!actions.length) return null
     if (state.pending) return answerPending(actions, state, player)

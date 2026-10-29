@@ -8,6 +8,7 @@ export function StoryModal({
   onClose,
   className = "",
   testId,
+  closeLabel = "Return to map",
 }) {
   const panel = useRef(null);
   useEffect(() => {
@@ -25,6 +26,7 @@ export function StoryModal({
   }, []);
 
   const keys = (event) => {
+    if (document.querySelector('[data-testid="card-preview"]')) return;
     if (event.key === "Escape" && onClose) {
       event.preventDefault();
       onClose();
@@ -66,7 +68,7 @@ export function StoryModal({
           <button
             className="atlas-modal-close"
             onClick={onClose}
-            aria-label="Return to map"
+            aria-label={closeLabel}
           >
             <FaTimes />
           </button>

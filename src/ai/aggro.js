@@ -51,7 +51,7 @@ function turnMove(actions, state, player) {
 export const AggroAI = {
   id: 'aggro',
   name: 'Hotshot',
-  description: 'All offense — powers up its active Pokémon and attacks every turn it can.',
+  description: 'All offense. Powers up its active Pokémon and attacks every turn it can.',
   pickAction(actions, state, player) {
     if (!actions.length) return null
     if (state.pending) return answerPending(actions, state, player)

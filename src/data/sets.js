@@ -17,7 +17,7 @@ export const SETS = {
 
 export const FORMATS = {
   // The Kanto story plays in classic: Base Set through Fossil (+ promos).
-  classic: { id: 'classic', name: 'Classic (Base–Fossil)', sets: ['base1', 'jungle', 'fossil', 'promo'] },
+  classic: { id: 'classic', name: 'Classic (Base to Fossil)', sets: ['base1', 'jungle', 'fossil', 'promo'] },
   // The Rocket Takeover story: classic plus the Team Rocket expansion.
   rocketClassic: {
     id: 'rocketClassic',
@@ -27,13 +27,13 @@ export const FORMATS = {
   // The League Reborn story: everything through the Gym sets (no vending).
   gymEra: {
     id: 'gymEra',
-    name: 'Gym Era (Base–Gym Challenge)',
+    name: 'Gym Era (Base to Gym Challenge)',
     sets: ['base1', 'jungle', 'fossil', 'promo', 'rocket', 'gym1', 'gym2'],
   },
   // Everything through the Gym sets — the current Quick Play / editor default.
   rocketGym: {
     id: 'rocketGym',
-    name: 'Rocket–Gym (pre-rotation)',
+    name: 'Rocket to Gym (pre-rotation)',
     sets: ['base1', 'jungle', 'fossil', 'promo', 'rocket', 'gym1', 'gym2', 'vending'],
   },
 }

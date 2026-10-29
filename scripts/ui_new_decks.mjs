@@ -18,8 +18,8 @@ await page.getByRole('button', { name: 'Quick Play' }).click()
 await page.waitForTimeout(400)
 
 for (const [id, label] of [
-  ['baserocket', '2000 Base–Rocket'],
-  ['basegym', '2000 Base–Gym'],
+  ['baserocket', '2000 Base to Rocket'],
+  ['basegym', '2000 Base to Gym'],
   ['prop153', 'Prop 15/3 (2000)'],
   ['originalrules', 'Original Rules (Japan)'],
 ]) {

@@ -1,17 +1,17 @@
 # PlayPokemonCards
 
-A full implementation of the classic Pokémon TCG — every card from Base Set
+A full implementation of the classic Pokémon TCG: every card from Base Set
 through Gym Challenge (530 cards, plus Wizards promos and two Japanese vending
-cards) — built on a small library of composable effect primitives.
+cards), built on a small library of composable effect primitives.
 
 ## Game modes
 
-- **Quick Play** — rule-enforced match against an AI (multiple personalities),
+- **Quick Play**: rule-enforced match against an AI (multiple personalities),
   with 70+ historical preset decks or your own.
-- **Story Mode** — three campaigns (Kanto Challenge, Rocket Takeover, League
+- **Story Mode**: three campaigns (The Indigo Journey, Rocket Takeover, League
   Reborn) with booster packs, a card collection, currency, and boss battles.
-- **Sandbox** — free-form two-sided board for testing cards and interactions.
-- **Deck Editor** — build and save decks; the same editor is reused (with
+- **Sandbox**: free-form two-sided board for testing cards and interactions.
+- **Deck Editor**: build and save decks; the same editor is reused (with
   collection constraints) inside Story Mode.
 
 The game is local-first: matches, story progress, and decks all run in the
@@ -82,9 +82,9 @@ src/
 Every attack, Trainer, and Power is an array of effect objects processed
 through a queue. Three modifiers compose with any effect:
 
-- `flip: N` — flip N coins once, store heads/tails in context
-- `if: 'heads' | 'tails' | 'didDamage' | …` — condition gate
-- `amount: {...}` — calculators for scaling damage (per heads, per energy,
+- `flip: N`: flip N coins once, store heads/tails in context
+- `if: 'heads' | 'tails' | 'didDamage' | …`: condition gate
+- `amount: {...}`: calculators for scaling damage (per heads, per energy,
   per damage counter, half remaining HP, ...)
 
 `CHOOSE` is the interrupt primitive: it pauses the queue and prompts the user
@@ -102,5 +102,5 @@ Add stats to the generator (`scripts/gen_cards.mjs`) and an encoding to
 'Fire Blast': { effects: COST_DISCARD(1, { energyType: 'fire' }) },
 ```
 
-Attacks with plain numeric damage need no encoding at all — the engine
+Attacks with plain numeric damage need no encoding at all: the engine
 auto-queues the damage effect.

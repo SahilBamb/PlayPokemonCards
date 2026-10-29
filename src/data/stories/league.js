@@ -54,7 +54,7 @@ export const LEAGUE_STORY = {
   id: 'league',
   name: 'League Reborn',
   description:
-    'The Gym Leaders are free and rebuilding their gyms — re-earn all eight badges. But someone kept paying Team Rocket, and the trail leads somewhere no one expects. Adds the Gym Heroes & Gym Challenge sets.',
+    'The Gym Leaders are free and rebuilding their gyms. Re-earn all eight badges. But someone kept paying Team Rocket, and the trail leads somewhere no one expects. Adds the Gym Heroes & Gym Challenge sets.',
   formatId: 'gymEra',
   packs: ['base1', 'jungle', 'fossil', 'rocket', 'gym1', 'gym2'],
   promoEvent: { packId: 'promoPack', chance: 0.12 },
@@ -67,7 +67,7 @@ export const LEAGUE_STORY = {
     name: 'League Quartermaster',
     image: tclassImg('oras-lady'),
     greeting:
-      'Welcome to the official League supply post! The Gym Leaders donated their own cards to these Heroes and Challenge boosters — every purchase helps rebuild the gyms.',
+      'Welcome to the official League supply post! The Gym Leaders donated their own cards to these Heroes and Challenge boosters. Every purchase helps rebuild the gyms.',
   },
   trophy: {
     name: 'League Reborn Trophy',
@@ -116,7 +116,7 @@ export const LEAGUE_STORY = {
     say(leader('kanto-misty'), 'Badges given away are worthless. Re-earn them. Starting with us.'),
     say(REMNANT, 'You heroes finished the occupation? Cute. The paychecks never stopped coming.'),
     say(leader('kanto-brock'), 'Someone is still paying Team Rocket. Keep your eyes open.'),
-    say(QUARTERMASTER, 'Official supply post! Heroes and Challenge boosters — every purchase rebuilds a gym.'),
+    say(QUARTERMASTER, 'Official supply post! Heroes and Challenge boosters. Every purchase rebuilds a gym.'),
     say(leader('kanto-brock'), 'I set aside {starter} from the trainee locker. Pewter first. Stone by stone.'),
   ],
   areas: [
@@ -141,7 +141,7 @@ export const LEAGUE_STORY = {
           intro: [
             'Hey! This rubble is Team Rocket salvage!',
             "Team Rocket's gone? Ha. The paychecks never stopped coming, kid.",
-            "Someone's still running the show — and I don't ask questions!",
+            "Someone's still running the show, and I don't ask questions!",
           ],
           win: ['Fine, take the salvage!', 'But I got paid yesterday. YESTERDAY. Chew on that.'],
           lose: ['Still getting paid, still winning. Best job I ever had.'],
@@ -150,13 +150,13 @@ export const LEAGUE_STORY = {
           rewards: { win: 180, lose: 35 },
           intro: [
             'You came. After everything Sabrina made us do... the League owes you.',
-            'But a badge given away is worth nothing. My gym is open again — earn it, like everyone else!',
+            'But a badge given away is worth nothing. My gym is open again. Earn it, like everyone else!',
           ],
           win: [
-            'Solid as bedrock. The Boulder Badge is yours — earned, this time.',
+            'Solid as bedrock. The Boulder Badge is yours, earned, this time.',
             "One thing bothers me though... the Rocket leftovers in town. Somebody's still paying them. Keep your eyes open.",
           ],
-          lose: ['My rocks held firm. Train harder — the new League has standards!'],
+          lose: ['My rocks held firm. Train harder. The new League has standards!'],
         }),
       ],
     },
@@ -183,11 +183,11 @@ export const LEAGUE_STORY = {
           rewards: { win: 180, lose: 35 },
           intro: [
             "It's you! I never got to thank you properly for Cerulean Harbor.",
-            "So here's my thanks: my real deck, my real gym, no mind control. The Cascade Badge — take it if you can!",
+            "So here's my thanks: my real deck, my real gym, no mind control. The Cascade Badge. Take it if you can!",
           ],
           win: [
             'Beautiful! Like watching the tide come in. The Cascade Badge is yours.',
-            "Oh — one more thing. The grunts you keep meeting? A sailor told me their orders arrive sealed with a single letter: 'G'.",
+            "Oh, one more thing. The grunts you keep meeting? A sailor told me their orders arrive sealed with a single letter: 'G'.",
           ],
           lose: ['The current is stronger than it looks! Swim back when you are ready.'],
         }),
@@ -217,7 +217,7 @@ export const LEAGUE_STORY = {
             "Beat me and I'll keep you posted. Lose, and stay out of my investigation!",
           ],
           win: [
-            'Tch! Fine, you win. Listen — the ledgers all route through Viridian.',
+            'Tch! Fine, you win. Listen, the ledgers all route through Viridian.',
             "Somebody with serious money is playing puppet master. I'll dig deeper. Smell ya later!",
           ],
           lose: ['Hah! Leave the detective work to me. Smell ya later!'],
@@ -226,11 +226,11 @@ export const LEAGUE_STORY = {
           rewards: { win: 200, lose: 40 },
           intro: [
             "Kid! Good to fight you WITHOUT a rebellion on the line for once.",
-            "I rebuilt this gym with my own two hands. Nobody takes it from me again — especially not a rookie! Show me voltage!",
+            "I rebuilt this gym with my own two hands. Nobody takes it from me again, especially not a rookie! Show me voltage!",
           ],
           win: [
             "HAH! You've grown, soldier! The Thunder Badge is yours!",
-            'And hey — those remnants? Professional discipline, steady pay. That kind of money comes from an old boss, not a new one. Think about it.',
+            'And hey, those remnants? Professional discipline, steady pay. That kind of money comes from an old boss, not a new one. Think about it.',
           ],
           lose: ['ZZZAP! The Lightning American stands tall! Recharge and return!'],
         }),
@@ -263,7 +263,7 @@ export const LEAGUE_STORY = {
           ],
           win: [
             'Wonderful. A battle with a clear mind is such a joy. The Rainbow Badge is yours.',
-            'Before you go... while I slept, I kept a guest ledger I never wrote. Payments to the Game Corner basement — approved in handwriting I did not recognize. Someone used my gym as a bank.',
+            'Before you go... while I slept, I kept a guest ledger I never wrote. Payments to the Game Corner basement, approved in handwriting I did not recognize. Someone used my gym as a bank.',
           ],
           lose: ['The garden is patient, dear. Come back when you have grown.'],
         }),
@@ -277,7 +277,7 @@ export const LEAGUE_STORY = {
         say(leader('kanto-koga'), 'Magnificent. Kenji chose his allies well.'),
         say({ name: 'Remnant Officer', image: rocketImg('Team Rocket Manager') }, "The G seal was on the letterhead before Sabrina, during her, and after her."),
         say(leader('kanto-koga'), 'Saffron experiments predate her entirely. Tread carefully.'),
-        say(leader('kanto-sabrina'), 'I am waiting. To atone — and to warn you.'),
+        say(leader('kanto-sabrina'), 'I am waiting. To atone and to warn you.'),
       ],
       nodes: [
         trainer('lg-fuchsia-1', 'oras-ninja-boy', 'Ninja Boy Kaito', {
@@ -288,8 +288,8 @@ export const LEAGUE_STORY = {
           rewards: { win: 140, lose: 28 },
           intro: [
             'You again. The hero. My grunts write reports about you.',
-            "I ran payroll for the old Team Rocket, the REAL one — before Sabrina's little psychic circus.",
-            "And I still do. The signature on my orders hasn't changed in ten years. Draw your own conclusions — after I crush you.",
+            "I ran payroll for the old Team Rocket, the REAL one, before Sabrina's little psychic circus.",
+            "And I still do. The signature on my orders hasn't changed in ten years. Draw your own conclusions after I crush you.",
           ],
           win: [
             "Ugh. Fine. One professional courtesy, hero: Sabrina never signed anything. She never had to.",
@@ -301,11 +301,11 @@ export const LEAGUE_STORY = {
           rewards: { win: 220, lose: 40 },
           intro: [
             'So. My son Kenji fought beside you while I was... elsewhere. My family owes you a debt.',
-            'But debts are not badges. Fwahaha! Face the true master of Fuchsia — poison, shadow, and misdirection!',
+            'But debts are not badges. Fwahaha! Face the true master of Fuchsia: poison, shadow, and misdirection!',
           ],
           win: [
             'Magnificent. Kenji chose his allies well. The Soul Badge is yours.',
-            'A ninja hears things. The remnants whisper of a benefactor in Viridian — and of experiments in Saffron that predate Sabrina entirely. Tread carefully.',
+            'A ninja hears things. The remnants whisper of a benefactor in Viridian and of experiments in Saffron that predate Sabrina entirely. Tread carefully.',
           ],
           lose: ['Fwahaha! Vanish and reflect! The shadows will still be here.'],
         }),
@@ -324,13 +324,13 @@ export const LEAGUE_STORY = {
       nodes: [
         trainer('lg-saffron-1', 'oras-schoolkid-f', 'Schoolkid Mina', {
           types: ['psychic'], tier: 2, aiId: 'stall',
-          intro: ['The gym reopened as a school — Miss Sabrina teaches ethics now. Really!', 'She says I must test every visitor. Pop quiz time!'],
+          intro: ['The gym reopened as a school. Miss Sabrina teaches ethics now. Really!', 'She says I must test every visitor. Pop quiz time!'],
         }),
         named('lg-saffron-2', 'mystery', 'Rocket Scientist', rocketImg('Team Rocket Pyschic Grunt'), 'rocketExperiment', {
           aiId: 'stall',
           rewards: { win: 150, lose: 30 },
           intro: [
-            'No no no — stay back! The specimen is unstable!',
+            'No no no! Stay back! The specimen is unstable!',
             'Project M predates everything. Sabrina FOUND the lab, she never built it. The funding goes back years before her.',
             'It broke containment and it obeys only me now. Observe: RESULTS!',
           ],
@@ -344,15 +344,15 @@ export const LEAGUE_STORY = {
           rewards: { win: 220, lose: 45 },
           intro: [
             'You. The one mind I could never bend.',
-            'I remember every terrible thing I did as "Champion". I rebuilt this gym to atone — and to remember.',
+            'I remember every terrible thing I did as "Champion". I rebuilt this gym to atone and to remember.',
             'But understand this: I must know you are strong enough for what comes next. No mercy.',
           ],
           win: [
             'Yes... you are ready. The Marsh Badge is yours. Now listen carefully.',
-            'The hunger for power that consumed me — it was planted. A voice taught me the mind-control technique, guided my rise, and vanished the day I fell.',
+            'The hunger for power that consumed me... it was planted. A voice taught me the mind-control technique, guided my rise, and vanished the day I fell.',
             'I finally traced the voice. It came from Viridian. It came from the man who "helped" you defeat me.',
           ],
-          lose: ['I saw this outcome, and I hoped I was wrong. Grow stronger — for all our sakes.'],
+          lose: ['I saw this outcome, and I hoped I was wrong. Grow stronger, for all our sakes.'],
         }),
       ],
     },
@@ -379,7 +379,7 @@ export const LEAGUE_STORY = {
           rewards: { win: 240, lose: 45 },
           intro: [
             'HAH! The kid who doused my brainwashed bonfire! Pop quiz: am I grateful?',
-            'Answer: YES — but gratitude earns you nothing here! My mind is my own and it is FULL of fire! Final exam time!',
+            'Answer: YES, but gratitude earns you nothing here! My mind is my own and it is FULL of fire! Final exam time!',
           ],
           win: [
             'CORRECT ANSWER! The Volcano Badge is yours!',
@@ -396,7 +396,7 @@ export const LEAGUE_STORY = {
       cutscene: [
         say(leader('kanto-giovanni'), 'The design breaks. At my table. Ha... magnificent.'),
         say(BLUE, 'You actually did it.'),
-        say(leader('kanto-giovanni'), 'No more proxies. The Earth Badge — and the region — are yours, Champion.'),
+        say(leader('kanto-giovanni'), 'No more proxies. The Earth Badge and the region are yours, Champion.'),
         say(leader('kanto-brock'), 'Then the League is truly reborn. Guard it better than we did.'),
         say(leader('kanto-misty'), "And if another G shows up... we'll be ready."),
       ],
@@ -414,28 +414,28 @@ export const LEAGUE_STORY = {
         named('lg-viridian-2', 'mystery', 'Blue', BLUE.image, 'rivalBlue2', {
           rewards: { win: 200, lose: 40 },
           intro: [
-            'STOP! Before you go in there — it was Giovanni. It was ALWAYS Giovanni.',
+            'STOP! Before you go in there! It was Giovanni. It was ALWAYS Giovanni.',
             'He built the mind-control lab. He planted the idea in Sabrina. He bankrolled her empire, then used YOU to tear it down when she got too strong.',
-            "The rebellion, the liberation — all of it cleared his path back to the throne. And I can't let you face him underleveled. Full power, right now!",
+            "The rebellion, the liberation... all of it cleared his path back to the throne. And I can't let you face him underleveled. Full power, right now!",
           ],
           win: [
             "...Good. You're ready. I checked.",
             "He's in the gym, sitting on the Earth Badge like a crown. Go take it from him. I'll watch the door. Smell ya later!",
           ],
-          lose: ['See? Not ready! Train up — Giovanni is beyond anything we have fought.'],
+          lose: ['See? Not ready! Train up. Giovanni is beyond anything we have fought.'],
         }),
         gymBoss('lg-viridian-boss', 'kanto-giovanni', 'gymGiovanni', {
           rewards: { win: 500, lose: 60 },
           intro: [
-            'Welcome, hero. Do sit down — you have earned that much.',
+            'Welcome, hero. Do sit down. You have earned that much.',
             'Yes. The technique was mine. Sabrina was my student, my proxy, and when she grew ambitious... my scapegoat. You removed her beautifully.',
-            'The gyms reopened, the League reborn, the region grateful — and every thread runs through Viridian. Through me. The greater evil, as you call it, simply has better manners.',
+            'The gyms reopened, the League reborn, the region grateful, and every thread runs through Viridian. Through me. The greater evil, as you call it, simply has better manners.',
             'One battle remains in my design. Defeat me and Kanto is truly free. Fail, and you were always working for me.',
           ],
           win: [
             '...So the design breaks. At MY table. Ha... haha... magnificent.',
             'No tricks, no proxies, no second organization in the shadows. You have beaten the man himself.',
-            'The Earth Badge — and the region — are yours, Champion. Guard them better than I did.',
+            'The Earth Badge and the region are yours, Champion. Guard them better than I did.',
           ],
           lose: ['As designed. Even your defeat serves my purpose. Return when you can surprise me.'],
         }),

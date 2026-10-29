@@ -110,7 +110,7 @@ export const KANTO_STORY = {
     {
       id: 'kanto-grass',
       name: 'Overgrowth',
-      description: 'Bulbasaur, Oddish, and Bellsprout — poison and drain your way to victory.',
+      description: 'Bulbasaur, Oddish, and Bellsprout. Use poison and drain your way to victory.',
       coverCards: ['Bulbasaur', 'Oddish'],
       counts: {
         Bulbasaur: 4, Ivysaur: 2, Oddish: 4, Gloom: 2, Bellsprout: 4, Weepinbell: 2, 'Nidoran ♂': 3,
@@ -121,13 +121,13 @@ export const KANTO_STORY = {
   ],
   intro: [
     say(OAK, "Ah! There you are. I've been waiting by the lab window all morning."),
-    say(OAK, 'The Pokémon League is calling for new challengers — eight Gyms, then the Elite Four at Indigo Plateau.'),
+    say(OAK, 'The Pokémon League is calling for new challengers: eight Gyms, then the Elite Four at Indigo Plateau.'),
     say(OAK, "I set aside a starter deck for you: {starter}. It's yours now, plus a few coins for the Shop."),
     say(RIVAL, "HEY! Don't start the speech without me, Gramps!"),
     say(RIVAL, "I already grabbed a deck. A BETTER one. Obviously."),
-    say(RIVAL, "{starter}? That's what you picked? Hah! Smell ya later — I'll be Champion before you leave Pallet!"),
+    say(RIVAL, "{starter}? That's what you picked? Hah! Smell ya later! I'll be Champion before you leave Pallet!"),
     say(OAK, 'That grandson of mine... always racing two towns ahead of his manners.'),
-    say(OAK, "Pewter City is first. Brock's Gym is the traditional first stop. Go on — and try to enjoy the road."),
+    say(OAK, "Pewter City is first. Brock's Gym is the traditional first stop. Go on, and try to enjoy the road."),
   ],
   areas: [
     {
@@ -135,10 +135,10 @@ export const KANTO_STORY = {
       name: 'Pewter City',
       badge: leader('kanto-brock').badge,
       cutscene: [
-        say(leader('kanto-brock'), 'Solid battle. The Boulder Badge is more than a rock — it is a promise you keep training.'),
+        say(leader('kanto-brock'), 'Solid battle. The Boulder Badge is more than a rock. It is a promise you keep training.'),
         say(RIVAL, 'Took you long enough. I already beat Brock this morning.'),
         say(leader('kanto-brock'), 'He did. Barely. His defense was terrible.'),
-        say(RIVAL, 'Rude! Anyway — Cerulean next. Try not to drown.'),
+        say(RIVAL, 'Rude! Anyway, Cerulean next. Try not to drown.'),
         say(leader('kanto-brock'), "Misty is faster than she looks. Bring Water answers... or a lot of patience."),
       ],
       nodes: [
@@ -169,7 +169,7 @@ export const KANTO_STORY = {
         say(leader('kanto-misty'), 'Not bad! Most kids splash around and sink.'),
         say(RIVAL, "I already have TWO badges. You're still collecting souvenirs."),
         say(leader('kanto-misty'), 'Your rival was here. He bragged for ten minutes and left a puddle.'),
-        say(leader('kanto-misty'), "Vermilion is next. Lt. Surge doesn't do gentle — or indoor voices."),
+        say(leader('kanto-misty'), "Vermilion is next. Lt. Surge doesn't do gentle or indoor voices."),
       ],
       nodes: [
         trainer('cerulean-1', 'oras-lass', 'Lass Dana', {
@@ -187,7 +187,7 @@ export const KANTO_STORY = {
         boss('cerulean-boss', leader('kanto-misty'), 'misty', {
           rewards: { win: 180, lose: 35 },
           intro: ["I'm Misty, the world-famous beauty... and Cerulean's Gym Leader!", 'My Water Pokémon will wash you away!'],
-          win: ["Wow, you're too much!", 'All right — the Cascade Badge is yours.'],
+          win: ["Wow, you're too much!", 'All right, the Cascade Badge is yours.'],
           lose: ["That's what happens when you swim out of your depth!"],
         }),
       ],
@@ -239,7 +239,7 @@ export const KANTO_STORY = {
         }),
         trainer('celadon-2', 'oras-beauty', 'Beauty Grace', {
           types: ['colorless', 'water'], tier: 2,
-          intro: ['A battle? Fine — but make it quick, I have a photoshoot.'],
+          intro: ['A battle? Fine, but make it quick, I have a photoshoot.'],
         }),
         trainer('celadon-3', 'oras-rich-boy', 'Rich Boy Winston', {
           types: ['colorless'], tier: 2, aiId: 'random',
@@ -266,7 +266,7 @@ export const KANTO_STORY = {
       nodes: [
         trainer('fuchsia-1', 'oras-ninja-boy', 'Ninja Boy Hideo', {
           types: ['grass'], tier: 2,
-          intro: ['You never saw me coming!', 'Ninja arts and poison — a deadly pair!'],
+          intro: ['You never saw me coming!', 'Ninja arts and poison. A deadly pair!'],
         }),
         trainer('fuchsia-2', 'oras-bug-maniac', 'Bug Maniac Aidan', {
           types: ['grass'], tier: 2,
@@ -385,7 +385,7 @@ export const KANTO_STORY = {
         say(RIVAL, '...Fine. You win. This time.'),
         say(RIVAL, "Don't get comfortable. I'll take that trophy back."),
         say(e4('kanto-lorelei'), 'Then train. The title is not a souvenir.'),
-        say(OAK, "I always knew you had it in you. Pallet Town is proud — and so am I."),
+        say(OAK, "I always knew you had it in you. Pallet Town is proud, and so am I."),
       ],
       nodes: [
         eliteNode('indigo-1', e4('kanto-lorelei'), 'lorelei', [
@@ -403,7 +403,7 @@ export const KANTO_STORY = {
         boss('indigo-boss', { name: 'Champion Blue', image: leader('kanto-blue')?.image }, 'champion', {
           rewards: { win: 500, lose: 60 },
           intro: [
-            'Hey! I was looking forward to seeing you!', "That's right — I'm the Champion!",
+            'Hey! I was looking forward to seeing you!', "That's right, I'm the Champion!",
             "I'm the most powerful trainer in the world! Let's settle this, once and for all!",
           ],
           win: ["NO! That can't be!", '...You really are the best trainer now.', 'Congratulations, Champion.'],

@@ -1643,7 +1643,7 @@ export const TRAINER_EFFECTS = {
     { type: 'SET_TURNFLAG', flag: 'energyAttached', value: true },
   ],
   'Giovanni': [
-    CH_POKE({ player: 'self', zone: 'all', filter: { nameIncludes: 'Giovanni' }, prompt: 'Choose a Giovanni Pokémon — it can evolve without timing limits this turn' }),
+    CH_POKE({ player: 'self', zone: 'all', filter: { nameIncludes: 'Giovanni' }, prompt: 'Choose a Giovanni Pokémon: it can evolve without timing limits this turn' }),
     { type: 'SET_MARKER', target: 'chosen', marker: 'giovanni', duration: 1 },
   ],
   'Koga': [

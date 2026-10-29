@@ -531,7 +531,7 @@ function MOVE_DC(state, effect = {}) {
   const to = getSlot(state, toRef)
   if (!from || !to || !(from.dc > 0)) return state
   if (effect.noKo && (to.dc ?? 0) + 10 >= to.hp) {
-    return pushLog(state, `${to.name} would be Knocked Out — the damage counter stays put.`)
+    return pushLog(state, `${to.name} would be Knocked Out. The damage counter stays put.`)
   }
   state = updateSlot(state, fromRef, (s) => ({ ...s, dc: s.dc - 10 }))
   state = updateSlot(state, toRef, (s) => ({ ...s, dc: (s.dc ?? 0) + 10 }))
@@ -909,7 +909,7 @@ function DIGGER(state) {
     if (!heads) break
     current = opposite[current]
   }
-  state = pushLog(state, `Digger: ${results.join(' ')} — ${current}'s Active takes 10.`)
+  state = pushLog(state, `Digger: ${results.join(' ')}: ${current}'s Active takes 10.`)
   state = pushFx(state, { kind: 'coins', results, label: 'Digger' })
   const ref = { player: current, id: 0 }
   if (getSlot(state, ref)) state = applyDamage(state, ref, 10, {})

@@ -30,7 +30,7 @@ function CatalogCard({ card, fav, onToggleFav }) {
         e.stopPropagation()
         preview(card)
       }}
-      title={`${card.name} — drag onto the field, deck, discard, or a hand`}
+      title={`${card.name}: drag onto the field, deck, discard, or a hand`}
     >
       {card.image ? (
         <img src={card.image} alt={card.name} loading="lazy" draggable={false} className="w-28 rounded-sm pointer-events-none select-none" />

@@ -66,7 +66,7 @@ export const ROCKET_STORY = {
     name: 'Deserter Wanda',
     image: img('Team Rocket Grunt Shopper'),
     greeting:
-      "Psst... I quit Team Rocket, but I kept the keys to their supply trucks. Boosters, dark Pokémon, the works — the rebellion shops here. Just don't tell HQ where you got them, alright?",
+      "Psst... I quit Team Rocket, but I kept the keys to their supply trucks. Boosters, dark Pokémon, the works. The rebellion shops here. Just don't tell HQ where you got them, alright?",
   },
   trophy: {
     name: 'Liberation Trophy',
@@ -111,12 +111,12 @@ export const ROCKET_STORY = {
     },
   ],
   intro: [
-    say(CLAIR, 'So. The new recruit. I am Clair — I came from Johto because Kanto fell, and dragons do not kneel.'),
+    say(CLAIR, 'So. The new recruit. I am Clair. I came from Johto because Kanto fell, and dragons do not kneel.'),
     say(SURGE, 'Lt. Surge. Ex-gym, full-time Rocket wrecker. We train you or we bury you. Prefer option one.'),
-    say(GRUNT, 'HEY! This hideout is— wait. This is the WRONG warehouse—'),
+    say(GRUNT, 'HEY! This hideout is... wait. This is the WRONG warehouse!'),
     say(SURGE, 'ZAP! And stay down, rat!'),
     say(CLAIR, "They are everywhere. Sabrina sits on the Champion throne, and several Gym Leaders wear her voice."),
-    say(WANDA, "Psst. I'm Wanda. I quit Rocket and kept the truck keys. Shop's in the back — boosters, dark cards, don't tell HQ."),
+    say(WANDA, "Psst. I'm Wanda. I quit Rocket and kept the truck keys. Shop's in the back: boosters, dark cards, don't tell HQ."),
     say(CLAIR, 'Take {starter}. Survive our exams. Then we send you into the field.'),
     say(SURGE, 'Cerulean Harbor first, if you graduate. Move, soldier!'),
   ],
@@ -126,7 +126,7 @@ export const ROCKET_STORY = {
       name: 'Rebel Hideout',
       badge: leaderBadge('johto-clair'),
       cutscene: [
-        say(CLAIR, 'Exam passed. The Rising Badge is yours — Kanto rises with you.'),
+        say(CLAIR, 'Exam passed. The Rising Badge is yours. Kanto rises with you.'),
         say(SURGE, "Harbor next. Misty's theirs now. Don't hesitate when her eyes go blank."),
         say(WANDA, "I packed you a discount. Don't waste it dying."),
         say(CLAIR, 'Free her if you can. The rebellion needs its Leaders back.'),
@@ -135,7 +135,7 @@ export const ROCKET_STORY = {
         trainer('hideout-1', img('Anti-Team Rocket Koga Son'), 'Rebel Kenji', {
           types: ['grass'], tier: 1, aiId: 'random',
           intro: [
-            'Welcome to the hideout. I am Kenji — my father Koga went missing when Rocket took Fuchsia.',
+            'Welcome to the hideout. I am Kenji. My father Koga went missing when Rocket took Fuchsia.',
             "Before you fight Team Rocket, you fight us. That's the rule. Training match, go!",
           ],
           win: ['Good. You strike like a ninja already.', 'Save that edge for the grunts outside.'],
@@ -144,7 +144,7 @@ export const ROCKET_STORY = {
         trainer('hideout-2', img('Anti-Team Rocket Janine'), 'Rebel Janine', {
           types: ['grass', 'psychic'], tier: 1,
           intro: [
-            'I am Janine. Kenji says you have promise — I will be the judge of that.',
+            'I am Janine. Kenji says you have promise. I will be the judge of that.',
             'Poison spreads slowly, like a rebellion. Show me you can outlast it!',
           ],
           win: ['You endured every toxin I had. Impressive.', 'The harbor grunts will be easier than me.'],
@@ -163,12 +163,12 @@ export const ROCKET_STORY = {
         named('hideout-boss', 'boss', 'Rebel Leader Clair', img('Anti-Team Rocket Claire'), 'rebelClair', {
           rewards: { win: 160, lose: 30 },
           intro: [
-            'I am Clair. I came from Johto when I heard Kanto had fallen — dragons do not kneel to rats.',
+            'I am Clair. I came from Johto when I heard Kanto had fallen. Dragons do not kneel to rats.',
             'This is your final exam. Beat me, and the rebellion sends you into the field.',
           ],
           win: [
             'Magnificent. My dragons approve, and they approve of no one.',
-            'Take the Rising Badge — a symbol that Kanto rises with you. Now go. Cerulean Harbor first.',
+            'Take the Rising Badge, a symbol that Kanto rises with you. Now go. Cerulean Harbor first.',
           ],
           lose: ['Not yet. A dragon can smell hesitation. Train and face me again.'],
         }),
@@ -180,14 +180,14 @@ export const ROCKET_STORY = {
       badge: leaderBadge('kanto-misty'),
       cutscene: [
         say(MISTY, 'The water... my gym... I remember you dragging me out.'),
-        say(CLAIR, 'Welcome back, Executive — no. Gym Leader.'),
+        say(CLAIR, 'Welcome back, Executive... no. Gym Leader.'),
         say(MISTY, 'Sabrina was in my head. The Game Corner is next. Something rotten runs under Celadon.'),
         say(WANDA, "I'll move the shop closer to the docks. You look like you need more packs."),
       ],
       nodes: [
         trainer('harbor-1', img('Team Rocket Sailor Grunt'), 'Rocket Sailor Dorian', {
           types: ['water'], tier: 1,
-          intro: ["Oi! This dock is Team Rocket property!", 'Every crate here ships to HQ — including you, once I win!'],
+          intro: ["Oi! This dock is Team Rocket property!", 'Every crate here ships to HQ, including you, once I win!'],
           win: ['My cargo! My reputation! The Executive will keelhaul me...'],
           lose: ['Overboard you go! Team Rocket owns the seas!'],
         }),
@@ -197,7 +197,7 @@ export const ROCKET_STORY = {
           intro: [
             'Well, well. A rebel sneaking along the docks.',
             "I'm Zinnia. I joined Team Rocket for the dragons... mostly for the dragons.",
-            'Beat me and maybe I rethink my career. Lorekeeper rules — no holding back!',
+            'Beat me and maybe I rethink my career. Lorekeeper rules. No holding back!',
           ],
           win: [
             'Ha! You fight like the old tales say heroes do.',
@@ -215,7 +215,7 @@ export const ROCKET_STORY = {
           win: [
             'The water... my gym... what have I been DOING?',
             "Sabrina was in my head. Thank you for dragging me out.",
-            'Take the Cascade Badge — and watch the Game Corner. Something rotten runs under Celadon.',
+            'Take the Cascade Badge, and watch the Game Corner. Something rotten runs under Celadon.',
           ],
           lose: ['Wash away, little rebel. The harbor belongs to Team Rocket.'],
         }),
@@ -228,7 +228,7 @@ export const ROCKET_STORY = {
       cutscene: [
         say(ERIKA, 'The perfume fades. What a horrid dream I was living.'),
         say(CLAIR, 'Flowers and a rebellion. Unexpected allies.'),
-        say(ERIKA, 'They took Cinnabar Lab next. Poor Blaine — he burns for them now.'),
+        say(ERIKA, 'They took Cinnabar Lab next. Poor Blaine. He burns for them now.'),
         say(SURGE, 'Then we cut the power. Lab first, feelings later.'),
       ],
       nodes: [
@@ -236,7 +236,7 @@ export const ROCKET_STORY = {
           types: ['colorless'], tier: 2, aiId: 'random',
           intro: ['I bankroll this whole operation, you know.', 'Every coin in this Game Corner is mine. Care to lose some cards too?'],
           win: ['My portfolio! My rare candies! Daddy will hear about this!'],
-          lose: ['The house always wins — and I AM the house.'],
+          lose: ['The house always wins, and I AM the house.'],
         }),
         trainer('corner-2', img('Team Rocket Purple Poke Fan'), 'Rocket Poké Fan Lila', {
           types: ['psychic', 'colorless'], tier: 2,
@@ -261,7 +261,7 @@ export const ROCKET_STORY = {
           win: [
             '...The perfume fades. What a horrid dream I was living.',
             'You have my gratitude, and the Rainbow Badge.',
-            'They took Cinnabar Lab next. Poor Blaine — he burns for them now.',
+            'They took Cinnabar Lab next. Poor Blaine. He burns for them now.',
           ],
           lose: ['Shhh. Sleep now. The rebellion was only ever a dream.'],
         }),
@@ -294,7 +294,7 @@ export const ROCKET_STORY = {
           rewards: { win: 150, lose: 30 },
           intro: [
             'So the rebellion sends a child into my old organization.',
-            'Yes. I am Giovanni. I BUILT Team Rocket — and Sabrina stole it from me while I trained alone.',
+            'Yes. I am Giovanni. I BUILT Team Rocket, and Sabrina stole it from me while I trained alone.',
             'The enemy of my enemy... needs testing. Show me the Earth-shaking strength it takes to topple her!',
           ],
           win: [
@@ -314,7 +314,7 @@ export const ROCKET_STORY = {
           ],
           win: [
             'The fire... dims. My head is my own again. Correct answer, kid!',
-            'Take the Volcano Badge! Silph Co. is their fortress — the Manager and their "Boss" Norman hold it.',
+            'Take the Volcano Badge! Silph Co. is their fortress. The Manager and their "Boss" Norman hold it.',
           ],
           lose: ['WRONG! You burn like all the rest! HAHAHA!'],
         }),
@@ -349,18 +349,18 @@ export const ROCKET_STORY = {
             'I manage logistics, personnel, and intruders. You fall under column three.',
             'Sabrina automated the Gym Leaders, but middle management? We chose this. The benefits are excellent.',
           ],
-          win: ['This is a disaster for my quarterly review.', 'Fine — Norman is upstairs. Tell him I fought valiantly.'],
+          win: ['This is a disaster for my quarterly review.', 'Fine. Norman is upstairs. Tell him I fought valiantly.'],
           lose: ['Efficient, clean, by the book. Security will show you out.'],
         }),
         named('silph-boss', 'boss', 'Boss Norman', img('Team Rocket Boss Norman'), 'bossNorman', {
           rewards: { win: 240, lose: 45 },
           intro: [
             'I am Norman. I came to Kanto to visit an old friend... and Sabrina gave me a new purpose instead.',
-            'Balance in all things — including a rebellion crushed with a perfectly even hand.',
+            'Balance in all things, including a rebellion crushed with a perfectly even hand.',
           ],
           win: [
             '...My family. I was supposed to go home months ago.',
-            'That woman took my mind. Take her badge stockpile — this Balance Badge — and take her DOWN.',
+            'That woman took my mind. Take this Balance Badge from her stockpile and take her DOWN.',
             'She waits at the old Rocket HQ in Viridian, with the last of her enforcers.',
           ],
           lose: ['Steady. Measured. Inevitable. That is Team Rocket under my watch.'],
@@ -378,7 +378,7 @@ export const ROCKET_STORY = {
         say(GIOVANNI, 'A fine performance. Both of you.'),
         say(CLAIR, 'Giovanni?'),
         say(GIOVANNI, 'The region is "free." For now. Do enjoy it.'),
-        say(WANDA, "Shop's staying open. Liberated Kanto still needs cards — and I still have the keys."),
+        say(WANDA, "Shop's staying open. Liberated Kanto still needs cards, and I still have the keys."),
       ],
       nodes: [
         named('hq-1', 'trainer', 'The Rocket Master', img('Team Rocket Master'), 'rocketMaster', {
@@ -408,14 +408,14 @@ export const ROCKET_STORY = {
           intro: [
             'I felt you climbing my tower floor by floor, undoing years of careful work.',
             'Giovanni wasted Team Rocket on money. I spent it on MINDS. Gym Leaders. Champions. A region that cannot disobey.',
-            'I am Sabrina — Champion of Kanto, whether Kanto wills it or not. Your mind will make a fine addition.',
+            'I am Sabrina, Champion of Kanto, whether Kanto wills it or not. Your mind will make a fine addition.',
           ],
           win: [
             'Impossible. I saw every future... except the one where your will did not break.',
             'The leaders are waking. The region is waking. My empire of minds... undone by one stubborn rebel.',
             'Kanto is yours again. Champion.',
           ],
-          lose: ['Kneel. Every mind kneels to me eventually — yours simply took longer.'],
+          lose: ['Kneel. Every mind kneels to me eventually. Yours simply took longer.'],
         }),
       ],
     },

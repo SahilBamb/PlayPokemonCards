@@ -1,10 +1,12 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react'
 import { TypeIcon } from './icons.jsx'
 import { HoloCard } from './HoloCard.jsx'
 
 // Right-click any card to see it big and centered; click anywhere, press
 // Escape, or hit the X to dismiss. Provided app-wide so every screen gets it.
 const PreviewContext = createContext(() => {})
+// The preview hook is shared by every card view.
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCardPreview = () => useContext(PreviewContext)
 
 // pokemontcg.io serves higher-resolution scans alongside the small ones
@@ -26,7 +28,7 @@ function TextFallback({ card }) {
       {(card.attacks ?? []).map((a) => (
         <p key={a.name} className="text-sm">
           <span className="font-bold">{a.name}</span> {a.damage && <span className="text-red-600 font-bold">{a.damage}</span>}
-          {a.text && <> — {a.text}</>}
+          {a.text && <>: {a.text}</>}
         </p>
       ))}
       {card.text && <p className="text-sm">{card.text}</p>}
@@ -36,6 +38,13 @@ function TextFallback({ card }) {
 
 function PreviewOverlay({ card, onClose }) {
   const [failedHires, setFailedHires] = useState(false)
+  const closeButton = useRef(null)
+
+  useEffect(() => {
+    const previous = document.activeElement
+    closeButton.current?.focus()
+    return () => previous?.focus?.()
+  }, [])
 
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose()
@@ -46,15 +55,20 @@ function PreviewOverlay({ card, onClose }) {
   return (
     <div
       data-testid="card-preview"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Inspect ${card.name}`}
+      onKeyDown={(event) => { if (event.key === 'Tab') { event.preventDefault(); closeButton.current?.focus() } }}
       onClick={onClose}
       onContextMenu={(e) => {
         e.preventDefault()
         onClose()
       }}
-      className="fixed inset-0 z-[70] bg-black/75 backdrop-blur-sm flex items-center justify-center p-8 cursor-pointer"
+      className="fixed inset-0 z-[140] bg-black/75 backdrop-blur-sm flex items-center justify-center p-8 cursor-pointer"
     >
       <button
         onClick={onClose}
+        ref={closeButton}
         aria-label="Close card preview"
         className="absolute top-4 right-4 w-10 h-10 rounded-sm bg-poke-red hover:bg-[#f4460f] border-b-2 border-poke-red-dark text-white text-xl font-bold
           flex items-center justify-center transition"

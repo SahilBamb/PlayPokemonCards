@@ -66,6 +66,16 @@
       ],
       "generation": "built-in image_gen, edit of kanto-map",
       "prompt": "docs/story-atlas/prompts/kanto-reborn.txt"
+    },
+    {
+      "name": "promo-pack",
+      "url": "/story-atlas/promo-pack.svg",
+      "bytes": 2167,
+      "size": [
+        220,
+        427
+      ],
+      "generation": "Native SVG, extending the existing Pok\u00e9 Ball motif"
     }
   ]
 }

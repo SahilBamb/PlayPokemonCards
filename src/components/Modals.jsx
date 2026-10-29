@@ -236,7 +236,7 @@ export function ZoneViewer() {
     <Overlay>
       <div className="flex items-center justify-between">
         <h2 className="font-bold text-lg">
-          {view.player} — {view.zone} ({cards.length})
+          {view.player}: {view.zone} ({cards.length})
         </h2>
         <button onClick={() => dispatch({ type: 'close-view' })} className="px-3 py-1 rounded-sm bg-gray-200 hover:bg-gray-300 dark:bg-zinc-700 dark:hover:bg-zinc-600">
           Close

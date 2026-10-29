@@ -295,7 +295,7 @@ function playTrainer(state, action) {
   if (state.pending || state.effectsQueue.length || state.fxQueue.length) return state
   const card = state[player].hand.find((c) => c.uid === uid)
   if (!card || card.supertype !== 'trainer' || card.doll) return state
-  if (handBlocked(state, player)) return pushLog(state, 'Your hand is set aside — you can\'t play cards from it right now.')
+  if (handBlocked(state, player)) return pushLog(state, 'Your hand is set aside. You can\'t play cards from it right now.')
   if (trainerBlocked(state, player)) return pushLog(state, "You can't play Trainer cards this turn.")
 
   // Stadium cards sit next to the arena instead of resolving effects. A new
@@ -311,7 +311,7 @@ function playTrainer(state, action) {
       state = pushLog(state, `${old.card.name} was discarded.`)
     }
     state = { ...state, stadium: { card, player } }
-    return pushLog(state, `${player} played ${card.name} — it's now in play.`)
+    return pushLog(state, `${player} played ${card.name}: it's now in play.`)
   }
 
   const effects = getTrainerEffects(card.name)
@@ -325,7 +325,7 @@ function playTrainer(state, action) {
     return pushLog(state, `${card.name} can't be played with Basic Pokémon in your hand.`)
   }
   if (!trainerPlayable(state, player, effects, uid)) {
-    return pushLog(state, `${card.name} can't be played right now — it would have no effect.`)
+    return pushLog(state, `${card.name} can't be played right now, as it would have no effect.`)
   }
   // No Removal Gym: Energy Removal costs 2 extra discards from hand
   const removalTax = stadiumActive(state, 'No Removal Gym') &&
@@ -341,7 +341,7 @@ function playTrainer(state, action) {
     const f = flipCoins(1)
     state = pushLog(state, `Chaos Gym: flip... ${f.results[0]}`)
     state = pushFx(state, { kind: 'coins', results: f.results, label: 'Chaos Gym' })
-    if (f.tails > 0) return pushLog(state, `Chaos Gym scrambled ${card.name} — no effect.`)
+    if (f.tails > 0) return pushLog(state, `Chaos Gym scrambled ${card.name}: no effect.`)
   }
   const queue = removalTax
     ? [
@@ -439,7 +439,7 @@ function handleDrop(state, action) {
       : null
   if (!card) return state
   if (!fromCatalog && handBlocked(state, source.player)) {
-    return pushLog(state, 'Your hand is set aside — you can\'t play cards from it right now.')
+    return pushLog(state, 'Your hand is set aside. You can\'t play cards from it right now.')
   }
   const takeFromHand = (s) =>
     fromCatalog ? s : updateZone(s, source.player, 'hand', (h) => h.filter((c) => c.uid !== card.uid))
@@ -641,7 +641,7 @@ function endTurn(state) {
     state = { ...state, trainerBlock: null }
   }
 
-  state = pushLog(state, `--- ${opposite[player]}'s turn (turn ${state.turnNumber}) ---`)
+  state = pushLog(state, `Turn ${state.turnNumber}: ${opposite[player]}`)
 
   if (turnRulesActive(state) && state.phase !== 'gameover') {
     state = { ...state, turnFlags: { energyAttached: false, retreated: false, powersUsed: {} } }
@@ -654,7 +654,7 @@ function endTurn(state) {
       state = updateZone(state, next, 'deck', (d) => d.slice(1))
       state = pushLog(state, `${next} drew a card.`)
     } else {
-      state = pushLog(state, `${state.turnPlayer}'s deck is empty — no draw.`)
+      state = pushLog(state, `${state.turnPlayer}'s deck is empty. No draw.`)
     }
   }
   return state
@@ -827,8 +827,8 @@ function baseReducer(state, action) {
       return pushLog(
         state,
         on
-          ? `Turn-based rules ON — it's ${state.turnPlayer}'s turn. Attacks end the turn; energy/retreat/powers are once per turn.`
-          : 'Turn-based rules OFF — free sandbox.'
+          ? `Turn-based rules ON: it's ${state.turnPlayer}'s turn. Attacks end the turn; energy/retreat/powers are once per turn.`
+          : 'Turn-based rules OFF: free sandbox.'
       )
     }
     case 'click':

@@ -4,7 +4,7 @@
 export const RandomAI = {
   id: 'random',
   name: 'Wild Missingno',
-  description: 'Chaotic — does something legal, not necessarily something smart.',
+  description: 'Chaotic. Does something legal, not necessarily something smart.',
   pickAction(actions, state, player, rng = Math.random) {
     if (!actions.length) return null
     const nonEnd = actions.filter((a) => a.type !== 'end-turn' && a.type !== 'concede')

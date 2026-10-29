@@ -1,4 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  FaArrowRight,
+  FaCheck,
+  FaCoins,
+  FaGripHorizontal,
+  FaLayerGroup,
+  FaSearch,
+  FaStar,
+} from "react-icons/fa";
 import { byName } from "../../engine/cards.js";
 import {
   BOOSTER_PACKS,
@@ -9,33 +18,28 @@ import {
 } from "../../data/boosters.js";
 import TRAINER_CLASSES from "../../data/trainerClasses.js";
 import { useCardPreview } from "../CardPreview.jsx";
+import { useSettings } from "../Settings.jsx";
 import {
+  loadProfile,
   rollPromoOffer,
   rollSubOffer,
   buyPack,
   openOwnedPack,
 } from "../../lib/profileStore.js";
+import { playSfx } from "../../lib/sfx.js";
 import { PackOpening } from "./PackOpening.jsx";
 import { AtlasPortrait, StoryCoins, StoryHeader } from "./StoryAtlas.jsx";
+import { StoryModal } from "./StoryModal.jsx";
+import { storyPackArt } from "./storyShopArt.js";
+import "./story-shop.css";
 
-// Stories can bring their own shopkeeper (name/image/greeting); this is the fallback.
 const DEFAULT_SHOPKEEPER = {
   name: "Shopkeeper",
   image: TRAINER_CLASSES.find((t) => t.id === "oras-poke-fan-f")?.image,
 };
-
 const RARITY_ORDER = ["Rare Holo", "Rare", "Uncommon", "Common", "Promo"];
-const RARITY_COLOR = {
-  "Rare Holo": "text-amber-300",
-  Rare: "text-blue-300",
-  Uncommon: "text-zinc-200",
-  Common: "text-zinc-400",
-  Promo: "text-poke-red",
-};
-
 export const CoinPill = StoryCoins;
 
-// Modal: every card the pack can contain, grouped by rarity with pull odds.
 function PackPreview({ pack, onClose }) {
   const preview = useCardPreview();
   const pool = useMemo(() => packPool(pack.setId, pack.filter), [pack]);
@@ -49,67 +53,51 @@ function PackPreview({ pack, onClose }) {
     return "";
   };
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-6"
-      onClick={onClose}
+    <StoryModal
+      label={`${pack.name} possible pulls`}
+      onClose={onClose}
+      closeLabel="Close preview"
+      className="story-pack-preview"
+      testId="pack-preview"
     >
-      <div
-        data-testid="pack-preview"
-        onClick={(e) => e.stopPropagation()}
-        className="bg-zinc-950/95 border-2 border-zinc-700 rounded-sm shadow-2xl max-w-4xl w-full max-h-[85vh] flex flex-col"
-      >
-        <div className="flex items-center gap-3 px-4 py-2.5 border-b-2 border-poke-red/60">
-          <h2 className="text-white text-sm font-black uppercase tracking-widest">
-            {pack.name} — possible pulls
-          </h2>
-          <button
-            onClick={onClose}
-            className="ml-auto w-7 h-7 rounded-sm bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 text-white font-bold"
-            aria-label="Close preview"
-          >
-            ×
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto p-4">
-          {RARITY_ORDER.filter((r) => pool[r]?.length).map((rarity) => (
-            <div key={rarity} className="mb-4">
-              <div
-                className={`text-xs font-bold uppercase tracking-wider mb-2 ${RARITY_COLOR[rarity]}`}
-              >
-                {rarity} · {pool[rarity].length} cards · {oddsFor(rarity)}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {pool[rarity].map((name) => {
-                  const card = byName[name];
-                  return card?.image ? (
+      <header>
+        <span className="atlas-eyebrow">A LOOK INSIDE</span>
+        <h2>{pack.name}</h2>
+      </header>
+      <div className="story-pack-pool">
+        {RARITY_ORDER.filter((rarity) => pool[rarity]?.length).map((rarity) => (
+          <section key={rarity}>
+            <h3>
+              {rarity}{" "}
+              <span>
+                {pool[rarity].length} cards · {oddsFor(rarity)}
+              </span>
+            </h3>
+            <div>
+              {pool[rarity].map((name) => (
+                <button
+                  key={name}
+                  onClick={() => preview(byName[name])}
+                  aria-label={`Inspect ${name}`}
+                  title={name}
+                >
+                  {byName[name]?.image ? (
                     <img
-                      key={name}
-                      src={card.image}
+                      src={byName[name].image}
                       alt={name}
                       loading="lazy"
                       draggable={false}
-                      onContextMenu={(e) => {
-                        e.preventDefault();
-                        preview(card);
-                      }}
-                      className="w-20 aspect-[245/342] rounded-sm bg-zinc-800/60"
-                      title={name}
                     />
                   ) : (
-                    <div
-                      key={name}
-                      className="w-20 h-28 rounded-sm bg-zinc-700 border border-zinc-500 flex items-center justify-center p-1 text-center text-[9px] text-zinc-200 font-semibold"
-                    >
-                      {name}
-                    </div>
-                  );
-                })}
-              </div>
+                    <span>{name}</span>
+                  )}
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
+          </section>
+        ))}
       </div>
-    </div>
+    </StoryModal>
   );
 }
 
@@ -117,163 +105,316 @@ function PackTile({
   pack,
   owned,
   coins,
-  onBuy,
+  onChoose,
   onPreview,
   onOpen,
   variant,
-  soldOut = false,
+  soldOut,
+  pending,
+  taking,
+  busy,
 }) {
-  const hasArt = [
-    "base1",
-    "jungle",
-    "fossil",
-    "rocket",
-    "gym1",
-    "gym2",
-  ].includes(pack.setId);
+  const affordable = coins >= pack.price;
   return (
-    <div data-testid={`pack-${pack.id}`} className="atlas-pack-tile">
+    <div
+      data-testid={`pack-${pack.id}`}
+      className={`story-shop-product ${taking ? "taking" : ""}`}
+    >
       {variant && (
-        <span className="atlas-pack-tag">
-          {variant === "promo" ? "A rare find" : "Limited stock"}
+        <span className="story-stock-label">
+          {variant === "promo" ? (
+            <>
+              <FaStar /> Rare find
+            </>
+          ) : (
+            "Themed pack"
+          )}
         </span>
       )}
-      <div className="atlas-pack-art">
-        <img
-          src={hasArt ? `/boosterpacks/${pack.setId}.jpg` : "/pokeball.svg"}
-          alt={`${pack.name} pack`}
-          draggable={false}
-        />
-      </div>
-      <strong>{pack.name}</strong>
-      <span className="atlas-pack-price">
-        {soldOut ? "Sold out" : `${pack.price} coins`}
-      </span>
-      <div className="atlas-pack-actions">
-        {!soldOut && (
-          <button
-            onClick={onBuy}
-            disabled={coins < pack.price}
-            data-testid={`buy-${pack.id}`}
-            className="atlas-button primary"
-          >
-            Buy
-          </button>
-        )}
+      <button
+        className={`story-shop-buy ${pack.promo ? "promo" : ""}`}
+        data-testid={`buy-${pack.id}`}
+        onClick={onChoose}
+        disabled={soldOut || !affordable || busy}
+        aria-label={
+          soldOut
+            ? `${pack.name} is sold out`
+            : pending
+              ? `Confirm ${pack.name} for ${pack.price} coins`
+              : `Choose ${pack.name} for ${pack.price} coins`
+        }
+      >
+        <span className="story-shop-product-image">
+          <img
+            src={storyPackArt(pack)}
+            alt={`${pack.name} pack`}
+            draggable={false}
+          />
+        </span>
+        <span className={`story-shop-price ${pending ? "confirming" : ""}`}>
+          {taking || pending ? <FaCheck /> : <FaCoins />}
+          {soldOut
+            ? "Sold out"
+            : taking
+              ? "Ready!"
+              : pending
+                ? "Confirm?"
+                : pack.price}
+        </span>
+      </button>
+      <div className="story-product-label">
+        <strong>{pack.name.replace(/ Booster$/, "")}</strong>
         <button
           onClick={onPreview}
           data-testid={`preview-${pack.id}`}
-          className="atlas-button secondary"
+          aria-label={`Preview ${pack.name}`}
+          title="Possible pulls"
         >
-          Preview
+          <FaSearch />
         </button>
       </div>
       {owned > 0 && (
         <button
-          onClick={onOpen}
+          className="story-owned-pack"
           data-testid={`open-${pack.id}`}
-          className="atlas-button primary"
+          onClick={onOpen}
+          disabled={busy}
         >
-          Open ({owned})
+          Open owned ({owned}) <FaArrowRight />
         </button>
+      )}
+      {!affordable && !soldOut && (
+        <small className="story-pack-shortfall">
+          {pack.price - coins} more coins needed
+        </small>
       )}
     </div>
   );
 }
 
 export function ShopScreen({ story, profile, setProfile, onBack, onEditor }) {
+  const { settings } = useSettings();
   const [previewPack, setPreviewPack] = useState(null);
   const [opening, setOpening] = useState(null);
+  const [pending, setPending] = useState(null);
+  const [taking, setTaking] = useState(null);
+  const [notice, setNotice] = useState("");
+  const [mode, setMode] = useState(() => {
+    try {
+      return localStorage.getItem("ppc-story-reveal-mode") === "row"
+        ? "row"
+        : "stack";
+    } catch {
+      return "stack";
+    }
+  });
+  const timer = useRef(null);
+  const purchasing = useRef(false);
   useEffect(() => {
     setProfile((p) => rollSubOffer(rollPromoOffer(p, story), story));
+    return () => clearTimeout(timer.current);
+    // The restock event occurs once per visit, as before.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const packs = (story.packs ?? [])
-    .map((id) => BOOSTER_PACKS[id])
-    .filter(Boolean);
-  const promoPack = profile.promoOffer
+  useEffect(() => {
+    try {
+      localStorage.setItem("ppc-story-reveal-mode", mode);
+    } catch {
+      /* preferences are optional */
+    }
+  }, [mode]);
+  useEffect(() => {
+    const cancel = (event) => {
+      if (event.key === "Escape") setPending(null);
+    };
+    document.addEventListener("keydown", cancel);
+    return () => document.removeEventListener("keydown", cancel);
+  }, []);
+  const regular = (story.packs ?? [])
+    .map((id) => ({ pack: BOOSTER_PACKS[id] }))
+    .filter((entry) => entry.pack);
+  const promo = profile.promoOffer
     ? BOOSTER_PACKS[profile.promoOffer.packId]
     : null;
-  const promoOwned =
-    BOOSTER_PACKS.promoPack &&
-    (profile.packs[BOOSTER_PACKS.promoPack.id] ?? 0) > 0;
-  const subOfferPack = profile.subOffer
-    ? SUB_PACKS[profile.subOffer.packId]
-    : null;
-  const ownedSubPacks = Object.values(SUB_PACKS).filter(
-    (p) => (profile.packs[p.id] ?? 0) > 0 && p.id !== subOfferPack?.id,
+  const themed = profile.subOffer ? SUB_PACKS[profile.subOffer.packId] : null;
+  const ownedThemed = Object.values(SUB_PACKS).filter(
+    (pack) => (profile.packs[pack.id] ?? 0) > 0 && pack.id !== themed?.id,
   );
-  const buy = (pack) => setProfile((p) => buyPack(p, pack) ?? p);
-  const open = (pack) => {
-    const res = openOwnedPack(profile, pack);
-    if (!res) return;
-    setProfile(res.profile);
-    setOpening({ pack, result: res });
-  };
+  const products = [
+    ...regular,
+    ...(themed ? [{ pack: themed, variant: "sub" }] : []),
+    ...ownedThemed.map((pack) => ({ pack, variant: "sub", soldOut: true })),
+    ...(promo || profile.packs.promoPack > 0
+      ? [{ pack: BOOSTER_PACKS.promoPack, variant: "promo", soldOut: !promo }]
+      : []),
+  ];
+  const shelves = Array.from(
+    { length: Math.ceil(products.length / 3) },
+    (_, index) => products.slice(index * 3, index * 3 + 3),
+  );
   const keeper = story.shopkeeper ?? DEFAULT_SHOPKEEPER;
-  const greeting = promoPack
-    ? "A collector traded in something special today. A Black Star Promo pack, while it lasts!"
-    : subOfferPack
-      ? `A themed ${subOfferPack.name} pack just came in. A narrower pull makes it easier to find the cards you are hunting.`
-      : (keeper.greeting ??
-        "Welcome! Five cards in every pack: three commons, an uncommon, and a rare that might be a holofoil. Extra copies past four are refunded as coins.");
-  const tile = (pack, variant, soldOut = false) => (
-    <PackTile
-      key={pack.id}
-      pack={pack}
-      owned={profile.packs[pack.id] ?? 0}
-      coins={profile.coins}
-      onBuy={() => buy(pack)}
-      onPreview={() => setPreviewPack(pack)}
-      onOpen={() => open(pack)}
-      variant={variant}
-      soldOut={soldOut}
-    />
-  );
+  const greeting =
+    keeper.greeting ??
+    "Welcome! Pick a booster for the road. Five cards in every pack, and something new for your next deck. Extra copies past four come back as coins.";
+  const startOpening = (pack) => {
+    setPending(null);
+    setOpening(pack);
+  };
+  const choose = (pack) => {
+    if (purchasing.current) return;
+    if (pending !== pack.id) {
+      setPending(pack.id);
+      return;
+    }
+    const next = buyPack(loadProfile(), pack);
+    if (!next) {
+      setPending(null);
+      setNotice(
+        "Earn a few more coins in your next battle, then come back for this pack.",
+      );
+      return;
+    }
+    purchasing.current = true;
+    setPending(null);
+    setTaking(pack.id);
+    setProfile(next);
+    playSfx("coin");
+    timer.current = setTimeout(
+      () => {
+        purchasing.current = false;
+        setTaking(null);
+        setNotice(
+          "Your pack is ready. It stays unopened until you rip the foil.",
+        );
+        startOpening(pack);
+      },
+      settings.animations ? 650 : 0,
+    );
+  };
+  const unseal = () => {
+    const result = openOwnedPack(loadProfile(), opening);
+    if (!result) {
+      setOpening(null);
+      setNotice("That pack has already been opened.");
+      return null;
+    }
+    setProfile(result.profile);
+    return result;
+  };
+  const modalOpen = !!(previewPack || opening);
   return (
-    <div className="atlas-shop-page">
-      <StoryHeader
-        coins={profile.coins}
-        onBack={onBack}
-        onJourney={onBack}
-        onEditor={onEditor}
-        onShop={() => {}}
-        active="shop"
-        backLabel="Journey"
-      />
-      <div className="atlas-shop-inner">
-        <section className="atlas-shop-heading">
-          <span className="atlas-eyebrow">A LITTLE SOMETHING FOR THE ROAD</span>
-          <h1>Poké Mart</h1>
-          <p>
-            Grow your collection, discover a new favorite, and make your next
-            deck your best one yet.
-          </p>
-        </section>
-        <div className="atlas-shop-shelf">
-          {packs.map((p) => tile(p))}
-          {subOfferPack && tile(subOfferPack, "sub")}
-          {ownedSubPacks.map((p) => tile(p, "sub", true))}
-          {(promoPack || promoOwned) &&
-            tile(BOOSTER_PACKS.promoPack, "promo", !promoPack)}
+    <div className="story-shop" data-shop-story={story.id}>
+      <div inert={modalOpen} className="story-shop-surface">
+        <StoryHeader
+          coins={profile.coins}
+          onBack={onBack}
+          onJourney={onBack}
+          onEditor={onEditor}
+          onShop={() => {}}
+          active="shop"
+          backLabel="Journey"
+        />
+        <div className="story-shop-stage">
+          <section
+            className="story-shop-host"
+            aria-label={`${keeper.name}'s shop`}
+          >
+            <div className="story-shop-sign">
+              <span className="atlas-eyebrow">KANTO · {story.name}</span>
+              <h1>Poké Mart</h1>
+              <p>A new pack. A new possibility.</p>
+            </div>
+            <AtlasPortrait {...keeper} className="story-shop-portrait" />
+            <div className="story-shop-speech">
+              <strong data-testid="shopkeeper-name">{keeper.name}</strong>
+              <p>{greeting}</p>
+            </div>
+          </section>
+          <section
+            className="story-cabinet"
+            aria-labelledby="story-cabinet-heading"
+          >
+            <header className="story-cabinet-header">
+              <div>
+                <span>STORY BOOSTERS</span>
+                <h2 id="story-cabinet-heading">Choose a pack</h2>
+              </div>
+              <div
+                className="story-shop-mode"
+                role="group"
+                aria-label="Card reveal style"
+              >
+                <button
+                  aria-pressed={mode === "row"}
+                  onClick={() => setMode("row")}
+                >
+                  <FaGripHorizontal />
+                  Row
+                </button>
+                <button
+                  aria-pressed={mode === "stack"}
+                  onClick={() => setMode("stack")}
+                >
+                  <FaLayerGroup />
+                  Stack
+                </button>
+              </div>
+            </header>
+            <div className="story-cabinet-shelves">
+              {shelves.map((shelf, index) => (
+                <div className="story-cabinet-shelf" key={index}>
+                  {shelf.map(({ pack, variant, soldOut }) => (
+                    <PackTile
+                      key={pack.id}
+                      pack={pack}
+                      variant={variant}
+                      soldOut={soldOut}
+                      owned={profile.packs[pack.id] ?? 0}
+                      coins={profile.coins}
+                      pending={pending === pack.id}
+                      taking={taking === pack.id}
+                      busy={!!taking}
+                      onChoose={() => choose(pack)}
+                      onPreview={() => {
+                        setPending(null);
+                        setPreviewPack(pack);
+                      }}
+                      onOpen={() => startOpening(pack)}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
+            <footer className="story-cabinet-footer">
+              <p>
+                Story coins ·{" "}
+                {BOOSTER_PACKS.promoPack &&
+                  "Five cards per booster · One per promo"}
+              </p>
+              {themed && (
+                <p className="story-fresh-stock">
+                  <FaStar />
+                  Fresh stock: {themed.name}
+                </p>
+              )}
+              <p className="story-shop-notice" role="status">
+                {notice ||
+                  "Your pulls join your story collection. Extra copies return coins."}
+              </p>
+            </footer>
+          </section>
         </div>
-        <div className="atlas-shopkeeper">
-          <div className="atlas-shopkeeper-message">
-            <strong>{keeper.name}</strong>
-            <p>{greeting}</p>
-          </div>
-          {keeper.image && (
-            <AtlasPortrait {...keeper} className="atlas-shopkeeper-portrait" />
-          )}
-        </div>
+        <div className="story-shop-counter" aria-hidden="true" />
       </div>
       {previewPack && (
         <PackPreview pack={previewPack} onClose={() => setPreviewPack(null)} />
       )}
       {opening && (
         <PackOpening
-          packName={opening.pack.name}
-          result={opening.result}
+          key={opening.id}
+          pack={opening}
+          mode={mode}
+          onUnseal={unseal}
           onDone={() => setOpening(null)}
         />
       )}

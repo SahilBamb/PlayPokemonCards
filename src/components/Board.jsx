@@ -103,7 +103,7 @@ export function LogBody() {
     <div className="flex-1 text-zinc-200 text-xs p-3 flex flex-col-reverse overflow-y-auto">
       <ul className="space-y-1">
         {state.log.map((msg, i) => (
-          <li key={i} className={msg.startsWith('---') || msg.startsWith('***') ? 'text-poke-red font-bold pt-1' : msg.startsWith('Coin flip') ? 'text-amber-300' : ''}>
+          <li key={i} className={msg.startsWith('Turn ') || msg.startsWith('***') ? 'text-poke-red font-bold pt-1' : msg.startsWith('Coin flip') ? 'text-amber-300' : ''}>
             {msg}
           </li>
         ))}

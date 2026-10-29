@@ -18,3 +18,12 @@ Kanto chapter revision checks
 - Encounter and result conversations are bounded popups over the map. Keyboard focus stays in the dialog; underlying navigation is inert; Escape/close return to the same selected area. Battle starts only through Battle.
 - Desktop hub 1600x950, 1366x768 and 1280x720: map and encounter art cannot overlap or cover the battle deck. All deck controls remain visible. Phone 390x844: no horizontal overflow, modal scroll and actions reachable, landscape phone supported.
 - Resume each chapter, switch chapters before choosing a starter, purchase/open a pack, invalid deck, keyboard battle setup and forfeit return retain existing rules and saves.
+
+Story shop and copy revision
+- All three hosts and their original greetings remain visible. Six regular League packs, themed offers, promo offers and owned stock use a wood and glass cabinet with individual image slots and coin badges.
+- First pack click requests confirmation without spending. Second click buys once at the existing story coin price and opens a sealed pack. Insufficient funds cannot spend below zero. An untorn pack can be closed and resumed after a reload.
+- Mouse, touch and keyboard can tear the shared jagged foil seam. Cards emerge, then reveal in stack or row mode. Stack card, stage and footer bounds stay fixed after each reveal. The last card can be appreciated before the summary.
+- Holo/Promo effects, per-card duplicate coin badges, full-pack refunds, collection caps and one-card promos use the original story rules. Opened cards save at the tear and survive closing before reveal.
+- Preview card inspection layers above the shop popup; closing inspection returns to the same popup without closing the pack. Escape and focus containment work.
+- Desktop 1600x950 and 1366x768, mobile 390x844, reduced motion and limited/empty funds inspected. Card Opener wallet, purchase and tear remain independent.
+- Copy scan checks JavaScript string/template literals and JSX text for long dashes or double-dash prose, preserving CSS variables, URLs, numeric decrements, HTML comments and command flags. Story dialogue, UI labels, tooltips, deck descriptions and visible turn logs are covered.

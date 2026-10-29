@@ -1,116 +1,328 @@
-import { useState } from 'react'
-import { byName } from '../../engine/cards.js'
-import { useCardPreview } from '../CardPreview.jsx'
+import { useEffect, useRef, useState } from "react";
+import { FaArrowRight, FaCheck, FaCoins } from "react-icons/fa";
+import { byName } from "../../engine/cards.js";
+import { DUPE_REFUND } from "../../data/boosters.js";
+import { useCardPreview } from "../CardPreview.jsx";
+import { useSettings } from "../Settings.jsx";
+import { HoloCard } from "../HoloCard.jsx";
+import { PackTear } from "../opener/PackTear.jsx";
+import { playSfx } from "../../lib/sfx.js";
+import { StoryModal } from "./StoryModal.jsx";
+import { storyPackArt } from "./storyShopArt.js";
 
-const RARITY_GLOW = {
-  'Rare Holo': 'shadow-[0_0_24px_rgba(250,204,21,0.55)]',
-  Promo: 'shadow-[0_0_24px_rgba(227,53,13,0.6)]',
-  Rare: 'shadow-[0_0_16px_rgba(96,165,250,0.45)]',
-}
+const shiny = (card) => /Holo|Secret|Promo/.test(card?.rarity ?? "");
 
-function PackCard({ name, flipped, refunded, onFlip }) {
-  const card = byName[name]
-  const preview = useCardPreview()
+function PullCard({
+  name,
+  index,
+  flipped,
+  refund,
+  onClick,
+  finished = false,
+  stacked = false,
+}) {
+  const card = byName[name];
+  const inspect = useCardPreview();
   return (
     <div
+      className={`story-pull ${flipped ? "revealed" : ""} ${flipped && shiny(card) ? "shiny" : ""} ${stacked ? "stacked" : ""}`}
       data-testid="pack-card"
-      data-flipped={flipped ? '1' : '0'}
-      onClick={onFlip}
-      onContextMenu={(e) => {
-        if (!flipped) return
-        e.preventDefault()
-        preview(card)
-      }}
-      className={`relative w-28 aspect-[245/342] cursor-pointer select-none transition-transform duration-300 ${flipped ? '' : 'hover:scale-105'}`}
-      style={{ perspective: '600px' }}
+      data-flipped={flipped ? "1" : "0"}
     >
-      {flipped ? (
-        <div className={`w-full h-full rounded-sm animate-[zoomIn_0.3s_ease-out] ${RARITY_GLOW[card?.rarity] ?? ''}`}>
-          {card?.image ? (
-            <img src={card.image} alt={name} className="w-full h-full rounded-sm" draggable={false} />
-          ) : (
-            <div className="w-full h-full rounded-sm bg-zinc-700 border border-zinc-500 flex items-center justify-center p-1 text-center text-[10px] text-zinc-200 font-semibold">
-              {name}
-            </div>
-          )}
-          {refunded > 0 && (
-            <span className="absolute bottom-1 inset-x-1 text-center text-[10px] font-bold bg-black/80 text-amber-300 rounded-sm py-0.5">
-              extra copy → coins
-            </span>
-          )}
-        </div>
-      ) : (
-        <div className="w-full h-full rounded-sm overflow-hidden border-2 border-[#294c7c] flex items-center justify-center hover:border-poke-red transition">
-          <img src="/card-opener/card-back.jpg" alt="Face down card" className="w-full h-full object-cover" draggable={false} />
-        </div>
-      )}
-    </div>
-  )
-}
-
-// Full-screen reveal after opening a booster: cards start face-down, click to
-// flip (or flip all). `result` = { names, refunded, refund } from
-// openOwnedPack. Right-click a revealed card to zoom it.
-export function PackOpening({ packName, result, onDone }) {
-  const [flipped, setFlipped] = useState(() => result.names.map(() => false))
-  const allFlipped = flipped.every(Boolean)
-  // mark which duplicates got refunded (assign refunds to the last copies pulled)
-  const refundLeft = { ...result.refunded }
-  const refundFlags = [...result.names]
-    .reverse()
-    .map((name) => {
-      if (refundLeft[name] > 0) {
-        refundLeft[name]--
-        return true
-      }
-      return false
-    })
-    .reverse()
-
-  return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center" data-testid="pack-opening">
-      <div className="flex flex-col items-center gap-5 max-w-3xl p-6">
-        <h2 className="text-2xl font-black text-white uppercase tracking-widest flex items-center gap-3">
-          <img src="/pokeball.svg" alt="" className="w-7 h-7" draggable={false} />
-          {packName}
-        </h2>
-        <p className="text-sm text-zinc-400 -mt-3">Click the cards to reveal them.</p>
-        <div className="flex flex-wrap justify-center gap-3">
-          {result.names.map((name, i) => (
-            <PackCard
-              key={i}
-              name={name}
-              flipped={flipped[i]}
-              refunded={refundFlags[i] ? 1 : 0}
-              onFlip={() => setFlipped((f) => f.map((v, j) => (j === i ? true : v)))}
-            />
-          ))}
-        </div>
-        {result.refund > 0 && allFlipped && (
-          <p className="text-amber-300 text-sm font-semibold" data-testid="pack-refund">
-            Extra copies beyond 4 were redeemed for {result.refund} coins.
-          </p>
+      <button
+        className="story-pull-card"
+        onClick={onClick}
+        aria-label={
+          !flipped
+            ? `Reveal card ${index + 1}`
+            : finished
+              ? `Inspect ${name}`
+              : `Next card after ${name}`
+        }
+        onContextMenu={(event) => {
+          if (flipped) {
+            event.preventDefault();
+            inspect(card);
+          }
+        }}
+      >
+        {flipped ? (
+          <HoloCard card={card}>
+            {card?.image ? (
+              <img src={card.image} alt={name} draggable={false} />
+            ) : (
+              <span className="story-card-fallback">{name}</span>
+            )}
+            {shiny(card) && (
+              <span className="story-foil-sweep" aria-hidden="true" />
+            )}
+          </HoloCard>
+        ) : (
+          <img
+            src="/card-opener/card-back.jpg"
+            alt="Face down card"
+            draggable={false}
+          />
         )}
-        <div className="flex gap-3">
-          {!allFlipped && (
-            <button
-              onClick={() => setFlipped(flipped.map(() => true))}
-              data-testid="pack-flip-all"
-              className="px-4 py-2 rounded-sm bg-zinc-800 hover:bg-zinc-700 border-2 border-zinc-600 text-white text-sm font-bold uppercase tracking-wide"
-            >
-              Flip All
-            </button>
-          )}
-          <button
-            onClick={onDone}
-            disabled={!allFlipped}
-            data-testid="pack-done"
-            className="px-5 py-2 rounded-sm bg-poke-red hover:bg-[#f4460f] border-b-4 border-poke-red-dark text-white text-sm font-bold uppercase tracking-wide disabled:opacity-40"
-          >
-            Add to Collection
-          </button>
-        </div>
+        {flipped && shiny(card) && (
+          <span className="story-pull-sparkles" aria-hidden="true">
+            ✦<i>✦</i>
+            <b>✧</b>
+          </span>
+        )}
+        {flipped && refund > 0 && (
+          <span className="story-refund-badge">
+            <FaCoins /> +{refund}
+          </span>
+        )}
+      </button>
+      <div className="story-pull-caption" aria-hidden={!flipped}>
+        {flipped && (
+          <>
+            <strong>{name}</strong>
+            <small>
+              {refund
+                ? "Extra copy converted to coins"
+                : (card?.rarity ?? "Added to collection")}
+            </small>
+          </>
+        )}
       </div>
     </div>
-  )
+  );
+}
+
+// A bought pack stays unopened until the tear completes. Cards and duplicate
+// refunds are persisted by onUnseal, so leaving a reveal can never lose a pull.
+export function PackOpening({ pack, mode, onUnseal, onDone }) {
+  const { settings } = useSettings();
+  const [reduced, setReduced] = useState(
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  const instant = reduced || !settings.animations;
+  const [stage, setStage] = useState("sealed");
+  const [result, setResult] = useState(null);
+  const [flipped, setFlipped] = useState([]);
+  const [index, setIndex] = useState(0);
+  const [summary, setSummary] = useState(false);
+  const unsealed = useRef(false);
+  const openingRoot = useRef(null);
+  const inspect = useCardPreview();
+  useEffect(() => {
+    if (stage === "reveal")
+      openingRoot.current
+        ?.querySelector(".story-pull-card")
+        ?.focus({ preventScroll: true });
+  }, [stage, index, summary]);
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const changed = () => setReduced(media.matches);
+    media.addEventListener("change", changed);
+    return () => media.removeEventListener("change", changed);
+  }, []);
+  useEffect(() => {
+    if (!["tearing", "dealing"].includes(stage)) return;
+    const timer = setTimeout(
+      () => setStage(stage === "tearing" ? "dealing" : "reveal"),
+      instant ? 0 : stage === "tearing" ? 1050 : 1450,
+    );
+    return () => clearTimeout(timer);
+  }, [stage, instant]);
+  useEffect(() => {
+    for (const name of result?.names ?? []) {
+      const image = new Image();
+      image.src = byName[name]?.image ?? "";
+    }
+  }, [result]);
+  const tear = () => {
+    if (unsealed.current) return;
+    unsealed.current = true;
+    const next = onUnseal();
+    if (!next) {
+      unsealed.current = false;
+      return;
+    }
+    setResult(next);
+    setFlipped(next.names.map(() => false));
+    setStage("tearing");
+    playSfx("packTear");
+  };
+  const allFlipped = flipped.length > 0 && flipped.every(Boolean);
+  const done = allFlipped && (mode === "row" || summary);
+  const refundLeft = { ...result?.refunded };
+  const refundFlags = [...(result?.names ?? [])]
+    .reverse()
+    .map((name) => {
+      if (!(refundLeft[name] > 0)) return false;
+      refundLeft[name] -= 1;
+      return true;
+    })
+    .reverse();
+  const flip = (i) => {
+    if (flipped[i]) {
+      if (mode === "stack" && !done) {
+        if (i < flipped.length - 1) setIndex(i + 1);
+        else setSummary(true);
+        playSfx("cardSlide");
+      } else inspect(byName[result.names[i]]);
+      return;
+    }
+    playSfx(shiny(byName[result.names[i]]) ? "cardRare" : "cardFlip");
+    setFlipped((prev) => prev.map((value, j) => j === i || value));
+  };
+  const revealAll = () => {
+    setFlipped(flipped.map(() => true));
+    setIndex(flipped.length - 1);
+    setSummary(true);
+  };
+  const set = { name: pack.name, image: storyPackArt(pack) };
+  return (
+    <StoryModal
+      label={`Open ${pack.name}`}
+      onClose={onDone}
+      closeLabel="Back to shop"
+      className="story-pack-modal"
+      testId="pack-opening"
+    >
+      <div
+        className="story-opening"
+        ref={openingRoot}
+        data-stage={stage}
+        data-mode={mode}
+        data-motion={instant ? "reduced" : "full"}
+      >
+        <header className="story-opening-header">
+          <span className="atlas-eyebrow">YOUR STORY COLLECTION</span>
+          <h2>{pack.name}</h2>
+        </header>
+        <div className={`story-opening-stage ${stage}`}>
+          {["sealed", "tearing"].includes(stage) && (
+            <div className="story-sealed-pack">
+              <PackTear
+                set={set}
+                tearing={stage === "tearing"}
+                onOpen={tear}
+                disabled={stage !== "sealed"}
+              />
+            </div>
+          )}
+          {stage === "dealing" && (
+            <div
+              className="story-pack-deal"
+              aria-label="Cards coming out of the pack"
+            >
+              <img className="story-empty-wrapper" src={set.image} alt="" />
+              {result.names.map((_, i) => (
+                <img
+                  key={i}
+                  className="story-emerging-card"
+                  src="/card-opener/card-back.jpg"
+                  alt=""
+                  style={{
+                    "--story-card-index": i,
+                    "--story-card-middle": (result.names.length - 1) / 2,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+          {stage === "reveal" && (
+            <>
+              {mode === "stack" && !done ? (
+                <div className="story-stack-table">
+                  {flipped.length - index > 1 && (
+                    <span className="story-card-underlay" />
+                  )}
+                  <PullCard
+                    key={index}
+                    name={result.names[index]}
+                    index={index}
+                    stacked
+                    flipped={flipped[index]}
+                    onClick={() => flip(index)}
+                    refund={
+                      refundFlags[index]
+                        ? (DUPE_REFUND[byName[result.names[index]]?.rarity] ??
+                          5)
+                        : 0
+                    }
+                  />
+                </div>
+              ) : (
+                <div className={`story-pull-row ${done ? "complete" : ""}`}>
+                  {result.names.map((name, i) => (
+                    <PullCard
+                      key={i}
+                      name={name}
+                      index={i}
+                      flipped={flipped[i]}
+                      onClick={() => flip(i)}
+                      finished={done}
+                      refund={
+                        refundFlags[i]
+                          ? (DUPE_REFUND[byName[name]?.rarity] ?? 5)
+                          : 0
+                      }
+                    />
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+        <footer className="story-opening-footer" aria-live="polite">
+          {stage === "sealed" ? (
+            <p>Drag across the dotted line, or focus it and press Enter.</p>
+          ) : stage === "tearing" ? (
+            <p>Opening your pack...</p>
+          ) : stage === "dealing" ? (
+            <p>
+              {result.names.length}{" "}
+              {result.names.length === 1 ? "card" : "cards"} for your next
+              adventure.
+            </p>
+          ) : (
+            <>
+              <div className="story-opening-progress">
+                <span>
+                  {done ? (
+                    <>
+                      <FaCheck /> {result.names.length}{" "}
+                      {result.names.length === 1 ? "card" : "cards"} opened
+                    </>
+                  ) : (
+                    `${flipped.filter(Boolean).length} / ${result.names.length} revealed`
+                  )}
+                </span>
+                {!allFlipped && (
+                  <button data-testid="pack-flip-all" onClick={revealAll}>
+                    Reveal all <FaArrowRight />
+                  </button>
+                )}
+              </div>
+              {allFlipped && (
+                <p className="story-opening-saved">
+                  <FaCheck /> Saved to your collection
+                  {result.refund > 0 && (
+                    <span data-testid="pack-refund">
+                      <FaCoins /> {result.refund} coins from extra copies
+                    </span>
+                  )}
+                </p>
+              )}
+              <button
+                data-testid="pack-done"
+                className="atlas-button primary"
+                disabled={!allFlipped}
+                style={{ visibility: allFlipped ? "visible" : "hidden" }}
+                onClick={onDone}
+              >
+                Back to shop <FaArrowRight />
+              </button>
+            </>
+          )}
+        </footer>
+      </div>
+    </StoryModal>
+  );
 }

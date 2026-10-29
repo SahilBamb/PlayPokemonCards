@@ -21,10 +21,10 @@
 
 export const DECK_GROUPS = {
   starter: 'Starter Decks',
-  basefossil: '1999 Base–Fossil',
+  basefossil: '1999 Base to Fossil',
   gameboy: 'Game Boy (2000)',
-  baserocket: '2000 Base–Rocket',
-  basegym: '2000 Base–Gym',
+  baserocket: '2000 Base to Rocket',
+  basegym: '2000 Base to Gym',
   prop153: 'Prop 15/3 (2000)',
   originalrules: 'Original Rules (Japan)',
 }
@@ -108,7 +108,7 @@ export const PRESET_DECK_DEFS = [
   {
     id: 'haymakerBF',
     name: 'Haymaker',
-    description: 'The refined trio — Hitmonchan, Electabuzz & Scyther — plus Ditto for Mewtwo.',
+    description: 'The refined trio of Hitmonchan, Electabuzz & Scyther, plus Ditto for Mewtwo.',
     coverCards: ['Hitmonchan', 'Scyther'],
     counts: {
       Electabuzz: 3, Hitmonchan: 3, Scyther: 3, Ditto: 2,
@@ -241,7 +241,7 @@ export const PRESET_DECK_DEFS = [
     id: 'trSavage',
     name: 'STS: Mewtwo / Electabuzz',
     group: 'baserocket',
-    description: "Jack Savage's 2000 West Coast STS winner (11–14): Sneak Attack plus Energy Absorption.",
+    description: "Jack Savage's 2000 West Coast STS winner (ages 11 to 14): Sneak Attack plus Energy Absorption.",
     coverCards: ['Mewtwo (Promo 3)', 'Electabuzz'],
     counts: {
       Scyther: 4, 'Mewtwo (Promo 3)': 3, Electabuzz: 3, Ditto: 2, Chansey: 2,
@@ -282,7 +282,7 @@ export const PRESET_DECK_DEFS = [
     id: 'trClefable',
     name: 'Clefable / Mewtwo',
     group: 'baserocket',
-    description: 'Metronome for one energy, backed by heavy removal — and Clefable resists Psychic.',
+    description: 'Metronome for one energy, backed by heavy removal: and Clefable resists Psychic.',
     coverCards: ['Clefable', 'Mewtwo (Promo 3)'],
     counts: {
       'Mewtwo (Promo 3)': 4, Clefairy: 3, Clefable: 3, Grimer: 3, Muk: 2, Kangaskhan: 2,
@@ -409,7 +409,7 @@ export const PRESET_DECK_DEFS = [
     id: 'trWigglytuff',
     name: 'Wigglytuff / Magmar',
     group: 'baserocket',
-    description: 'The Base–Fossil classic, updated with Nightly Garbage Run and a defensive Muk line.',
+    description: 'The Base to Fossil classic, updated with Nightly Garbage Run and a defensive Muk line.',
     coverCards: ['Wigglytuff', 'Magmar (Fossil)'],
     counts: {
       'Magmar (Fossil)': 4, Scyther: 3, Jigglypuff: 3, Wigglytuff: 2, Grimer: 2, Muk: 2,
@@ -495,7 +495,7 @@ export const PRESET_DECK_DEFS = [
     id: 'gymRaticate',
     name: "Lt. Surge's Raticate / Mr. Mime",
     group: 'basegym',
-    description: 'Super Fang halves their HP, Meditate finishes — Resistance Gym removes the only out.',
+    description: 'Super Fang halves their HP, Meditate finishes: Resistance Gym removes the only out.',
     coverCards: ["Lt. Surge's Raticate", 'Mr. Mime'],
     counts: {
       "Lt. Surge's Rattata": 3, "Lt. Surge's Raticate": 3, 'Mr. Mime': 3, Doduo: 2, Dodrio: 2,
@@ -736,7 +736,7 @@ export const PRESET_DECK_DEFS = [
     id: 'origMagneton',
     name: 'Magneton / Mr. Mime / Electrode',
     group: 'originalrules',
-    description: 'PlusPowered Selfdestruct wipes both benches — except Invisible Wall Mr. Mime.',
+    description: 'PlusPowered Selfdestruct wipes both benches: except Invisible Wall Mr. Mime.',
     note: 'Built for pre-errata PlusPower (bench damage), which is not simulated here.',
     coverCards: ['Magneton', 'Mr. Mime'],
     counts: {

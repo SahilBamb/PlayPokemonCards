@@ -91,7 +91,7 @@ function CustomDeckOption({ deck, selected, onClick }) {
       </div>
       <span className="font-bold text-sm text-white">{deck.name || '(unnamed)'}</span>
       <span className="text-xs text-zinc-400 text-center">
-        {invalid ? 'Not playable — finish it in the Deck Editor' : `${deckSize(deck.counts)} cards`}
+        {invalid ? 'Not playable. Finish it in the Deck Editor' : `${deckSize(deck.counts)} cards`}
       </span>
     </button>
   )
@@ -244,7 +244,7 @@ export function MainMenu({ onSandbox, onPlay, onEditor, onStory, onOpener }) {
                     />
                   ))}
                   {customDecks.length === 0 && (
-                    <span className="text-xs text-zinc-500 self-center">No saved decks yet — build one in the Deck Editor.</span>
+                    <span className="text-xs text-zinc-500 self-center">No saved decks yet. Build one in the Deck Editor.</span>
                   )}
                   <button
                     onClick={onEditor}

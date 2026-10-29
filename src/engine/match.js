@@ -140,8 +140,8 @@ export function drawForTurn(state, player) {
 export function beginPlay(state) {
   const f = flipCoins(1)
   const first = f.heads > 0 ? 'p1' : 'p2'
-  state = pushLog(state, `Opening coin flip: ${f.results[0]} — ${first} goes first.`)
-  state = pushFx(state, { kind: 'coins', results: f.results, label: `Opening flip — ${first} goes first` })
+  state = pushLog(state, `Opening coin flip: ${f.results[0]}. ${first} goes first.`)
+  state = pushFx(state, { kind: 'coins', results: f.results, label: `Opening flip: ${first} goes first` })
   state = {
     ...state,
     phase: 'playing',
@@ -149,7 +149,7 @@ export function beginPlay(state) {
     turnNumber: 1,
     turnFlags: { energyAttached: false, retreated: false, powersUsed: {} },
   }
-  state = pushLog(state, `--- ${first}'s turn (turn 1) ---`)
+  state = pushLog(state, `Turn 1: ${first}`)
   return drawForTurn(state, first)
 }
 

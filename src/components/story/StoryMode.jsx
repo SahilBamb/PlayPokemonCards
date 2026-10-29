@@ -83,7 +83,7 @@ export function StoryMode({ onExit }) {
             {
               name: "Professor Oak",
               image: null,
-              text: `${starter.name} — a fine choice! Now go challenge the trainers of ${story.name}.`,
+              text: `${starter.name}: a fine choice! Now go challenge the trainers of ${story.name}.`,
             },
           ],
       onDone: () => setDialogue(null),

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="427" viewBox="0 0 220 427" role="img" aria-label="Black Star Promo collector sleeve">
+  <defs>
+    <linearGradient id="foil"><stop stop-color="#12233d"/><stop offset=".2" stop-color="#51657c"/><stop offset=".46" stop-color="#1b2c43"/><stop offset=".82" stop-color="#3f5771"/><stop offset="1" stop-color="#15243a"/></linearGradient>
+    <linearGradient id="gold"><stop stop-color="#fff3c0"/><stop offset=".5" stop-color="#c59c43"/><stop offset="1" stop-color="#fff0b2"/></linearGradient>
+    <linearGradient id="silver" x2="0" y2="1"><stop stop-color="#7f858c"/><stop offset=".25" stop-color="#faf5e8"/><stop offset=".5" stop-color="#454f5f"/><stop offset=".75" stop-color="#ddd9cc"/><stop offset="1" stop-color="#667180"/></linearGradient>
+    <pattern id="crimp" width="6" height="20" patternUnits="userSpaceOnUse"><path d="M1 0v20M4 0v20" stroke="#ffffff55"/></pattern>
+  </defs>
+  <path d="M4 1H216L219 6L217 20V408L219 423L215 426H5L1 423L3 408V20L1 6Z" fill="url(#foil)" stroke="#f8e4ae" stroke-width="2"/>
+  <path d="M4 2H216V24H4ZM4 404H216V425H4Z" fill="url(#silver)"/>
+  <path d="M4 2H216V24H4ZM4 404H216V425H4Z" fill="url(#crimp)"/>
+  <path d="M14 36H206V390H14Z" fill="none" stroke="url(#gold)"/>
+  <path d="M110 53L117 69L135 71L121 82L125 100L110 90L95 100L99 82L85 71L103 69Z" fill="url(#gold)"/>
+  <g transform="translate(110 185)">
+    <circle r="56" fill="#fff9e9" stroke="#101b30" stroke-width="7"/>
+    <path d="M-56 0A56 56 0 0 1 56 0Z" fill="#de4939"/>
+    <path d="M-56 0H56" stroke="#101b30" stroke-width="8"/>
+    <circle r="17" fill="#fff9e9" stroke="#101b30" stroke-width="7"/>
+    <path d="M-43-24A49 49 0 0 1-8-48" fill="none" stroke="#ffffff80" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <g text-anchor="middle" fill="url(#gold)" font-family="Georgia,serif" font-weight="bold">
+    <text x="110" y="294" font-size="25">BLACK STAR</text>
+    <text x="110" y="327" font-size="29" letter-spacing="3">PROMO</text>
+  </g>
+  <text x="110" y="367" text-anchor="middle" fill="#eee2c9" font-family="sans-serif" font-size="9" letter-spacing="2">ONE COLLECTIBLE CARD</text>
+</svg>
