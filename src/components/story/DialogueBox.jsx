@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { FaArrowRight, FaCoins } from "react-icons/fa";
 import { AtlasPortrait } from "./StoryAtlas.jsx";
+import { StoryModal } from "./StoryModal.jsx";
 
 // Kept public for the existing story progression checks.
 // eslint-disable-next-line react-refresh/only-export-components
@@ -17,86 +18,65 @@ export function DialogueBox({
   onDone,
   doneLabel = "Continue",
   onCancel,
-  cancelLabel = "Maybe Later",
+  cancelLabel = "Return to map",
   context,
   sceneStyle,
 }) {
   const beats = dialogueBeats({ scene, name, image, lines });
   const [i, setI] = useState(0);
-  const container = useRef(null);
   const beat = beats[i] ?? {};
   const last = i >= beats.length - 1;
   const speaker = beat.name ?? name;
   const portrait = beat.image ?? image;
-  const advance = () => (last ? onDone?.() : setI(i + 1));
-  useEffect(() => {
-    const previous = document.activeElement;
-    container.current?.querySelector("button")?.focus();
-    return () => previous?.focus?.();
-  }, []);
-  const keys = (event) => {
-    if (event.key === "Escape" && onCancel) {
-      event.preventDefault();
-      onCancel();
-      return;
-    }
-    if (event.key !== "Tab") return;
-    const buttons = [
-      ...container.current.querySelectorAll("button:not(:disabled)"),
-    ];
-    const first = buttons[0];
-    const final = buttons.at(-1);
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      final.focus();
-    } else if (!event.shiftKey && document.activeElement === final) {
-      event.preventDefault();
-      first.focus();
-    }
+  const advance = () => {
+    if (!last) setI(i + 1);
   };
+
   return (
-    <div
-      className="atlas-dialogue"
-      data-testid="dialogue"
-      role="dialog"
-      aria-modal="true"
-      aria-label={`${speaker ?? "Story"} dialogue`}
-      onKeyDown={keys}
-      ref={container}
+    <StoryModal
+      label={`${speaker ?? "Story"} dialogue`}
+      onClose={onCancel}
+      className="atlas-conversation-modal"
+      testId="dialogue"
     >
       <div
-        className="atlas-dialogue-scene"
+        className="atlas-conversation-scene"
         style={
           sceneStyle ?? { backgroundImage: "url(/story-atlas/oak-lab.webp)" }
         }
-      />
-      <div className="atlas-dialogue-chapter">
-        <span className="atlas-eyebrow">
-          {context?.location ?? "A NEW CHAPTER"}
-        </span>
-        <h2>
-          {context?.badge
-            ? "The next badge awaits."
-            : "Every journey has a story."}
-        </h2>
+      >
+        <div className="atlas-conversation-title">
+          <span className="atlas-eyebrow">
+            KANTO · {context?.location ?? "A NEW CHAPTER"}
+          </span>
+          <h2>
+            {context?.badge
+              ? "The next badge awaits."
+              : context?.coins
+                ? "A challenger awaits."
+                : "Your story continues."}
+          </h2>
+        </div>
+        {portrait && (
+          <AtlasPortrait
+            name={speaker}
+            image={portrait}
+            className="atlas-conversation-character"
+          />
+        )}
       </div>
-      {portrait && (
-        <AtlasPortrait
-          name={speaker}
-          image={portrait}
-          className="atlas-dialogue-character"
-        />
-      )}
-      <section className="atlas-dialogue-box">
-        <span className="atlas-speaker">{speaker}</span>
+      <div className="atlas-conversation-copy">
+        <span className="atlas-conversation-speaker">{speaker}</span>
         <button
-          className="atlas-dialogue-line"
+          className="atlas-conversation-line"
           data-testid="dialogue-line"
+          data-autofocus
           onClick={advance}
+          aria-disabled={last}
         >
           {beat.text}
         </button>
-        {context?.coins && (
+        {!!context?.coins && (
           <div className="atlas-dialogue-reward">
             <span>
               <FaCoins />
@@ -114,29 +94,29 @@ export function DialogueBox({
         <div className="atlas-dialogue-controls">
           <span>
             {i + 1} / {beats.length}
-            <small>Click the dialogue to continue</small>
+            <small>
+              {last ? "Ready when you are" : "Click the dialogue to continue"}
+            </small>
           </span>
           <div>
+            {onCancel && (
+              <button
+                className="atlas-button secondary"
+                onClick={onCancel}
+                data-testid="dialogue-cancel"
+              >
+                {cancelLabel}
+              </button>
+            )}
             {last ? (
-              <>
-                {onCancel && (
-                  <button
-                    className="atlas-button secondary"
-                    onClick={onCancel}
-                    data-testid="dialogue-cancel"
-                  >
-                    {cancelLabel}
-                  </button>
-                )}
-                <button
-                  className="atlas-button primary"
-                  onClick={onDone}
-                  data-testid="dialogue-done"
-                >
-                  {doneLabel}
-                  <FaArrowRight />
-                </button>
-              </>
+              <button
+                className="atlas-button primary"
+                onClick={onDone}
+                data-testid="dialogue-done"
+              >
+                {doneLabel}
+                <FaArrowRight />
+              </button>
             ) : (
               <button className="atlas-button primary" onClick={advance}>
                 Continue
@@ -145,7 +125,7 @@ export function DialogueBox({
             )}
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </StoryModal>
   );
 }

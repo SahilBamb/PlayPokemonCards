@@ -41,6 +41,7 @@ await page.waitForSelector('[data-testid="story-kanto"]')
 if (!(await page.getByTestId('story-rocket').count())) errors.push('rocket story missing from story select')
 await page.screenshot({ path: `${shots}/r1_story_select.png` })
 await page.getByTestId('story-rocket').click()
+await page.getByTestId('begin-story').click()
 
 // 2. Rocket starter decks
 await page.waitForSelector('[data-testid="starter-rocket-volt"]')

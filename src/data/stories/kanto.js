@@ -69,7 +69,7 @@ const eliteNode = (id, who, deckKey, intro, win) => ({
 
 export const KANTO_STORY = {
   id: 'kanto',
-  name: 'Kanto',
+  name: 'The Indigo Journey',
   description: 'The original journey: eight Gym Leaders, the Elite Four, and a familiar rival. Classic era cards.',
   formatId: 'classic',
   packs: ['base1', 'jungle', 'fossil'],

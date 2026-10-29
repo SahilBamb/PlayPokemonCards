@@ -7,7 +7,7 @@ Target: the approved `01-kanto-atlas-hub.png` concept in
 
 | Asset | Production use | Method |
 | --- | --- | --- |
-| Kanto landscape atlas | Interactive journey map, campaign covers, regional postcard crops | Generate a clean illustration matching the approved concept, with no labels or controls |
+| Three Kanto landscape atlases | Interactive story maps, campaign covers, regional postcard crops | Original summer, Rocket occupation at dusk, restored spring League; preserve geography across all variants |
 | Pewter Gym interior | Gym encounters and the story battle environment | Generate a separate scene in the same cel painted style |
 | Collector shop interior | Story Poké Mart backdrop | Generate a separate quiet shop scene with space for real UI |
 | Professor's lab | Starter selection and introductory conversations | Generate a separate daylight lab scene |
@@ -17,9 +17,9 @@ Target: the approved `01-kanto-atlas-hub.png` concept in
 | Routes, markers, locks, coin and navigation icons | Dynamic progress and accessible controls | SVG/CSS and existing icon library, not text baked into artwork |
 
 Only scenic backgrounds require image generation. UI type, rewards, deck counts,
-card faces, names and unlock state stay real and data driven. A common atlas
-provides consistent geography; campaign specific color treatments distinguish
-Rocket Takeover and League Reborn. Regional postcards crop their appropriate
+card faces, names and unlock state stay real and data driven. Three separate atlas illustrations
+share consistent geography while occupation details and restored architecture
+distinguish Rocket Takeover and League Reborn. Regional postcards crop their appropriate
 landmark from that atlas. New images are saved with generation prompts and
 converted to WebP for the site; originals remain in the concept folder.
 
@@ -54,11 +54,11 @@ reduced motion. Preserve unrelated changes in the original checkout.
 
 ## Delivered
 
-The four environments are in `public/story-atlas/`, totaling about 1.38 MB.
+The six environments are in `public/story-atlas/`, totaling about 2.67 MB.
 `manifest.json` records dimensions, sizes and generation prompts. The illustrated
 journey, campaign picker, starter selection, dialogue, shop, pack reveal, deck
-editor and story battle theme are implemented. The map and regional postcards
-reuse one atlas; all gyms currently share the painted Pewter interior. This keeps
+editor and story battle theme are implemented. Each story map, campaign cover and regional postcard uses its own Kanto atlas;
+all gyms currently share the painted Pewter interior. This keeps
 the initial asset set cohesive without generating redundant per-town scenes.
 
 Existing trainer portraits, badges, card scans and wrappers remain authentic
@@ -114,3 +114,40 @@ selection and the introduction, displayed a ready 60-card deck and 250 coins,
 opened the shop and canceled an encounter with Escape without a browser error.
 GitHub build [40884187619](https://github.com/SahilBamb/PlayPokemonCards/actions/runs/40884187619)
 passed for the released source.
+
+## Kanto story chapters revision
+
+Kanto is the region. Its stories are **The Indigo Journey**, **Rocket Takeover**
+and **League Reborn**. The first story retains save ID `kanto`, deck formats,
+node IDs, rewards and collection rules, so existing adventures continue normally.
+
+Two new images were created with built-in image generation using the original
+map as the edit reference. `kanto-rocket.webp` depicts occupied Kanto at dusk;
+`kanto-reborn.webp` depicts a restored League in spring. Geography is held constant
+so the existing pins stay aligned. The original summer `kanto-map.webp` remains
+the Indigo Journey map. Exact prompts are saved in `docs/story-atlas/prompts/`,
+and dimensions and byte sizes are in the asset manifest.
+
+All campaign choices now open the same hub flow, including unstarted stories.
+**Begin story** or **Choose starting deck** opens a compact starter dialog above
+the map. Canceling has no effect on cards or coins. Picking a starter grants it
+once and opens the introduction as a popup. Challenges and result conversations
+also appear as popups over the still-mounted hub. Only the explicit **Battle!**
+button launches the battle; clicking the final dialogue line cannot start it.
+
+The modal locks background scrolling, makes the hub inert, contains keyboard
+focus and restores it on exit. Encounter cancellation supports Escape, the close
+button and backdrop. Existing battle gameplay still uses its own board.
+
+The desktop hub now uses explicit grid rows for header, story navigation, map
+and deck dock. The map cannot force the deck out of the viewport; a dense
+encounter panel scrolls within its row. Phones use a vertical hub and internally
+scrolling popups. The short-window fallback retains natural page scrolling.
+
+Revision verification: 19 story tests passed, scoped ESLint and production build
+passed. Browser checks covered all three new-story hubs, starter cancellation
+without grants, chapter switching, one-time starter grants, resumed saves,
+locked areas, shop and editor, keyboard battle setup, concession rewards and the
+result popup. Viewport checks covered 1600 by 950, 1366 by 768, 1280 by 720, phone
+390 by 844 and phone landscape 844 by 390. Screenshots were visually inspected
+for overflow, overlapping deck controls, popup bounds and readable actions.

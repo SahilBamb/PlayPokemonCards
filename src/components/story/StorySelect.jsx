@@ -8,7 +8,8 @@ import {
 import { STORIES } from "../../data/stories.js";
 import { storyState, resetProfile } from "../../lib/profileStore.js";
 import { byName } from "../../engine/cards.js";
-import { StoryHeader } from "./StoryAtlas.jsx";
+import { StoryHeader, storyMap } from "./StoryAtlas.jsx";
+import { StoryModal } from "./StoryModal.jsx";
 
 const CAMPAIGN_COPY = {
   kanto: ["THE ORIGINAL ADVENTURE", "A familiar world. A new hand."],
@@ -25,15 +26,11 @@ export function StorySelect({ profile, onSelect, onReset, onBack }) {
         backLabel="Main Menu"
       />
       <section className="atlas-select-heading">
-        <span className="atlas-eyebrow">YOUR NEXT ADVENTURE</span>
-        <h1>
-          Every great journey
-          <br />
-          starts with a card.
-        </h1>
+        <span className="atlas-eyebrow">EXPLORE THE REGION</span>
+        <h1>Kanto</h1>
         <p>
-          Meet familiar faces, earn your badges, and build a collection
-          <br className="atlas-desktop-break" /> that tells a story of its own.
+          Three stories. One familiar region.
+          <br /> Choose a story to explore its map and begin your adventure.
         </p>
       </section>
       <div className="atlas-campaign-cards">
@@ -48,7 +45,7 @@ export function StorySelect({ profile, onSelect, onReset, onBack }) {
               onClick={() => onSelect(story)}
             >
               <div className="atlas-campaign-cover">
-                <img src="/story-atlas/kanto-map.webp" alt="" />
+                <img src={storyMap(story).image} alt="" />
                 <span className="atlas-campaign-number">
                   {story.id === "kanto"
                     ? "01"
@@ -84,7 +81,7 @@ export function StorySelect({ profile, onSelect, onReset, onBack }) {
                   )}
                 </div>
                 <span className="atlas-button primary">
-                  {started ? "Continue journey" : "Begin adventure"}
+                  {started ? "Continue journey" : "Explore story"}
                   <FaArrowRight />
                 </span>
               </div>
@@ -118,24 +115,19 @@ export function StorySelect({ profile, onSelect, onReset, onBack }) {
 
 export function StarterPick({ story, onPick, onBack }) {
   return (
-    <div className="atlas-starter-page">
-      <div className="atlas-starter-scene" />
-      <div className="atlas-starter-top">
-        <button className="atlas-button secondary" onClick={onBack}>
-          <FaArrowLeft />
-          Stories
-        </button>
-        <span>{story.name}</span>
-      </div>
-      <section className="atlas-starter-heading">
-        <span className="atlas-eyebrow">YOUR FIRST SIXTY CARDS</span>
-        <h1>A deck to call your own.</h1>
-        <p>
-          Choose your partner for the road ahead.
-          <br />
-          Battle, collect, and make it yours as you go.
-        </p>
-      </section>
+    <StoryModal
+      label={`Choose a starting deck for ${story.name}`}
+      onClose={onBack}
+      className="atlas-starter-modal"
+      testId="starter-dialog"
+    >
+      <header className="atlas-starter-modal-heading">
+        <span className="atlas-eyebrow">KANTO · {story.name}</span>
+        <h2 data-autofocus tabIndex={-1}>
+          Choose your starting deck
+        </h2>
+        <p>Your first sixty cards. Pick a partner for the journey ahead.</p>
+      </header>
       <div className="atlas-starter-choices">
         {story.starterDecks.map((starter, i) => (
           <button
@@ -155,11 +147,10 @@ export function StarterPick({ story, onPick, onBack }) {
               ))}
             </div>
             <span className="atlas-eyebrow">STARTER DECK · 60 CARDS</span>
-            <h2>{starter.name}</h2>
+            <h3>{starter.name}</h3>
             <p>{starter.description}</p>
             <span className="atlas-button primary">
-              Choose this deck
-              <FaArrowRight />
+              Choose this deck <FaArrowRight />
             </span>
           </button>
         ))}
@@ -168,6 +159,6 @@ export function StarterPick({ story, onPick, onBack }) {
         These cards join your collection. Basic Energy is always available in
         the Deck Editor.
       </p>
-    </div>
+    </StoryModal>
   );
 }

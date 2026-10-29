@@ -44,6 +44,28 @@
       ],
       "generation": "built-in image_gen",
       "prompt": "docs/story-atlas/prompts/oak-lab.txt"
+    },
+    {
+      "name": "kanto-rocket",
+      "url": "/story-atlas/kanto-rocket.webp",
+      "bytes": 608222,
+      "size": [
+        1672,
+        941
+      ],
+      "generation": "built-in image_gen, edit of kanto-map",
+      "prompt": "docs/story-atlas/prompts/kanto-rocket.txt"
+    },
+    {
+      "name": "kanto-reborn",
+      "url": "/story-atlas/kanto-reborn.webp",
+      "bytes": 679332,
+      "size": [
+        1672,
+        941
+      ],
+      "generation": "built-in image_gen, edit of kanto-map",
+      "prompt": "docs/story-atlas/prompts/kanto-reborn.txt"
     }
   ]
 }

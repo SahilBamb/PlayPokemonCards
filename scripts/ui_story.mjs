@@ -43,6 +43,7 @@ await page.getByTestId('menu-story').click()
 await page.waitForSelector('[data-testid="story-kanto"]')
 await page.screenshot({ path: `${shots}/s1_story_select.png` })
 await page.getByTestId('story-kanto').click()
+await page.getByTestId('begin-story').click()
 
 // 2. Starter pick (fresh profile) -> Blazing Fists
 await page.waitForSelector('[data-testid="starter-kanto-fire"]')

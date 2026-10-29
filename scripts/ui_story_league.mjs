@@ -43,6 +43,7 @@ for (const id of ['kanto', 'rocket', 'league']) {
 }
 await page.screenshot({ path: `${shots}/l1_story_select.png` })
 await page.getByTestId('story-league').click()
+await page.getByTestId('begin-story').click()
 
 // 2. Gym trainee starter decks
 await page.waitForSelector('[data-testid="starter-league-rock"]')

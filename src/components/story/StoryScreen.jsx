@@ -18,7 +18,7 @@ import {
   areaCompleted,
 } from "../../lib/profileStore.js";
 import {
-  ATLAS_MAP,
+  storyMap,
   AtlasBadges,
   AtlasPortrait,
   StoryHeader,
@@ -67,8 +67,10 @@ export function StoryScreen({
   onSetDeck,
   onSelectStory,
   onBack,
+  onBegin,
 }) {
   const state = storyState(profile, story.id);
+  const started = !!state.starterDeckId;
   const [selectedId, setSelectedId] = useState(
     () =>
       (
@@ -90,19 +92,20 @@ export function StoryScreen({
     !state.beaten.includes(nextNode.id) && nextNode.kind !== "trainer";
   const name = hidden
     ? nextNode.kind === "boss"
-      ? "A Gym challenger awaits"
+      ? "A powerful challenger awaits"
       : "A familiar face?"
     : nextNode.char.name;
   const format = storyFormat(story);
   const decks = loadDecks().filter(
     (deck) => (deck.format ?? "classic") === format.id,
   );
-  const activeDeck =
-    decks.find((deck) => deck.id === state.activeDeckId) ?? decks[0];
+  const activeDeck = started
+    ? (decks.find((deck) => deck.id === state.activeDeckId) ?? decks[0])
+    : null;
   const problems = activeDeck
     ? validateDeck(activeDeck.counts, profile.collection, format)
     : ["Choose a battle deck."];
-  const battleReady = problems.length === 0;
+  const battleReady = started && problems.length === 0;
   const covers = Object.keys(activeDeck?.counts ?? {})
     .filter((name) => byName[name]?.supertype === "pokemon")
     .slice(0, 3);
@@ -135,6 +138,7 @@ export function StoryScreen({
           {Object.values(STORIES).map((s) => (
             <button
               key={s.id}
+              data-testid={`story-${s.id}`}
               aria-current={s.id === story.id ? "page" : undefined}
               onClick={() => onSelectStory(s)}
             >
@@ -144,14 +148,9 @@ export function StoryScreen({
           ))}
         </div>
         <div className="atlas-journey-title">
-          <h1>{story.name}</h1>
-          <p>
-            {state.trophy
-              ? "A champion’s journey, yours to revisit."
-              : state.beaten.length
-                ? "Every battle writes a new chapter."
-                : "Your journey starts here"}
-          </p>
+          <span className="atlas-eyebrow">EXPLORE THE REGION</span>
+          <h1>Kanto</h1>
+          <p>{story.name}</p>
         </div>
         <AtlasBadges story={story} state={state} onArea={setSelectedId} />
       </div>
@@ -183,8 +182,8 @@ export function StoryScreen({
         >
           <img
             className="atlas-map-art"
-            src={ATLAS_MAP}
-            alt="Illustrated region with mountain gyms, forest towns, gardens and coastal cities"
+            src={storyMap(story).image}
+            alt={storyMap(story).alt}
           />
           <svg
             className="atlas-route-lines"
@@ -273,7 +272,10 @@ export function StoryScreen({
           className="atlas-encounter-panel"
           aria-label="Selected region and next battle"
         >
-          <div className="atlas-encounter-art" style={regionArtStyle(area.id)}>
+          <div
+            className="atlas-encounter-art"
+            style={regionArtStyle(area.id, story)}
+          >
             <span className="atlas-eyebrow">
               {completed
                 ? "CHAPTER COMPLETE"
@@ -300,11 +302,13 @@ export function StoryScreen({
             </p>
             <h3>{name}</h3>
             <p className="atlas-encounter-quote">
-              {!unlocked
-                ? "Complete the previous area to reach this part of your journey."
-                : hidden
-                  ? "Some surprises are best discovered along the way."
-                  : nextNode.dialogue.intro[0]}
+              {!started
+                ? story.description
+                : !unlocked
+                  ? "Complete the previous area to reach this part of your journey."
+                  : hidden
+                    ? "Some surprises are best discovered along the way."
+                    : nextNode.dialogue.intro[0]}
             </p>
             <div className="atlas-encounter-action">
               <span className="atlas-reward">
@@ -313,10 +317,15 @@ export function StoryScreen({
               </span>
               <button
                 className="atlas-button primary"
-                disabled={!unlocked || !battleReady}
-                onClick={() => challenge(nextNode)}
+                disabled={started && (!unlocked || !battleReady)}
+                data-testid={!started ? "begin-story" : "challenge-next"}
+                onClick={() => (started ? challenge(nextNode) : onBegin())}
               >
-                {!unlocked ? (
+                {!started ? (
+                  <>
+                    Begin story <FaArrowRight />
+                  </>
+                ) : !unlocked ? (
                   <>
                     <FaLock />
                     Locked
@@ -329,7 +338,7 @@ export function StoryScreen({
                 )}
               </button>
             </div>
-            {!battleReady && (
+            {started && !battleReady && (
               <button className="atlas-deck-warning" onClick={onEditor}>
                 {problems[0]} Open Decks to get ready <FaArrowRight />
               </button>
@@ -367,43 +376,77 @@ export function StoryScreen({
         </aside>
       </div>
 
-      <footer className="atlas-deck-dock">
-        <label>
-          <span className="atlas-eyebrow">BATTLE DECK</span>
-          <span className="atlas-deck-picker">
-            <select
-              data-testid="deck-select"
-              aria-label="Battle deck"
-              value={activeDeck?.id ?? ""}
-              onChange={(e) => onSetDeck(e.target.value)}
+      <footer
+        className={`atlas-deck-dock ${started ? "" : "atlas-deck-unstarted"}`}
+      >
+        {!started ? (
+          <>
+            <div className="atlas-first-deck">
+              <span className="atlas-eyebrow">YOUR STORY STARTS HERE</span>
+              <h3>A deck for the journey</h3>
+              <p>
+                Choose your starter when you are ready to begin {story.name}.
+              </p>
+            </div>
+            <button
+              className="atlas-button primary"
+              data-testid="choose-starter"
+              onClick={onBegin}
             >
-              {decks.map((deck) => (
-                <option key={deck.id} value={deck.id}>
-                  {deck.name || "Untitled deck"}
-                </option>
+              <FaPen />
+              Choose starting deck
+            </button>
+          </>
+        ) : (
+          <>
+            <label>
+              <span className="atlas-eyebrow">BATTLE DECK</span>
+              <span className="atlas-deck-picker">
+                <select
+                  data-testid="deck-select"
+                  aria-label="Battle deck"
+                  value={activeDeck?.id ?? ""}
+                  onChange={(e) => onSetDeck(e.target.value)}
+                >
+                  {decks.map((deck) => (
+                    <option key={deck.id} value={deck.id}>
+                      {deck.name || "Untitled deck"}
+                    </option>
+                  ))}
+                  {!decks.length && <option value="">Choose a deck</option>}
+                </select>
+                <FaChevronDown />
+              </span>
+            </label>
+            <div className="atlas-deck-covers" aria-hidden="true">
+              {covers.map((name) => (
+                <img
+                  key={name}
+                  src={byName[name].image}
+                  alt=""
+                  draggable={false}
+                />
               ))}
-              {!decks.length && <option value="">Choose a deck</option>}
-            </select>
-            <FaChevronDown />
-          </span>
-        </label>
-        <div className="atlas-deck-covers" aria-hidden="true">
-          {covers.map((name) => (
-            <img key={name} src={byName[name].image} alt="" draggable={false} />
-          ))}
-        </div>
-        <span className="atlas-deck-size">
-          {Object.values(activeDeck?.counts ?? {}).reduce((a, b) => a + b, 0)} /
-          60 <small>cards</small>
-        </span>
-        <span className={`atlas-deck-ready ${battleReady ? "" : "invalid"}`}>
-          <FaCheck />
-          {battleReady ? "Ready to battle" : "Deck needs attention"}
-        </span>
-        <button className="atlas-button secondary" onClick={onEditor}>
-          <FaPen />
-          Edit deck
-        </button>
+            </div>
+            <span className="atlas-deck-size">
+              {Object.values(activeDeck?.counts ?? {}).reduce(
+                (a, b) => a + b,
+                0,
+              )}{" "}
+              / 60 <small>cards</small>
+            </span>
+            <span
+              className={`atlas-deck-ready ${battleReady ? "" : "invalid"}`}
+            >
+              <FaCheck />
+              {battleReady ? "Ready to battle" : "Deck needs attention"}
+            </span>
+            <button className="atlas-button secondary" onClick={onEditor}>
+              <FaPen />
+              Edit deck
+            </button>
+          </>
+        )}
       </footer>
     </div>
   );

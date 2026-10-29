@@ -14,6 +14,24 @@ import { SettingsButton } from "../Settings.jsx";
 /* Pure atlas helpers share this file with its view components. */
 /* eslint-disable react-refresh/only-export-components */
 export const ATLAS_MAP = "/story-atlas/kanto-map.webp";
+export const STORY_MAPS = {
+  kanto: {
+    image: ATLAS_MAP,
+    mood: "The original adventure",
+    alt: "Kanto in summer, with sunlit forests, coastal cities and mountain gyms",
+  },
+  rocket: {
+    image: "/story-atlas/kanto-rocket.webp",
+    mood: "A region under siege",
+    alt: "Occupied Kanto at dusk, with fortified towns, red banners and searchlights",
+  },
+  league: {
+    image: "/story-atlas/kanto-reborn.webp",
+    mood: "A new beginning",
+    alt: "Restored Kanto in spring, with blossoming trees, rebuilt gyms and festival pennants",
+  },
+};
+export const storyMap = (story) => STORY_MAPS[story?.id] ?? STORY_MAPS.kanto;
 const REGIONS = {
   pewter: [30, 28],
   cerulean: [69, 27],
@@ -33,10 +51,10 @@ const REGIONS = {
 };
 export const regionPosition = (id, index = 0) =>
   REGIONS[id] ?? [20 + (index % 3) * 28, 30 + Math.floor(index / 3) * 25];
-export const regionArtStyle = (id) => {
+export const regionArtStyle = (id, story) => {
   const [x, y] = regionPosition(id);
   return {
-    backgroundImage: `url(${ATLAS_MAP})`,
+    backgroundImage: `url(${storyMap(story).image})`,
     backgroundSize: "280% auto",
     backgroundPosition: `${x}% ${y}%`,
   };
