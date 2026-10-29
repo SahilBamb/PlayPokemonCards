@@ -2,14 +2,15 @@ import { useGame } from './GameContext.jsx'
 import { Hand, Row } from './Zones.jsx'
 
 function SetupBar() {
-  const { state, dispatch, humanPlayer } = useGame()
+  const { state, dispatch, humanPlayer, handSelection, selectHandCard } = useGame()
   const ready = state.setupDone[humanPlayer]
   const hasActive = !!state[humanPlayer].mon[0]
   return (
-    <div className="flex items-center gap-3 bg-zinc-800 border-2 border-poke-red px-4 py-1.5 rounded-sm text-sm font-semibold text-white">
+    <div className="battle-prompt flex items-center gap-3 bg-zinc-800 border-2 border-poke-red px-4 py-1.5 rounded-sm text-sm font-semibold text-white">
       {ready
         ? 'Waiting for the opponent to finish setup...'
-        : 'Setup: drag a Basic Pokémon to your Active spot (bench others if you like), then press Ready.'}
+        : handSelection ? `${handSelection.name} selected. Choose your Active or Bench spot.` : selectHandCard ? 'Select or drag a Basic Pokémon to your Active spot, then press Ready.' : 'Setup: drag a Basic Pokémon to your Active spot (bench others if you like), then press Ready.'}
+      {handSelection && <button onClick={() => selectHandCard(null)} className="atlas-selection-cancel">Cancel</button>}
       {!ready && (
         <button
           onClick={() => dispatch({ type: 'setup-done', player: humanPlayer })}
@@ -24,7 +25,7 @@ function SetupBar() {
 }
 
 function PromptBar() {
-  const { state, dispatch, mode, humanPlayer } = useGame()
+  const { state, dispatch, mode, humanPlayer, handSelection, selectHandCard } = useGame()
   const pending = state.pending
   const isMatch = mode === 'match'
   const myTurn = !isMatch || state.turnPlayer === humanPlayer
@@ -33,7 +34,8 @@ function PromptBar() {
   if (isMatch && state.phase === 'setup') return <SetupBar />
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="battle-prompt flex items-center gap-4">
+      {handSelection && <span className="atlas-selected-card">{handSelection.name} selected<button onClick={() => selectHandCard(null)}>Cancel</button></span>}
       <div
         data-testid="turn-banner"
         className={`text-sm font-bold px-4 py-1 rounded-sm text-white border-b-2 ${myTurn ? 'bg-poke-red border-poke-red-dark' : 'bg-zinc-800 border-black'}`}
@@ -54,7 +56,7 @@ function PromptBar() {
         </div>
       ) : (
         <button
-          onClick={() => dispatch({ type: 'end-turn', actor: isMatch ? humanPlayer : state.turnPlayer })}
+          onClick={() => { selectHandCard?.(null); dispatch({ type: 'end-turn', actor: isMatch ? humanPlayer : state.turnPlayer }) }}
           disabled={isMatch && !myTurn}
           className="px-4 py-1 rounded-sm bg-poke-red hover:bg-[#f4460f] border-b-2 border-poke-red-dark text-white text-sm font-bold uppercase tracking-wide shadow disabled:opacity-40"
         >
@@ -112,7 +114,7 @@ export function LogBody() {
 
 export function LogPanel() {
   return (
-    <aside className="w-64 shrink-0 h-full bg-zinc-950/85 border border-zinc-800 rounded-sm backdrop-blur-sm flex flex-col">
+    <aside className="battle-log w-64 shrink-0 h-full bg-zinc-950/85 border border-zinc-800 rounded-sm backdrop-blur-sm flex flex-col">
       <h2 className="text-zinc-400 text-xs font-bold uppercase tracking-widest px-3 py-2 border-b-2 border-poke-red/60 flex items-center gap-2">
         <img src="/pokeball.svg" alt="" className="w-3.5 h-3.5 opacity-70" draggable={false} />
         Game Log
@@ -155,7 +157,7 @@ export function GameOverOverlay({ onExit, onRematch, exitLabel = 'Return to Menu
 
 export function Board() {
   return (
-    <div className="flex-1 min-w-0 flex flex-col justify-between gap-3 p-4 overflow-auto bg-zinc-100/90 border border-zinc-300 dark:bg-zinc-900/80 dark:border-zinc-700 rounded-sm shadow-2xl">
+    <div className="battle-board flex-1 min-w-0 flex flex-col justify-between gap-3 p-4 overflow-auto bg-zinc-100/90 border border-zinc-300 dark:bg-zinc-900/80 dark:border-zinc-700 rounded-sm shadow-2xl">
       <Hand player="p2" />
       <Row player="p2" />
       <div className="flex justify-center">

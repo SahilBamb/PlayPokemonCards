@@ -1,0 +1,12 @@
+Functional and visual inventory
+- Campaign picker: all three campaigns, new/continue state, existing progress, reset only after confirmation.
+- Starter picker: every story starter, two authentic cover cards, back action, introduction and keyboard dialogue progression.
+- Journey: current next area selected from save; all regions visible and selectable; locks gate battles; no hidden opponent names leaked; sequential trainer path; replay cleared trainer; eight Kanto badges, campaign-specific badge counts and trophy; 60 card deck selection and invalid-deck warning.
+- Map: generated illustration visible without any baked labels; selectable markers land on regional landmarks; current location, next challenge, coin balance, badges and deck dock readable at 1600x950, 1366x768 and 390x844; mobile navigation wraps without horizontal page overflow.
+- Dialogue: all intro speakers, progression, challenge/cancel, Escape, tab containment, portrait fallback, short and long lines, win/cutscene reward flow. Inspect gym scene and intro lab scene.
+- Shop: real wrappers and existing offers, affordance/currency contrast, buy affordability, pack preview, five card reveal and duplicate refunds, return to journey, story wallet isolation from Card Opener.
+- Editor: collection and format constrained browser, search, owned toggle, add/remove, save and back, mobile scroll usability, selected deck reflected in journey.
+- Battle: theme only for Story Mode; header does not cover opponent hand; active cards vertically aligned for empty and occupied slots; drag setup, Ready, turn and pending choice, attacks/retreat/concede, game log, return without rewards on forfeit. Actual match engine tests retained.
+- Reduced motion: no decorative animation, same functionality. Remote art failures render a usable trainer placeholder; local generated assets load.
+- Exploration: inspect a locked region then return to current chapter, switch campaign with existing save, invalid deck, long campaign names, completed campaign with trophy, interrupted/reloaded profile.
+- Regression: Quick Play and Card Opener retain their existing visual scope and functionality.

@@ -61,11 +61,13 @@ const coins = await page.getByTestId('coins').first().innerText()
 if (!coins.includes('250')) errors.push(`expected 250 starting coins, got "${coins}"`)
 if (!(await page.getByTestId('node-pewter-1').isEnabled())) errors.push('first node should be unlocked')
 if (await page.getByTestId('node-pewter-2').isEnabled()) errors.push('second node should be locked')
+await page.getByTestId('area-cerulean').click()
 if (await page.getByTestId('node-cerulean-1').isEnabled()) errors.push('second area should be locked')
+await page.getByTestId('area-pewter').click()
 const ready = await page.locator('text=Ready to battle').count()
 if (!ready) errors.push('starter deck not battle-ready in the hub')
 // mystery + boss nodes stay hidden
-const hubText = await page.getByTestId('area-pewter').innerText()
+const hubText = await page.locator('.atlas-encounter-panel').innerText()
 if (!hubText.includes('???')) errors.push('mystery/boss node names should be hidden')
 
 // 4. Shop: preview, buy, open a Base Set booster
@@ -88,7 +90,7 @@ await page.getByTestId('pack-flip-all').click()
 await page.waitForTimeout(400)
 await page.screenshot({ path: `${shots}/s5_pack_opened.png` })
 await page.getByTestId('pack-done').click()
-await page.getByRole('button', { name: '← Back' }).click()
+await page.getByTestId('to-journey').click()
 
 // 5. Deck editor: story decks only, unowned cards blocked by the collection
 await page.getByTestId('to-editor').click()

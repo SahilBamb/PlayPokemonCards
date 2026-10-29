@@ -1,12 +1,13 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { MatchScreen } from '../MatchScreen.jsx'
 import { DeckEditor } from '../DeckEditor.jsx'
 import { StorySelect, StarterPick } from './StorySelect.jsx'
 import { StoryScreen } from './StoryScreen.jsx'
 import { ShopScreen } from './ShopScreen.jsx'
 import { DialogueBox } from './DialogueBox.jsx'
-import { DriftBackground } from '../Background.jsx'
-import { storyFormat, STORY_SELECT_BG, storyBackdrop } from '../../data/stories.js'
+import { storyFormat } from '../../data/stories.js'
+import { StoryHeader, regionArtStyle } from './StoryAtlas.jsx'
+import './story-atlas.css'
 import { BOSS_DECKS, generateTrainerDeck, countsToList } from '../../data/storyDecks.js'
 import { saveDeck, newDeckId, deckToList } from '../../lib/deckStore.js'
 import {
@@ -40,6 +41,8 @@ export function StoryMode({ onExit }) {
   const [battle, setBattle] = useState(null) // { node, config, key }
   const outcome = useRef(null) // set by onResult, consumed on battle exit
 
+  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }) }, [view, story?.id])
+
   const enterStory = (s) => {
     setStory(s)
     setView(storyState(profile, s.id).starterDeckId ? 'hub' : 'starter')
@@ -69,6 +72,7 @@ export function StoryMode({ onExit }) {
   // Challenge flow: intro dialogue -> battle -> result recorded once ->
   // win/lose dialogue with rewards when the player leaves the match.
   const challenge = (node, deck) => {
+    const area = story.areas.find((a) => a.nodes.some((n) => n.id === node.id))
     const config = {
       playerDeckList: deckToList(deck),
       playerDeckName: deck.name,
@@ -76,6 +80,9 @@ export function StoryMode({ onExit }) {
       aiDeckName: `${node.char.name}'s deck`,
       aiId: node.aiId,
       opponent: node.char,
+      storyAtlas: true,
+      storyLocation: area.name,
+      storyName: story.name,
       onResult: (won) => {
         const { profile: next, awards } = recordBattle(loadProfile(), story, node, won)
         setProfile(next)
@@ -85,6 +92,8 @@ export function StoryMode({ onExit }) {
     setDialogue({
       char: node.char,
       lines: node.dialogue.intro,
+      context: { location: area.name, coins: node.rewards.win, badge: node.kind === 'boss' ? area.badge : null },
+      sceneStyle: node.kind === 'boss' ? { backgroundImage: 'url(/story-atlas/pewter-gym.webp)' } : regionArtStyle(area.id),
       doneLabel: 'Battle!',
       onCancel: () => setDialogue(null), // player can back out of the fight
       onDone: () => {
@@ -113,6 +122,8 @@ export function StoryMode({ onExit }) {
     setDialogue({
       char: node.char,
       lines,
+      context: { location: area?.name },
+      sceneStyle: { backgroundImage: 'url(/story-atlas/pewter-gym.webp)' },
       onDone: () => {
         if (!cutscene) {
           setDialogue(null)
@@ -137,23 +148,24 @@ export function StoryMode({ onExit }) {
       />
     )
   } else if (view === 'starter') {
-    content = <StarterPick story={story} onPick={pickStarter} />
+    content = <StarterPick story={story} onPick={pickStarter} onBack={() => setView('select')} />
   } else if (view === 'shop') {
-    content = <ShopScreen story={story} profile={profile} setProfile={setProfile} onBack={() => setView('hub')} />
+    content = <ShopScreen story={story} profile={profile} setProfile={setProfile} onBack={() => setView('hub')} onEditor={() => setView('editor')} />
   } else if (view === 'editor') {
     content = (
-      <DeckEditor
+      <div className="atlas-editor-page"><StoryHeader coins={profile.coins} onBack={() => setView('hub')} onJourney={() => setView('hub')} onEditor={() => {}} onShop={() => setView('shop')} active="decks" backLabel="Journey" /><DeckEditor
         onExit={() => setView('hub')}
         collection={profile.collection}
         format={storyFormat(story)}
         title={`${story.name} Decks`}
-      />
+      /></div>
     )
   } else if (view === 'battle' && battle) {
     content = <MatchScreen key={battle.key} config={battle.config} onExit={exitBattle} exitLabel="Continue" />
   } else {
     content = (
       <StoryScreen
+        key={story.id}
         story={story}
         profile={profile}
         onChallenge={challenge}
@@ -161,15 +173,13 @@ export function StoryMode({ onExit }) {
         onEditor={() => setView('editor')}
         onSetDeck={(deckId) => setProfile((p) => setActiveDeck(p, story.id, deckId))}
         onBack={() => setView('select')}
+        onSelectStory={enterStory}
       />
     )
   }
 
-  const backdrop = !story || view === 'select' ? STORY_SELECT_BG : storyBackdrop(story)
-
   return (
-    <>
-      <DriftBackground src={backdrop.tile} base={backdrop.base} wash={backdrop.wash} strong />
+    <div className="story-atlas" data-story-view={view}>
       {content}
       {dialogue && (
         <DialogueBox
@@ -181,8 +191,10 @@ export function StoryMode({ onExit }) {
           doneLabel={dialogue.doneLabel}
           onDone={dialogue.onDone}
           onCancel={dialogue.onCancel}
+          context={dialogue.context}
+          sceneStyle={dialogue.sceneStyle}
         />
       )}
-    </>
+    </div>
   )
 }

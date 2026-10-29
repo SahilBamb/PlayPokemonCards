@@ -32,7 +32,7 @@ export function CardBack({ className = '' }) {
 // A card in the player's hand: drag to play, click to play Trainers.
 // Hidden cards (opponent's hand in a match) render as card backs.
 export function HandCard({ card, player }) {
-  const { dispatch, state } = useGame()
+  const { dispatch, state, handSelection, selectHandCard } = useGame()
   const { controls } = usePlayerControl(player)
   const preview = useCardPreview()
   if (card.hidden) {
@@ -44,18 +44,29 @@ export function HandCard({ card, player }) {
   }
   const isTrainer = card.supertype === 'trainer' && !card.doll
   const busy = !!state.pending || state.effectsQueue.length > 0 || state.fxQueue.length > 0
+  const activate = () => {
+    if (!controls || busy) return
+    if (isTrainer) dispatch({ type: 'play-trainer', player, uid: card.uid })
+    else selectHandCard?.(card)
+  }
 
   return (
     <div
       draggable={controls}
+      role={selectHandCard ? 'button' : undefined}
+      tabIndex={selectHandCard && controls ? 0 : undefined}
+      aria-label={selectHandCard ? `Select ${card.name}` : undefined}
+      aria-pressed={selectHandCard ? handSelection?.uid === card.uid : undefined}
+      data-hand-card={card.name}
       onDragStart={(e) => e.dataTransfer.setData('application/json', JSON.stringify({ from: 'hand', player, uid: card.uid }))}
-      onClick={() => controls && isTrainer && !busy && dispatch({ type: 'play-trainer', player, uid: card.uid })}
+      onClick={activate}
+      onKeyDown={(event) => { if (selectHandCard && ['Enter', ' '].includes(event.key)) { event.preventDefault(); activate() } }}
       onContextMenu={(e) => {
         e.preventDefault()
         preview(card)
       }}
       title={card.text || card.name}
-      className={`w-20 shrink-0 ${controls ? 'cursor-grab' : ''} transition hover:-translate-y-3 hover:z-10 ${isTrainer && controls ? 'hover:ring-2 hover:ring-emerald-400 rounded' : ''}`}
+      className={`w-20 shrink-0 ${controls ? 'cursor-grab' : ''} transition hover:-translate-y-3 hover:z-10 ${handSelection?.uid === card.uid ? 'atlas-hand-selected' : ''} ${isTrainer && controls ? 'hover:ring-2 hover:ring-emerald-400 rounded' : ''}`}
     >
       <CardFace card={card} className="w-20 h-28 object-cover" />
     </div>
@@ -137,7 +148,7 @@ function cardFx(fx, player, id) {
 
 // A pokemon (or Clefairy Doll) in play.
 export function BoardCard({ slot, player, id }) {
-  const { state, dispatch, validTargets, mode, humanPlayer } = useGame()
+  const { state, dispatch, validTargets, mode, humanPlayer, placeSelectedCard } = useGame()
   const { myTurn } = usePlayerControl(player)
   const preview = useCardPreview()
   const fx = useFx()
@@ -157,17 +168,22 @@ export function BoardCard({ slot, player, id }) {
     const data = JSON.parse(e.dataTransfer.getData('application/json'))
     dispatch({ type: 'drop', source: data, dest: ref })
   }
+  const activate = () => state.pending ? dispatch({ type: 'click', ...ref, actor: clickActor }) : !busy && placeSelectedCard?.(ref)
 
   return (
     <div
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      onClick={() => state.pending && dispatch({ type: 'click', ...ref, actor: clickActor })}
+      role={placeSelectedCard ? 'group' : undefined}
+      aria-label={placeSelectedCard ? `${player === humanPlayer ? 'Your' : 'Opponent'} ${slot.name}, ${id === 0 ? 'Active' : 'Bench'}` : undefined}
+      tabIndex={placeSelectedCard ? 0 : undefined}
+      onClick={(event) => { if (!event.target.closest('button')) activate() }}
+      onKeyDown={(event) => { if (placeSelectedCard && event.target === event.currentTarget && ['Enter', ' '].includes(event.key)) { event.preventDefault(); activate() } }}
       onContextMenu={(e) => {
         e.preventDefault()
         preview(slot)
       }}
-      className={`relative w-28 rounded-sm bg-white border border-zinc-300 text-zinc-900 dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-100 shadow-md p-1 flex flex-col gap-1 transition
+      className={`board-card relative w-28 rounded-sm bg-white border border-zinc-300 text-zinc-900 dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-100 shadow-md p-1 flex flex-col gap-1 transition
         ${isValidTarget ? 'ring-4 ring-yellow-400 cursor-pointer animate-pulse' : ''} ${fxAnim}`}
     >
       {fxOverlay}
@@ -254,19 +270,24 @@ export function BoardCard({ slot, player, id }) {
 }
 
 export function EmptySpot({ player, id, label }) {
-  const { state, dispatch, mode, humanPlayer } = useGame()
+  const { state, dispatch, mode, humanPlayer, placeSelectedCard } = useGame()
   const clickActor = mode === 'match' ? humanPlayer : player
   const handleDrop = (e) => {
     e.preventDefault()
     const data = JSON.parse(e.dataTransfer.getData('application/json'))
     dispatch({ type: 'drop', source: data, dest: { player, id } })
   }
+  const activate = () => state.pending ? dispatch({ type: 'click', player, id, actor: clickActor }) : placeSelectedCard?.({ player, id })
   return (
     <div
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      onClick={() => state.pending && dispatch({ type: 'click', player, id, actor: clickActor })}
-      className="w-28 h-40 rounded-sm border-2 border-dashed border-zinc-300 bg-zinc-100/60 dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-500 flex items-center justify-center text-[10px] text-zinc-400 uppercase tracking-wide font-semibold"
+      role={placeSelectedCard ? 'button' : undefined}
+      aria-label={placeSelectedCard ? `${player === humanPlayer ? 'Your' : 'Opponent'} ${id === 0 ? 'Active' : 'Bench'} spot` : undefined}
+      tabIndex={placeSelectedCard ? 0 : undefined}
+      onClick={activate}
+      onKeyDown={(event) => { if (placeSelectedCard && ['Enter', ' '].includes(event.key)) { event.preventDefault(); activate() } }}
+      className="empty-spot w-28 h-40 rounded-sm border-2 border-dashed border-zinc-300 bg-zinc-100/60 dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-500 flex items-center justify-center text-[10px] text-zinc-400 uppercase tracking-wide font-semibold"
     >
       {label ?? (id === 0 ? 'Active' : 'Bench')}
     </div>

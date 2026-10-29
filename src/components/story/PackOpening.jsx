@@ -40,8 +40,8 @@ function PackCard({ name, flipped, refunded, onFlip }) {
           )}
         </div>
       ) : (
-        <div className="w-full h-full rounded-sm bg-gradient-to-br from-zinc-800 to-zinc-950 border-2 border-zinc-600 flex items-center justify-center hover:border-poke-red transition">
-          <img src="/pokeball.svg" alt="" className="w-12 h-12 opacity-70" draggable={false} />
+        <div className="w-full h-full rounded-sm overflow-hidden border-2 border-[#294c7c] flex items-center justify-center hover:border-poke-red transition">
+          <img src="/card-opener/card-back.jpg" alt="Face down card" className="w-full h-full object-cover" draggable={false} />
         </div>
       )}
     </div>

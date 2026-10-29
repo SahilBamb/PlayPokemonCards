@@ -1,88 +1,151 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from "react";
+import { FaArrowRight, FaCoins } from "react-icons/fa";
+import { AtlasPortrait } from "./StoryAtlas.jsx";
 
-// Character dialogue: a large JRPG-style text box anchored to the bottom
-// center, with the character's portrait oversized and overlapping its right
-// edge. Advances one beat per click; `onDone` fires after the last beat.
-//
-// Two call shapes:
-//   name + image + lines  — one speaker (battle intro / win / lose)
-//   scene: [{ name, image, text }] — multi-speaker cutscenes
-// Pass `onCancel` to offer a decline option ("Maybe Later") on the last beat.
+// Kept public for the existing story progression checks.
+// eslint-disable-next-line react-refresh/only-export-components
 export function dialogueBeats({ scene, name, image, lines }) {
-  if (Array.isArray(scene) && scene.length) return scene
-  return (lines ?? []).map((text) => ({ name, image, text }))
+  if (Array.isArray(scene) && scene.length) return scene;
+  return (lines ?? []).map((text) => ({ name, image, text }));
 }
 
-export function DialogueBox({ name, image, lines, scene, onDone, doneLabel = 'Continue', onCancel, cancelLabel = 'Maybe Later' }) {
-  const beats = dialogueBeats({ scene, name, image, lines })
-  const [i, setI] = useState(0)
-  const beat = beats[i] ?? {}
-  const last = i >= beats.length - 1
-  const advance = () => (last ? onDone?.() : setI(i + 1))
-  const speaker = beat.name ?? name
-  const portrait = beat.image ?? image
-
+export function DialogueBox({
+  name,
+  image,
+  lines,
+  scene,
+  onDone,
+  doneLabel = "Continue",
+  onCancel,
+  cancelLabel = "Maybe Later",
+  context,
+  sceneStyle,
+}) {
+  const beats = dialogueBeats({ scene, name, image, lines });
+  const [i, setI] = useState(0);
+  const container = useRef(null);
+  const beat = beats[i] ?? {};
+  const last = i >= beats.length - 1;
+  const speaker = beat.name ?? name;
+  const portrait = beat.image ?? image;
+  const advance = () => (last ? onDone?.() : setI(i + 1));
+  useEffect(() => {
+    const previous = document.activeElement;
+    container.current?.querySelector("button")?.focus();
+    return () => previous?.focus?.();
+  }, []);
+  const keys = (event) => {
+    if (event.key === "Escape" && onCancel) {
+      event.preventDefault();
+      onCancel();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const buttons = [
+      ...container.current.querySelectorAll("button:not(:disabled)"),
+    ];
+    const first = buttons[0];
+    const final = buttons.at(-1);
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      final.focus();
+    } else if (!event.shiftKey && document.activeElement === final) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end justify-center pb-8 md:pb-16" data-testid="dialogue">
-      <div className="relative w-full max-w-5xl px-4">
-        {portrait && (
-          <img
-            src={portrait}
-            alt={speaker}
-            draggable={false}
-            className="absolute right-4 md:right-8 bottom-0 z-10 h-80 md:h-[28rem] w-auto max-w-[45%] object-contain object-bottom
-              drop-shadow-[0_0_24px_rgba(0,0,0,0.9)] pointer-events-none select-none"
-          />
-        )}
-        <div
+    <div
+      className="atlas-dialogue"
+      data-testid="dialogue"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${speaker ?? "Story"} dialogue`}
+      onKeyDown={keys}
+      ref={container}
+    >
+      <div
+        className="atlas-dialogue-scene"
+        style={
+          sceneStyle ?? { backgroundImage: "url(/story-atlas/oak-lab.webp)" }
+        }
+      />
+      <div className="atlas-dialogue-chapter">
+        <span className="atlas-eyebrow">
+          {context?.location ?? "A NEW CHAPTER"}
+        </span>
+        <h2>
+          {context?.badge
+            ? "The next badge awaits."
+            : "Every journey has a story."}
+        </h2>
+      </div>
+      {portrait && (
+        <AtlasPortrait
+          name={speaker}
+          image={portrait}
+          className="atlas-dialogue-character"
+        />
+      )}
+      <section className="atlas-dialogue-box">
+        <span className="atlas-speaker">{speaker}</span>
+        <button
+          className="atlas-dialogue-line"
+          data-testid="dialogue-line"
           onClick={advance}
-          className="cursor-pointer select-none bg-zinc-950/95 border-2 border-zinc-600 rounded-sm shadow-2xl relative"
         >
-          <div className="absolute -top-5 left-6 px-4 py-1 bg-poke-red border-b-2 border-poke-red-dark rounded-sm text-white text-base font-black uppercase tracking-wide shadow">
-            {speaker}
-          </div>
-          <p
-            className={`px-6 md:px-8 pt-9 pb-5 text-white text-xl md:text-2xl font-semibold leading-relaxed min-h-[9rem] md:min-h-[11rem]
-              ${portrait ? 'pr-44 md:pr-80' : ''}`}
-            data-testid="dialogue-line"
-          >
-            {beat.text}
-          </p>
-          <div className={`px-6 md:px-8 pb-4 flex items-center justify-between gap-3 ${portrait ? 'pr-44 md:pr-80' : ''}`}>
-            <span className="text-xs text-zinc-500 uppercase tracking-widest">
-              {i + 1} / {beats.length} — click to continue
+          {beat.text}
+        </button>
+        {context?.coins && (
+          <div className="atlas-dialogue-reward">
+            <span>
+              <FaCoins />
+              {context.coins} coins
             </span>
+            {context.badge && (
+              <span>
+                <img src={context.badge.image} alt="" />
+                {context.badge.name}
+              </span>
+            )}
+            <small>Victory rewards</small>
+          </div>
+        )}
+        <div className="atlas-dialogue-controls">
+          <span>
+            {i + 1} / {beats.length}
+            <small>Click the dialogue to continue</small>
+          </span>
+          <div>
             {last ? (
-              <span className="flex items-center gap-2">
+              <>
                 {onCancel && (
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onCancel()
-                    }}
+                    className="atlas-button secondary"
+                    onClick={onCancel}
                     data-testid="dialogue-cancel"
-                    className="px-4 py-2 rounded-sm bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 text-zinc-200 text-sm font-bold uppercase tracking-wide"
                   >
                     {cancelLabel}
                   </button>
                 )}
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onDone?.()
-                  }}
+                  className="atlas-button primary"
+                  onClick={onDone}
                   data-testid="dialogue-done"
-                  className="px-5 py-2 rounded-sm bg-poke-red hover:bg-[#f4460f] border-b-2 border-poke-red-dark text-white text-sm font-bold uppercase tracking-wide"
                 >
                   {doneLabel}
+                  <FaArrowRight />
                 </button>
-              </span>
+              </>
             ) : (
-              <span className="text-poke-red text-2xl leading-none animate-pulse">▾</span>
+              <button className="atlas-button primary" onClick={advance}>
+                Continue
+                <FaArrowRight />
+              </button>
             )}
           </div>
         </div>
-      </div>
+      </section>
     </div>
-  )
+  );
 }

@@ -21,7 +21,7 @@ export function Deck({ player }) {
       onDragOver={handleDragOver}
       onDrop={zoneDrop(dispatch, player, 'deck')}
       title={clickable ? 'Click to draw' : 'Deck (draws are automatic)'}
-      className={`relative w-20 h-28 shrink-0 flex items-center justify-center rounded-sm shadow-md overflow-hidden
+      className={`battle-deck relative w-20 h-28 shrink-0 flex items-center justify-center rounded-sm shadow-md overflow-hidden
         bg-gradient-to-br from-poke-red to-poke-red-dark text-white font-bold border-2 border-zinc-900 border-b-4
         ${clickable ? 'cursor-pointer hover:brightness-110' : ''}`}
     >
@@ -41,7 +41,7 @@ export function DiscardPile({ player }) {
       onDragOver={handleDragOver}
       onDrop={zoneDrop(dispatch, player, 'discard')}
       title="Click to view discard pile"
-      className="w-20 h-28 shrink-0 cursor-pointer rounded-sm border-2 border-dashed border-zinc-400 bg-zinc-200/70 hover:bg-zinc-300/70
+      className="battle-discard w-20 h-28 shrink-0 cursor-pointer rounded-sm border-2 border-dashed border-zinc-400 bg-zinc-200/70 hover:bg-zinc-300/70
         dark:border-zinc-600 dark:bg-zinc-800/70 dark:hover:bg-zinc-700/70 dark:text-zinc-400
         flex items-center justify-center text-xs text-zinc-500 overflow-hidden"
     >
@@ -102,7 +102,7 @@ export function Row({ player }) {
     </div>
   )
   return (
-    <div data-testid={`battle-row-${player}`} className="flex items-start justify-center gap-6">
+    <div data-testid={`battle-row-${player}`} className="battle-row flex items-start justify-center gap-6">
       <div className="flex flex-col gap-2">
         <Deck player={player} />
         <DiscardPile player={player} />

@@ -64,7 +64,7 @@ function BrowserCard({ card, count, limit, onAdd }) {
         preview(card)
       }}
       title={maxed ? `${card.name} — copy limit reached` : `${card.name} — click to add`}
-      className={`relative w-28 select-none ${maxed ? 'opacity-35' : 'cursor-pointer hover:scale-105 transition'}`}
+      className={`browser-card relative w-28 select-none ${maxed ? 'opacity-35' : 'cursor-pointer hover:scale-105 transition'}`}
     >
       {card.image ? (
         <img
@@ -238,7 +238,7 @@ export function DeckEditor({ onExit, collection = null, format = null, title = '
   }
 
   return (
-    <div className="w-full h-screen flex gap-2 p-2 text-white">
+    <div className="deck-editor w-full h-screen flex gap-2 p-2 text-white">
       {/* card browser */}
       <div className="flex-1 min-w-0 flex flex-col bg-zinc-950/85 border border-zinc-800 rounded-sm backdrop-blur-sm">
         <div className="flex items-center gap-3 px-3 py-2 border-b-2 border-poke-red/60">

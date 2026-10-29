@@ -1,4 +1,4 @@
-import { useReducer, useMemo, useEffect, useRef } from 'react'
+import { useReducer, useMemo, useEffect, useRef, useState } from 'react'
 import { GameContext } from './GameContext.jsx'
 import { Board, LogPanel, GameOverOverlay } from './Board.jsx'
 import { ChoiceModal, ZoneViewer, RevealOverlay } from './Modals.jsx'
@@ -11,6 +11,8 @@ import { AI_POLICIES, DEFAULT_AI, aiNeedsToAct } from '../ai/index.js'
 
 // Keep the engine's fxEnabled flag in sync with the user's settings — also
 // re-applies after a reset/rematch recreates the state with the default (off).
+// Also consumed by the sandbox, outside this view.
+// eslint-disable-next-line react-refresh/only-export-components
 export function useFxSync(state, dispatch) {
   const { settings } = useSettings()
   const wanted = fxWanted(settings)
@@ -41,6 +43,14 @@ export function MatchScreen({ config, onExit, onRematch, exitLabel }) {
     initialMatchState
   )
   const view = useMemo(() => maskStateFor(state, HUMAN), [state])
+  const [handSelection, setHandSelection] = useState(null)
+  const visibleSelection = handSelection && state[HUMAN].hand.some((card) => card.uid === handSelection.uid) ? handSelection : null
+  const selectHandCard = (card) => setHandSelection((previous) => !card || previous?.uid === card.uid ? null : { from: 'hand', player: HUMAN, uid: card.uid, name: card.name })
+  const placeSelectedCard = (dest) => {
+    if (!visibleSelection) return
+    dispatch({ type: 'drop', source: visibleSelection, dest })
+    setHandSelection(null)
+  }
   const validTargets = useMemo(() => {
     const pending = state.pending
     if (!pending || pending.chooserPlayer !== HUMAN) return []
@@ -78,14 +88,15 @@ export function MatchScreen({ config, onExit, onRematch, exitLabel }) {
   }, [state, policy])
 
   return (
-    <GameContext.Provider value={{ state, view, dispatch, validTargets, mode: 'match', humanPlayer: HUMAN }}>
+    <GameContext.Provider value={{ state, view, dispatch, validTargets, mode: 'match', humanPlayer: HUMAN, ...(config.storyAtlas ? { handSelection: visibleSelection, selectHandCard, placeSelectedCard } : {}) }}>
       <FxProvider>
-        <div className="w-full h-screen flex gap-2 p-2">
-          <div className="absolute top-4 left-4 z-30 flex items-center gap-2">
+        <div className={`w-full h-screen flex gap-2 p-2 ${config.storyAtlas ? 'story-battle' : ''}`}>
+          <div className="battle-topbar absolute top-4 left-4 z-30 flex items-center gap-2">
             <button onClick={onExit} className="px-3 py-1 rounded-sm bg-zinc-800/90 hover:bg-zinc-700 border border-zinc-600 text-white text-xs font-semibold shadow">
               {config.opponent ? '← Forfeit' : '← Menu'}
             </button>
             <SettingsButton />
+            {config.storyAtlas && <span className="battle-location">{config.storyLocation}</span>}
             {config.opponent ? (
               <span className="pl-1 pr-3 py-1 rounded-sm bg-zinc-900/80 border border-zinc-700 text-xs font-semibold text-zinc-200 shadow flex items-center gap-2">
                 {config.opponent.image && (

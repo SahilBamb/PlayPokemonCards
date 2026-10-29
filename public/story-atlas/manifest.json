@@ -1,0 +1,49 @@
+{
+  "style_reference": "01-kanto-atlas-hub.png",
+  "assets": [
+    {
+      "name": "poke-mart",
+      "url": "/story-atlas/poke-mart.webp",
+      "bytes": 242148,
+      "size": [
+        1672,
+        940
+      ],
+      "generation": "built-in image_gen",
+      "prompt": "docs/story-atlas/prompts/poke-mart.txt"
+    },
+    {
+      "name": "pewter-gym",
+      "url": "/story-atlas/pewter-gym.webp",
+      "bytes": 249466,
+      "size": [
+        1672,
+        941
+      ],
+      "generation": "built-in image_gen",
+      "prompt": "docs/story-atlas/prompts/pewter-gym.txt"
+    },
+    {
+      "name": "kanto-map",
+      "url": "/story-atlas/kanto-map.webp",
+      "bytes": 629336,
+      "size": [
+        1672,
+        941
+      ],
+      "generation": "built-in image_gen",
+      "prompt": "docs/story-atlas/prompts/kanto-map.txt"
+    },
+    {
+      "name": "oak-lab",
+      "url": "/story-atlas/oak-lab.webp",
+      "bytes": 257462,
+      "size": [
+        1672,
+        941
+      ],
+      "generation": "built-in image_gen",
+      "prompt": "docs/story-atlas/prompts/oak-lab.txt"
+    }
+  ]
+}

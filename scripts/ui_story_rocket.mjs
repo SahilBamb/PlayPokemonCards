@@ -55,8 +55,10 @@ await finishDialogue()
 await page.waitForSelector('[data-testid="area-hideout"]')
 await page.screenshot({ path: `${shots}/r3_hub.png` })
 if (!(await page.getByTestId('node-hideout-1').isEnabled())) errors.push('first rocket node should be unlocked')
+await page.getByTestId('area-harbor').click()
 if (await page.getByTestId('node-harbor-1').isEnabled()) errors.push('second rocket area should be locked')
-const hubText = await page.getByTestId('area-hideout').innerText()
+await page.getByTestId('area-hideout').click()
+const hubText = await page.locator('.atlas-encounter-panel').innerText()
 if (!hubText.includes('???')) errors.push('mystery/boss names should be hidden in the hideout')
 for (const area of ['hideout', 'harbor', 'corner', 'lab', 'silph', 'hq']) {
   if (!(await page.getByTestId(`area-${area}`).count())) errors.push(`area ${area} missing from hub`)
@@ -85,7 +87,7 @@ await page.getByTestId('pack-flip-all').click()
 await page.waitForTimeout(400)
 await page.screenshot({ path: `${shots}/r5_pack.png` })
 await page.getByTestId('pack-done').click()
-await page.getByRole('button', { name: '← Back' }).click()
+await page.getByTestId('to-journey').click()
 
 // 5. Deck editor: rocketClassic format — Team Rocket cards visible with the
 // Owned filter off, Gym-set cards still excluded
