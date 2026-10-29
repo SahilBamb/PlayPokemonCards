@@ -5,9 +5,12 @@ import { StorySelect, StarterPick } from "./StorySelect.jsx";
 import { StoryScreen } from "./StoryScreen.jsx";
 import { ShopScreen } from "./ShopScreen.jsx";
 import { DialogueBox } from "./DialogueBox.jsx";
-import { storyFormat } from "../../data/stories.js";
+import { storyFormat, storyBackdrop } from "../../data/stories.js";
+import { DriftBackground } from "../Background.jsx";
+import { useSettings } from "../Settings.jsx";
 import { StoryHeader, regionArtStyle } from "./StoryAtlas.jsx";
 import "./story-atlas.css";
+import "./story-atmosphere.css";
 import {
   BOSS_DECKS,
   generateTrainerDeck,
@@ -36,6 +39,7 @@ function nodeDeckList(node, story) {
 // Story Mode keeps setup and conversations above the campaign map hub.
 // Owns the profile (persisted on every change), shop, editor and battles.
 export function StoryMode({ onExit }) {
+  const { settings } = useSettings();
   const [profile, setProfileState] = useState(loadProfile);
   const setProfile = useCallback((next) => {
     setProfileState((prev) =>
@@ -49,6 +53,7 @@ export function StoryMode({ onExit }) {
   const [starterOpen, setStarterOpen] = useState(false);
   const [battle, setBattle] = useState(null); // { node, config, key }
   const outcome = useRef(null); // set by onResult, consumed on battle exit
+  const atmosphere = storyBackdrop(view === "select" ? null : story);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -263,7 +268,19 @@ export function StoryMode({ onExit }) {
   }
 
   return (
-    <div className="story-atlas" data-story-view={view}>
+    <div
+      className="story-atlas"
+      data-story-view={view}
+      data-campaign={view === "select" ? "select" : (story?.id ?? "select")}
+    >
+      <DriftBackground
+        className="story-drift"
+        src={atmosphere.tile}
+        base="#0c1220"
+        wash={atmosphere.wash}
+        strong
+        paused={!settings.animations}
+      />
       <div className="atlas-story-surface" inert={!!(starterOpen || dialogue)}>
         {content}
       </div>

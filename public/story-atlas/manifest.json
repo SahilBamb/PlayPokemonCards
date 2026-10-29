@@ -76,6 +76,127 @@
         427
       ],
       "generation": "Native SVG, extending the existing Pok\u00e9 Ball motif"
+    },
+    {
+      "name": "campaign-blue",
+      "url": "/story-atlas/campaigns/blue.webp",
+      "bytes": 21874,
+      "size": [
+        280,
+        560
+      ],
+      "generation": "Existing trainer art, resized and converted to WebP with alpha retained",
+      "source": "src/data/gymLeaders.js: kanto-blue"
+    },
+    {
+      "name": "campaign-misty",
+      "url": "/story-atlas/campaigns/misty.webp",
+      "bytes": 39376,
+      "size": [
+        381,
+        560
+      ],
+      "generation": "Existing trainer art, resized and converted to WebP with alpha retained",
+      "source": "src/data/gymLeaders.js: kanto-misty"
+    },
+    {
+      "name": "campaign-brock",
+      "url": "/story-atlas/campaigns/brock.webp",
+      "bytes": 29800,
+      "size": [
+        227,
+        560
+      ],
+      "generation": "Existing trainer art, resized and converted to WebP with alpha retained",
+      "source": "src/data/gymLeaders.js: kanto-brock"
+    },
+    {
+      "name": "campaign-rocket-master",
+      "url": "/story-atlas/campaigns/rocket-master.webp",
+      "bytes": 66342,
+      "size": [
+        373,
+        560
+      ],
+      "generation": "Existing trainer art, resized and converted to WebP with alpha retained",
+      "source": "public/trainers/TeamRocket/Team Rocket Master.png"
+    },
+    {
+      "name": "campaign-rocket-grunt",
+      "url": "/story-atlas/campaigns/rocket-grunt.webp",
+      "bytes": 31358,
+      "size": [
+        428,
+        560
+      ],
+      "generation": "Existing trainer art, resized and converted to WebP with alpha retained",
+      "source": "public/trainers/TeamRocket/Team Rocket Grunt Purple.png"
+    },
+    {
+      "name": "campaign-card-pikachu",
+      "url": "/story-atlas/campaigns/card-pikachu.webp",
+      "bytes": 6982,
+      "size": [
+        120,
+        165
+      ],
+      "generation": "Existing card scan or Gym badge, resized and converted to WebP",
+      "source": "src/engine/cards.js"
+    },
+    {
+      "name": "campaign-card-charizard",
+      "url": "/story-atlas/campaigns/card-charizard.webp",
+      "bytes": 7874,
+      "size": [
+        120,
+        165
+      ],
+      "generation": "Existing card scan or Gym badge, resized and converted to WebP",
+      "source": "src/engine/cards.js"
+    },
+    {
+      "name": "campaign-badge-pewter",
+      "url": "/story-atlas/campaigns/badge-pewter.webp",
+      "bytes": 2252,
+      "size": [
+        72,
+        72
+      ],
+      "generation": "Existing card scan or Gym badge, resized and converted to WebP",
+      "source": "src/data/gymLeaders.js"
+    },
+    {
+      "name": "campaign-badge-cerulean",
+      "url": "/story-atlas/campaigns/badge-cerulean.webp",
+      "bytes": 1696,
+      "size": [
+        48,
+        72
+      ],
+      "generation": "Existing card scan or Gym badge, resized and converted to WebP",
+      "source": "src/data/gymLeaders.js"
+    },
+    {
+      "name": "campaign-badge-vermilion",
+      "url": "/story-atlas/campaigns/badge-vermilion.webp",
+      "bytes": 2878,
+      "size": [
+        72,
+        72
+      ],
+      "generation": "Existing card scan or Gym badge, resized and converted to WebP",
+      "source": "src/data/gymLeaders.js"
+    },
+    {
+      "name": "campaign-badge-celadon",
+      "url": "/story-atlas/campaigns/badge-celadon.webp",
+      "bytes": 3012,
+      "size": [
+        72,
+        72
+      ],
+      "generation": "Existing card scan or Gym badge, resized and converted to WebP",
+      "source": "src/data/gymLeaders.js"
     }
   ]
 }

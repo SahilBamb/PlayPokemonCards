@@ -1,0 +1,535 @@
+/* Night-sky story shell; paper conversations and the illustrated shop stay readable. */
+.story-atlas {
+  position: relative;
+  isolation: isolate;
+  background: #0c1220;
+}
+.story-atlas > .story-drift {
+  z-index: 0;
+  pointer-events: none;
+}
+.story-atlas > .atlas-story-surface {
+  position: relative;
+  z-index: 1;
+}
+.story-atlas[data-campaign="select"] {
+  --story-accent: #8f9eff;
+}
+.story-atlas[data-campaign="kanto"] {
+  --story-accent: #78adff;
+}
+.story-atlas[data-campaign="rocket"] {
+  --story-accent: #ff7587;
+}
+.story-atlas[data-campaign="league"] {
+  --story-accent: #7fe1bb;
+}
+.story-atlas[data-story-view="select"] .atlas-select-page {
+  background: radial-gradient(ellipse at 50% 15%, #7169bf1c, transparent 65%);
+}
+.story-atlas :is(.atlas-select-page, .atlas-journey) > .atlas-header {
+  background: #0d1525b8;
+  border-color: #a2b1d022;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px #0002;
+}
+.story-atlas :is(.atlas-select-page, .atlas-journey) .atlas-brand {
+  color: #f0f4ff;
+}
+.story-atlas :is(.atlas-select-page, .atlas-journey) .atlas-brand small {
+  color: #93a6c1;
+}
+.story-atlas
+  :is(.atlas-select-page, .atlas-journey)
+  .atlas-header-tools
+  > button {
+  color: #b5c6e1;
+}
+.story-atlas :is(.atlas-select-page, .atlas-journey) .atlas-nav > button {
+  color: #94a7c4;
+}
+.story-atlas .atlas-journey .atlas-nav > button[aria-current] {
+  color: #f2f6ff;
+}
+.story-atlas .atlas-journey .atlas-nav > button[aria-current]::after {
+  background: var(--story-accent);
+}
+.story-atlas .atlas-select-heading {
+  padding-top: 32px;
+  padding-bottom: 24px;
+}
+.story-atlas .atlas-select-heading .atlas-eyebrow {
+  color: #a2aed4;
+}
+.story-atlas .atlas-select-heading h1 {
+  color: #f1f5ff;
+  text-shadow: 0 4px 25px #7886d233;
+}
+.story-atlas .atlas-select-heading p {
+  color: #a8b7ce;
+}
+.story-atlas .atlas-campaign-cards {
+  max-width: 1230px;
+  gap: 24px;
+}
+.story-atlas .atlas-campaign-card {
+  --campaign-accent: #79acfb;
+  color: #edf3ff;
+  background: linear-gradient(140deg, #1a2a41ea, #111c2eea);
+  border-color: #7088b43b;
+  box-shadow:
+    0 15px 35px #0004,
+    inset 0 1px 0 #ffffff09;
+}
+.story-atlas .atlas-campaign-card.rocket {
+  --campaign-accent: #ff7487;
+  border-color: #b9546955;
+}
+.story-atlas .atlas-campaign-card.league {
+  --campaign-accent: #7ce1b8;
+  border-color: #66a98d55;
+}
+.story-atlas .atlas-campaign-card:hover {
+  border-color: var(--campaign-accent);
+  box-shadow:
+    0 16px 45px #0007,
+    0 0 25px color-mix(in srgb, var(--campaign-accent) 12%, transparent);
+}
+.story-atlas .atlas-campaign-card-body .atlas-eyebrow {
+  color: var(--campaign-accent);
+}
+.story-atlas .atlas-campaign-card-body h2 {
+  color: #f3f6ff;
+  font-size: 31px;
+}
+.story-atlas .atlas-campaign-card-body > p {
+  color: #d5e0f2;
+}
+.story-atlas .atlas-campaign-card-body > small {
+  color: #9eafc7;
+}
+.story-atlas .atlas-campaign-status {
+  color: #becce2;
+}
+.story-atlas .atlas-campaign-card-body > .atlas-button {
+  color: #e7f0ff;
+  background: #304d793d;
+  border-color: #759dd35c;
+  box-shadow: none;
+}
+.story-atlas .atlas-campaign-card.rocket .atlas-button {
+  background: #893a4a38;
+  border-color: #d8798959;
+  color: #ffdae1;
+}
+.story-atlas .atlas-campaign-card.league .atlas-button {
+  background: #2f795e35;
+  border-color: #68bb9666;
+  color: #cbf5e3;
+}
+.story-atlas .atlas-campaign-card:hover .atlas-button {
+  background: color-mix(in srgb, var(--campaign-accent) 22%, #142139);
+}
+.story-atlas .atlas-select-footer {
+  color: #90a2be;
+}
+.story-atlas .atlas-select-footer .atlas-reset {
+  color: #bf929c;
+}
+.story-atlas .campaign-artwork {
+  height: 242px;
+  flex-shrink: 0;
+  isolation: isolate;
+  border-bottom: 1px solid #8fa7ce33;
+  background: #22476b;
+}
+.story-atlas .campaign-artwork > .campaign-landscape {
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+  object-position: 40% 35%;
+  filter: saturate(0.8) brightness(0.72);
+}
+.story-atlas .campaign-artwork.rocket > .campaign-landscape {
+  object-position: 65% 50%;
+  filter: saturate(0.8) brightness(0.65);
+}
+.story-atlas .campaign-artwork.league > .campaign-landscape {
+  object-position: 20% 25%;
+  filter: saturate(0.9) brightness(0.8);
+}
+.campaign-art-wash {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, #17263dee, transparent 60%),
+    linear-gradient(100deg, #113976bb, transparent);
+}
+.rocket .campaign-art-wash {
+  background:
+    linear-gradient(0deg, #301c34ed, transparent 65%),
+    linear-gradient(100deg, #3e162cbb, transparent);
+}
+.league .campaign-art-wash {
+  background:
+    linear-gradient(0deg, #14372dee, transparent 70%),
+    linear-gradient(100deg, #174b38bb, transparent);
+}
+.story-atlas .campaign-artwork .atlas-campaign-number {
+  z-index: 4;
+  font-size: 9px;
+  letter-spacing: 2px;
+  background: #0b172b9c;
+  border: 1px solid #ffffff26;
+  padding: 5px 9px;
+  border-radius: 5px;
+}
+.campaign-crest {
+  position: absolute;
+  z-index: 1;
+  top: 53px;
+  left: 22px;
+  display: grid;
+  place-items: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(#badcff44, #5b97ff09 70%);
+  filter: drop-shadow(0 5px 15px #0a18396b);
+}
+.campaign-crest.kanto > img {
+  width: 69px;
+  height: 69px;
+  transform: rotate(-12deg);
+  filter: drop-shadow(0 4px 3px #0b243f88);
+}
+.campaign-crest.rocket {
+  background: radial-gradient(#ed4c6433, transparent 70%);
+}
+.campaign-crest.rocket b {
+  color: #f04660;
+  font:
+    italic 1000 103px/1 Arial,
+    sans-serif;
+  letter-spacing: -8px;
+  text-shadow:
+    2px 3px 0 #ffd5cc66,
+    0 0 25px #ff4a4955;
+  transform: rotate(-8deg);
+}
+.campaign-crest.league {
+  color: #f5d481;
+  font-size: 70px;
+  background: radial-gradient(#fcdb862f, transparent 70%);
+}
+.story-atlas .campaign-character {
+  position: absolute;
+  z-index: 2;
+  top: 24px;
+  bottom: -30px;
+  right: -3%;
+  width: 62%;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 7px #08152488);
+}
+.story-atlas .campaign-character > img {
+  object-fit: contain;
+  object-position: center 0;
+}
+.story-atlas .campaign-artwork.kanto .campaign-character {
+  right: 3%;
+  width: 57%;
+  top: 27px;
+  bottom: -65px;
+  transform: rotate(4deg);
+}
+.story-atlas .campaign-artwork.rocket .character-0 {
+  right: -5%;
+  top: 18px;
+  bottom: -37px;
+  width: 57%;
+}
+.story-atlas .campaign-artwork.rocket .character-1 {
+  right: 32%;
+  top: 74px;
+  bottom: -55px;
+  width: 37%;
+  z-index: 1;
+  filter: brightness(0.8) drop-shadow(0 5px 6px #0009);
+}
+.story-atlas .campaign-artwork.league .character-0 {
+  width: 47%;
+  right: 21%;
+  top: 31px;
+  bottom: -58px;
+}
+.story-atlas .campaign-artwork.league .character-1 {
+  width: 47%;
+  right: -13%;
+  top: 39px;
+  bottom: -64px;
+  z-index: 1;
+}
+.campaign-card-artifacts {
+  position: absolute;
+  z-index: 3;
+  left: 17px;
+  bottom: 27px;
+  display: flex;
+  transform: rotate(-10deg);
+}
+.campaign-card-artifacts img {
+  width: 55px;
+  aspect-ratio: 245/342;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px #06162b99;
+}
+.campaign-card-artifacts img + img {
+  transform: rotate(17deg);
+  margin-left: -17px;
+  margin-top: 9px;
+}
+.campaign-badge-ribbon {
+  position: absolute;
+  z-index: 3;
+  bottom: 39px;
+  left: 13px;
+  display: flex;
+  gap: 1px;
+}
+.campaign-badge-ribbon img {
+  width: 29px;
+  height: 31px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 3px #031629);
+}
+.campaign-rocket-stripe {
+  position: absolute;
+  inset: auto 0 0;
+  height: 8px;
+  background: repeating-linear-gradient(
+    125deg,
+    #c94357 0 12px,
+    #201a2a 12px 25px
+  );
+  opacity: 0.8;
+}
+.campaign-art-label {
+  position: absolute;
+  bottom: 12px;
+  left: 17px;
+  z-index: 4;
+  color: #e6efff;
+  font-weight: 850;
+  font-size: 8px;
+  letter-spacing: 1.8px;
+  text-shadow: 0 2px 4px #000;
+}
+/* Dark hub chrome frames the map without tinting its illustration or light popups. */
+.story-atlas .atlas-journey {
+  color: #edf3ff;
+}
+.story-atlas .atlas-campaign-bar {
+  background: #101b2bd4;
+  border-bottom: 1px solid #7b92b31c;
+  margin-bottom: 12px;
+}
+.story-atlas .atlas-campaign-tabs {
+  border-color: #8ea8d333;
+  background: #0d172988;
+}
+.story-atlas .atlas-campaign-tabs > button {
+  color: #9eafc9;
+  border-color: #8ea8d326;
+}
+.story-atlas .atlas-campaign-tabs > button[aria-current] {
+  background: #38567f55;
+  color: #fff;
+  box-shadow: inset 0 -2px 0 var(--story-accent);
+}
+.story-atlas .atlas-journey-title .atlas-eyebrow {
+  color: #8297b7;
+}
+.story-atlas .atlas-journey-title h1 {
+  color: #f0f5ff;
+}
+.story-atlas .atlas-journey-title p {
+  color: var(--story-accent);
+}
+.story-atlas .atlas-badge-count {
+  border-color: #9bb4d933;
+}
+.story-atlas .atlas-badge-count small {
+  color: #94a7c4;
+}
+.story-atlas .atlas-badge-icons img {
+  filter: grayscale(1) brightness(1.4);
+  opacity: 0.5;
+}
+.story-atlas .atlas-badge-icons .earned img {
+  filter: drop-shadow(0 1px 4px #f6e6af55);
+  opacity: 1;
+}
+.story-atlas .atlas-map,
+.story-atlas .atlas-encounter-panel {
+  border-color: #728bae50;
+  box-shadow: 0 8px 28px #0003;
+}
+.story-atlas .atlas-map-caption {
+  color: #e8f0ff;
+  background: #101f34e8;
+  border-color: #b0c8e445;
+}
+.story-atlas .atlas-map-caption small {
+  color: #a9bdd6;
+}
+.story-atlas .atlas-map-legend {
+  background: #132136ed;
+  color: #d2e1f4;
+  border-color: #9eafd244;
+}
+.story-atlas .atlas-encounter-panel {
+  background: #142137e8;
+}
+.story-atlas .atlas-encounter-art::before {
+  background: linear-gradient(110deg, #10213bea, transparent 90%);
+}
+.story-atlas .atlas-encounter-art > h2 {
+  color: #f1f6ff;
+}
+.story-atlas .atlas-encounter-art > .atlas-eyebrow {
+  color: #c2d4ef;
+}
+.story-atlas .atlas-encounter-details > h3 {
+  color: #f5f8ff;
+}
+.story-atlas .atlas-encounter-details > .atlas-eyebrow {
+  color: #91a6c5;
+}
+.story-atlas .atlas-encounter-quote {
+  color: #aabbcf;
+}
+.story-atlas .atlas-reward > small {
+  color: #94a7bb;
+}
+.story-atlas .atlas-chapter-progress {
+  background: #0b172b9c;
+}
+.story-atlas .atlas-chapter-progress > div:first-child {
+  color: #93a7c5;
+}
+.story-atlas .atlas-opponent-token > span:last-child {
+  color: #b6c6de;
+}
+.story-atlas .atlas-token-art {
+  background: #22324a;
+  border-color: #61768e;
+  outline-color: #496076;
+}
+.story-atlas .atlas-token-art > b {
+  color: #bacbe2;
+}
+.story-atlas .atlas-opponent-path::before {
+  background: #4f6379;
+}
+.story-atlas .atlas-deck-dock {
+  color: #ecf3ff;
+  background: #132034e6;
+  border-color: #7593bd44;
+}
+.story-atlas .atlas-deck-dock .atlas-eyebrow {
+  color: #8fa3bf;
+}
+.story-atlas .atlas-deck-picker select {
+  color: #ecf3ff;
+}
+.story-atlas .atlas-deck-picker option {
+  background: #142238;
+  color: #eff4ff;
+}
+.story-atlas .atlas-deck-size {
+  color: #a0b4d2;
+}
+.story-atlas .atlas-deck-ready {
+  color: #79d1ad;
+}
+.story-atlas .atlas-deck-ready.invalid {
+  color: #edc47b;
+}
+.story-atlas .atlas-deck-dock .atlas-button.secondary {
+  color: #d2e0f5;
+  background: #20324b;
+  border-color: #7087a3;
+}
+.story-atlas .atlas-first-deck p {
+  color: #9eb2ce;
+}
+.story-atlas .atlas-mobile-region-picker {
+  color: #a6bbd7;
+}
+.story-atlas .atlas-mobile-region-picker select {
+  color: #dbe8fa;
+  background: #17273d;
+  border-color: #6f87aa66;
+}
+.story-atlas .atlas-mystery-portrait {
+  color: #d4e4fd;
+}
+.story-atlas .atlas-deck-warning {
+  background: #5e45272e;
+  color: #e5c080;
+  border-color: #b58a4455;
+}
+@media (max-width: 760px) {
+  .story-atlas .atlas-deck-picker select {
+    font-size: 21px;
+  }
+  .story-atlas .atlas-campaign-cards {
+    gap: 22px;
+  }
+  .story-atlas .atlas-select-heading {
+    padding-top: 27px;
+    padding-bottom: 20px;
+  }
+  .story-atlas .atlas-select-heading h1 {
+    font-size: 46px;
+  }
+  .story-atlas .campaign-artwork {
+    height: 221px;
+  }
+  .story-atlas .atlas-campaign-card-body h2 {
+    font-size: 29px;
+  }
+  .story-atlas .atlas-campaign-bar {
+    margin-bottom: 0;
+  }
+}
+@media (max-height: 800px) and (min-width: 761px) {
+  .story-atlas .atlas-select-heading {
+    padding-top: 18px;
+    padding-bottom: 16px;
+  }
+  .story-atlas .atlas-select-heading h1 {
+    font-size: 45px;
+    margin: 5px 0 7px;
+  }
+  .story-atlas .atlas-select-heading p {
+    font-size: 12px;
+  }
+  .story-atlas .campaign-artwork {
+    height: 208px;
+  }
+  .story-atlas .atlas-campaign-card-body {
+    padding: 17px;
+  }
+  .story-atlas .atlas-campaign-card-body h2 {
+    font-size: 28px;
+  }
+  .story-atlas .atlas-campaign-card-body > small {
+    font-size: 10px;
+  }
+  .story-atlas .atlas-campaign-status {
+    margin-top: 14px;
+    margin-bottom: 11px;
+  }
+}

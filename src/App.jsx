@@ -70,23 +70,34 @@ function SandboxScreen({ onExit }) {
   )
 }
 
+function screenForPath(pathname) {
+  const path = pathname.replace(/\/+$/, '') || '/'
+  if (path === '/card-opener') return 'opener'
+  if (path === '/story-mode') return 'story'
+  return 'menu'
+}
+
 export default function App() {
-  const [screen, setScreen] = useState(() => window.location.pathname === '/card-opener' ? 'opener' : 'menu')
+  const [screen, setScreen] = useState(() => screenForPath(window.location.pathname))
   const [opener, openerDispatch] = useReducer(openerReducer, undefined, loadOpenerSession)
   const [matchConfig, setMatchConfig] = useState(null)
   const [matchKey, setMatchKey] = useState(0)
 
   const toMenu = useCallback(() => {
-    if (window.location.pathname === '/card-opener') window.history.pushState({}, '', '/')
+    if (window.location.pathname !== '/') window.history.pushState({}, '', '/')
     setScreen('menu')
   }, [])
   const toOpener = useCallback(() => {
     if (window.location.pathname !== '/card-opener') window.history.pushState({}, '', '/card-opener')
     setScreen('opener')
   }, [])
+  const toStory = useCallback(() => {
+    if (window.location.pathname !== '/story-mode') window.history.pushState({}, '', '/story-mode')
+    setScreen('story')
+  }, [])
   useEffect(() => { saveOpenerSession(opener) }, [opener])
   useEffect(() => {
-    const onPopState = () => setScreen(window.location.pathname === '/card-opener' ? 'opener' : 'menu')
+    const onPopState = () => setScreen(screenForPath(window.location.pathname))
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
   }, [])
@@ -115,7 +126,7 @@ export default function App() {
         onOpener={toOpener}
         onSandbox={() => setScreen('sandbox')}
         onEditor={() => setScreen('editor')}
-        onStory={() => setScreen('story')}
+        onStory={toStory}
         onPlay={(config) => {
           setMatchConfig(config)
           setMatchKey((k) => k + 1)

@@ -8,14 +8,107 @@ import {
 import { STORIES } from "../../data/stories.js";
 import { storyState, resetProfile } from "../../lib/profileStore.js";
 import { byName } from "../../engine/cards.js";
-import { StoryHeader, storyMap } from "./StoryAtlas.jsx";
+import GYM_LEADERS from "../../data/gymLeaders.js";
+import { StoryHeader, storyMap, AtlasPortrait } from "./StoryAtlas.jsx";
 import { StoryModal } from "./StoryModal.jsx";
 
 const CAMPAIGN_COPY = {
-  kanto: ["THE ORIGINAL ADVENTURE", "A familiar world. A new hand."],
-  rocket: ["A REGION UNDER SIEGE", "Turn the tide. Take Kanto back."],
-  league: ["THE NEXT CHAPTER", "The League is ready. Are you?"],
+  kanto: ["THE ORIGINAL ADVENTURE", "Earn eight badges. Become Champion."],
+  rocket: ["A REGION UNDER SIEGE", "Join the rebellion. Take Kanto back."],
+  league: ["THE LEAGUE REBORN", "Rebuild the League. Uncover its secret."],
 };
+
+const leader = (id) => ({
+  ...GYM_LEADERS.find((trainer) => trainer.id === id),
+  image: `/story-atlas/campaigns/${id.replace("kanto-", "")}.webp`,
+});
+
+function CampaignArtwork({ story }) {
+  const characters =
+    story.id === "kanto"
+      ? [leader("kanto-blue")]
+      : story.id === "rocket"
+        ? [
+            {
+              name: "Team Rocket Master",
+              image: "/story-atlas/campaigns/rocket-master.webp",
+            },
+            {
+              name: "Rocket Grunt",
+              image: "/story-atlas/campaigns/rocket-grunt.webp",
+            },
+          ]
+        : [leader("kanto-misty"), leader("kanto-brock")];
+  return (
+    <div
+      className={`atlas-campaign-cover campaign-artwork ${story.id}`}
+      aria-hidden="true"
+      data-testid={`campaign-art-${story.id}`}
+    >
+      <img
+        className="campaign-landscape"
+        src={storyMap(story).image}
+        alt=""
+        draggable={false}
+      />
+      <span className="campaign-art-wash" />
+      <span className="atlas-campaign-number">
+        STORY{" "}
+        {story.id === "kanto" ? "01" : story.id === "rocket" ? "02" : "03"}
+      </span>
+      <span className={`campaign-crest ${story.id}`}>
+        {story.id === "rocket" ? (
+          <b>R</b>
+        ) : story.id === "league" ? (
+          <FaTrophy />
+        ) : (
+          <img src="/pokeball.svg" alt="" />
+        )}
+      </span>
+      {characters.map((character, i) => (
+        <AtlasPortrait
+          key={character.name}
+          {...character}
+          className={`campaign-character character-${i}`}
+        />
+      ))}
+      {story.id === "league" ? (
+        <span className="campaign-badge-ribbon">
+          {story.areas
+            .filter((a) => a.badge)
+            .slice(0, 4)
+            .map((a) => (
+              <img
+                key={a.id}
+                src={`/story-atlas/campaigns/badge-${a.id}.webp`}
+                alt=""
+              />
+            ))}
+        </span>
+      ) : story.id === "kanto" ? (
+        <span className="campaign-card-artifacts">
+          {["Pikachu", "Charizard"].map((name) => (
+            <img
+              key={name}
+              src={`/story-atlas/campaigns/card-${name.toLowerCase()}.webp`}
+              alt=""
+              draggable={false}
+            />
+          ))}
+        </span>
+      ) : (
+        <span className="campaign-rocket-stripe" />
+      )}
+      <span className="campaign-art-label">
+        {story.id === "kanto"
+          ? "THE BADGE QUEST"
+          : story.id === "rocket"
+            ? "KANTO UNDER SIEGE"
+            : "A NEW LEAGUE RISES"}
+      </span>
+    </div>
+  );
+}
 
 export function StorySelect({ profile, onSelect, onReset, onBack }) {
   return (
@@ -44,21 +137,7 @@ export function StorySelect({ profile, onSelect, onReset, onBack }) {
               key={story.id}
               onClick={() => onSelect(story)}
             >
-              <div className="atlas-campaign-cover">
-                <img src={storyMap(story).image} alt="" />
-                <span className="atlas-campaign-number">
-                  {story.id === "kanto"
-                    ? "01"
-                    : story.id === "rocket"
-                      ? "02"
-                      : "03"}
-                </span>
-                <img
-                  className="atlas-campaign-emblem"
-                  src={story.cover || "/pokeball.svg"}
-                  alt=""
-                />
-              </div>
+              <CampaignArtwork story={story} />
               <div className="atlas-campaign-card-body">
                 <span className="atlas-eyebrow">
                   {CAMPAIGN_COPY[story.id][0]}
