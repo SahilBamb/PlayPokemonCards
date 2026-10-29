@@ -9,12 +9,13 @@
   color: var(--atlas-ink);
   background: #f5f0e6;
   min-height: 100dvh;
-  font-family: "M PLUS Rounded 1c", system-ui, sans-serif;
+  /* Share the home page's rounded typeface and its fallback stack. */
+  font-family: inherit;
 }
 .story-atlas :is(h1, h2, h3) {
-  font-family: Georgia, "Times New Roman", serif;
-  letter-spacing: -0.04em;
-  font-weight: 750;
+  font-family: inherit;
+  letter-spacing: -0.025em;
+  font-weight: 900;
 }
 .story-atlas button {
   cursor: pointer;
@@ -54,16 +55,14 @@
   height: 40px;
 }
 .atlas-brand > span {
-  font:
-    800 25px Georgia,
-    serif;
+  font-size: 25px;
+  font-weight: 900;
   letter-spacing: -0.8px;
 }
 .atlas-brand small {
   display: block;
-  font:
-    750 8px "M PLUS Rounded 1c",
-    sans-serif;
+  font-size: 8px;
+  font-weight: 800;
   letter-spacing: 2px;
   color: #8e8b82;
   margin-top: 4px;
@@ -556,7 +555,7 @@
   bottom: -5px;
   color: #203f4c;
   opacity: 0.7;
-  font-family: Georgia, serif;
+  font-family: inherit;
   font-size: 150px;
   font-weight: bold;
   line-height: 1;
@@ -767,9 +766,9 @@
   color: var(--atlas-ink);
   width: 100%;
   padding: 4px 30px 5px 0;
-  font:
-    800 27px Georgia,
-    serif;
+  font-family: inherit;
+  font-size: 27px;
+  font-weight: 800;
   letter-spacing: -0.5px;
   outline-offset: 0;
 }
@@ -1517,7 +1516,7 @@
   justify-content: center;
 }
 .story-battle .battle-location {
-  font-family: Georgia, serif;
+  font-family: inherit;
   font-size: 15px;
   color: #2f4d46;
   margin-left: 6px;

@@ -58,3 +58,24 @@ cover images loaded locally and the three distinct covers were inspected at
 1366 by 768 without browser errors. GitHub build
 [40912490218](https://github.com/SahilBamb/PlayPokemonCards/actions/runs/40912490218)
 passed for this source.
+
+## Home page typography
+
+October 29, 2026: Story Mode now inherits the home page's M PLUS Rounded 1c
+font stack throughout. Headings use the same 900 weight and tight tracking
+as the home title. The brand, deck selector, mystery placeholder and battle
+location no longer introduce Georgia. Body text and controls share the global
+fallbacks. The decorative Rocket R keeps its existing logo treatment.
+
+The production build, CSS formatting and diff checks passed. Browser inspection
+confirmed matching computed font stacks on Home and Story Mode and the actual
+Rounded Mplus 1c Black web font rendering the Kanto heading. Visual checks at
+1600 by 950, 1366 by 768 and 390 by 844 covered campaign selection, starter and
+dialogue popups, hub/deck dock and shop. Starter selection, introduction,
+encounter cancellation and shop return passed using normal controls. The phone's
+Cinnabar Trainee deck name fits, all deck controls remain reachable, and no
+horizontal overflow or browser page errors were found. Review images are
+`story-atlas/46-story-home-font-laptop.webp`,
+`story-atlas/48-story-home-font-dialogue.webp`,
+`story-atlas/49-story-home-font-hub.webp` and
+`story-atlas/53-story-home-font-mobile-deck.webp`.

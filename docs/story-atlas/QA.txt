@@ -34,3 +34,8 @@ Story identity, atmosphere and navigation revision
 - Desktop 1600x950, laptop 1366x768 and phone 390x844: no clipped primary actions, misplaced character art, lost deck controls or horizontal overflow. Inspect all three covers and dark hub states after images load.
 - Home to Card Opener to Home to Story Mode uses /story-mode. Browser Back returns to Home, Forward returns to Story Mode. Direct entry, trailing slash, refresh, header and footer Main Menu actions work. Browser Back from a story hub or shop returns to Home without landing in Card Opener.
 - Existing starter saves, deck readiness, shop wallet and dialogue still work in the dark hub. Explore blocked remote images and reduced motion as off-happy-path checks.
+
+Story typography revision
+- Story selection, hub, starter and dialogue popups, shop and battle location inherit the same M PLUS Rounded 1c stack as Home. Major headings and the brand use Home's heavy rounded treatment. Verify loaded/computed font families against Home.
+- Inspect selection titles, navigation, long deck names, popup actions and shop labels at desktop 1600x950, laptop 1366x768 and phone 390x844. No horizontal overflow or clipped deck controls. Capture selection, hub and popup evidence.
+- Exercise campaign selection, starter choice, introduction, deck picker, shop and return using normal controls. Exploratory checks: long campaign title on a phone and narrow laptop hub with the longest available deck label.
