@@ -299,6 +299,7 @@ export function MainMenu({ onSandbox, onPlay, onEditor, onStory, onOpener }) {
           </div>
         </div>
       )}
+      {!picking && (<p className="creator-links" data-creator-credit><a href="https://www.sahilbambulkar.com/" target="_blank" rel="noopener noreferrer">Made by Solo Developer!</a><a href="https://www.dndlair.com/" target="_blank" rel="noopener noreferrer">Other Games</a></p>)}
     </div>
   )
 }
