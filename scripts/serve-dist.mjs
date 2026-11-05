@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url'
 
 const DIST = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../dist')
 const PORT = Number(process.env.PORT ?? 4173)
+const APP_ROUTES = new Set(['/', '/card-opener', '/card-opener/', '/story-mode', '/story-mode/'])
 const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
@@ -26,17 +27,35 @@ const MIME = {
 }
 
 const server = http.createServer((req, res) => {
-  const url = decodeURIComponent((req.url ?? '/').split('?')[0])
-  let file = path.join(DIST, url === '/' ? 'index.html' : url)
-  if (!file.startsWith(DIST)) {
-    res.writeHead(403)
+  let url
+  try {
+    const target = req.url ?? '/'
+    if (!target.startsWith('/')) throw new Error('Expected a local path')
+    url = decodeURIComponent(new URL('http://localhost' + target).pathname)
+  }
+  catch {
+    res.writeHead(400)
     return res.end()
   }
-  if (!fs.existsSync(file) || fs.statSync(file).isDirectory()) {
-    file = path.join(DIST, 'index.html')
+  let file = path.resolve(DIST, '.' + url)
+  if (file !== DIST && !file.startsWith(DIST + path.sep)) {
+    res.writeHead(404)
+    return res.end()
   }
+  let status = 200
+  if (APP_ROUTES.has(url)) file = path.join(DIST, 'index.html')
+  else if (!fs.existsSync(file) || !fs.statSync(file).isFile()) {
+    file = path.join(DIST, '404.html')
+    status = 404
+  }
+  if (url === '/404.html') status = 404
   const ext = path.extname(file)
-  res.writeHead(200, { 'Content-Type': MIME[ext] ?? 'application/octet-stream' })
+  res.writeHead(status, {
+    'Content-Type': MIME[ext] ?? 'application/octet-stream',
+    'X-Content-Type-Options': 'nosniff',
+    ...(status === 404 ? { 'Cache-Control': 'no-store' } : {}),
+  })
+  if (req.method === 'HEAD') return res.end()
   fs.createReadStream(file).pipe(res)
 })
 

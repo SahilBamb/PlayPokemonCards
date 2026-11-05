@@ -9,7 +9,7 @@
     "test:ui:opener-layout": "node scripts/ui_opener_layout.mjs",
     "record:opener-short": "node scripts/record_opener_short.mjs",
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/prepare-pages.mjs",
     "start": "node scripts/serve-dist.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
